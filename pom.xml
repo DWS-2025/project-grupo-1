@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.codeurjc</groupId>
-	<artifactId>web</artifactId>
+	<artifactId>project-grupo-1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>web</name>
+	<name>DWS Project Group 1</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
