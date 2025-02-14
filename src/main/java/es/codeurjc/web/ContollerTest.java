@@ -12,17 +12,17 @@ public class ContollerTest {
     public String index(Model model) {
         return "home";
     }
-    @GetMapping("/browse")
-    public String browse(Model model) {
-        return "browse";
+    @GetMapping("/following")
+    public String following(Model model) {
+        return "following";
     }
-    @GetMapping("/details")
-    public String details(Model model) {
-        return "details";
+    @GetMapping("/post")
+    public String post(Model model) {
+        return "post";
     }
-    @GetMapping("/streams")
-    public String streams(Model model) {
-        return "streams";
+    @GetMapping("/discover")
+    public String discover(Model model) {
+        return "discover";
     }
     @GetMapping("/profile")
     public String getMethodName(Model model) {
