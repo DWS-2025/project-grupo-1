@@ -28,4 +28,8 @@ public class ContollerTest {
     public String getMethodName(Model model) {
         return "profile";
     }
+    @GetMapping({"/login"})
+    public String login(Model model) {
+        return "login";
+    }
 }
