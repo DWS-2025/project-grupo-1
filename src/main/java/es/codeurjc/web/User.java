@@ -2,24 +2,21 @@ package es.codeurjc.web;
 
 public class User {
 
-    private String name, email, password, description, userImage;
+    private String userName, password, description, userImage;
+    private Post posts[];
+    private User followers[];
+    private User following[];
 
-    public User(String name, String email, String password, String description, String userImage) {
-        this.name = name;
-        this.email = email;
+    // Constructor with the information that the user provides when registering
+    public User(String userName, String password) {
+        this.userName = userName;
         this.password = password;
-        this.description = description;
-        this.userImage = userImage;
     }
 
     public String getName() {
-        return this.name;
+        return this.userName;
     }
-
-    public String getEmail() {
-        return this.email;
-    }
-
+    
     public String getPassword() {
         return this.password;
     }
