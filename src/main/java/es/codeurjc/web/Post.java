@@ -1,17 +1,26 @@
 package es.codeurjc.web;
 
+import java.util.ArrayList;
+import java.util.List;
 public class Post {
     private String title, content, postImage;
-    private User propietaryUser; 
-    private float  averageRating;
-    private Comment comments[];
-    private User colaboUsers[];
+    private User owner;
+    private float  averageRating; // [0.00, 5.00]
+    private List<Comment> comments;
+    private List<User> contributors;
 
-    public Post(String title, String content, String postImage, User propietaryUser){
+    public Post(String title, String content, String postImage, User owner){
         this.title = title;
         this.content = content;
         this.postImage = postImage;
-        this.propietaryUser = propietaryUser;
+        this.owner = owner;
+        this.averageRating = 0;
+        this.comments = new ArrayList<Comment>();
+        this.contributors = new ArrayList<User>();
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     public String getTitle() {
@@ -26,24 +35,25 @@ public class Post {
         return this.postImage;
     }
 
-    public User getPropietaryUser() {
-        return this.propietaryUser;
+    public User getOwner() {
+        return this.owner;
     }
 
     public float getAverageRating() {
         return this.averageRating;
     }
 
-    public Comment[] getComments() {
+    public List<Comment> getComments() {
         return this.comments;
     }
 
-    public User[] getColaboUsers() {
-        return this.colaboUsers;
+    public List<User> getContributors() {
+        return this.contributors;
     }
 
-   
-    
-
+   @Override
+   public boolean equals(Object obj) {
+       return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+   }
     
 }
