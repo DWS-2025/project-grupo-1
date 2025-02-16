@@ -5,17 +5,20 @@ import java.util.List;
 
 public class User {
 
-    private String userName, password, description, userImage;
+    private String userName, password, description, userImage, email;
+    private float rate;
     private List<Post> posts;
     private List<User> followers, following;
 
     // Constructor with the information that the user provides when registering
-    public User(String userName, String password) {
+    public User(String userName, String password, String email) {
         this.userName = userName;
         this.password = password;
+        this.email = email;
         this.posts = new ArrayList<Post>();
         this.followers = new ArrayList<User>();
         this.following = new ArrayList<User>();
+        this.rate = 0;
     }
 
     // Create a new post
@@ -89,6 +92,10 @@ public class User {
 
     public void setUserImage(String userImage) {
         this.userImage = userImage;
+    }
+
+    public float getRate() {
+        return this.rate;
     }
 
     @Override
