@@ -1,69 +1,70 @@
 /*Custom css for /login*/
 /*  Authentication Box (Login/Register Container) */
 .auth-box {
-    width: 450px;
-    padding: 40px;
-    background-color: #1f1f1f;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Navigation Tabs (Login/Register) */
-  .auth-tabs .nav-link {
-    color: #ccc;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px;
-    border: none;
-    transition: color 0.3s ease-in-out;
-  }
-  
-  .auth-tabs .nav-link.active {
-    color: #e75e8d;
-    border-bottom: 2px solid #e75e8d;
-  }
-  
-  /* Input Fields */
-  .auth-input {
-    padding: 12px;
-    font-size: 16px;
-    background: #333;
-    border: 1px solid #555;
-    color: white;
-    border-radius: 8px;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-  
-  /*Submit Buttons */
-  .auth-button {
-    padding: 14px;
-    font-size: 18px;
-    background: #e75e8d;
-    border: none;
-    color: white;
-    border-radius: 8px;
-    width: 100%;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .auth-button:hover {
-    background: #ec6090;
-  }
-  
-  /*Forgot Password Link */
-  .forgot-password {
-    color: #ec6090;
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-  }
-  /*
+  width: 450px;
+  padding: 40px;
+  background-color: #1f1f1f;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Navigation Tabs (Login/Register) */
+.auth-tabs .nav-link {
+  color: #ccc;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.auth-tabs .nav-link.active {
+  color: #e75e8d;
+  border-bottom: 2px solid #e75e8d;
+}
+
+/* Input Fields */
+.auth-input {
+  padding: 12px;
+  font-size: 16px;
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/*Submit Buttons */
+.auth-button {
+  padding: 14px;
+  font-size: 18px;
+  background: #e75e8d;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  width: 100%;
+  transition: background 0.3s ease-in-out;
+}
+
+.auth-button:hover {
+  background: #ec6090;
+}
+
+/*Forgot Password Link */
+.forgot-password {
+  color: #ec6090;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/*
   Custom css for /post
   
   */
-  .file-input-small {
-    width: 50%;
-  }
+.file-input-small {
+  width: 50%;
+}
