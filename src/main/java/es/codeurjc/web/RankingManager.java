@@ -17,7 +17,7 @@ public class RankingManager {
 
     public List<User> getUsersRanking() {
         List<User> rankingUsers = users;
-        rankingUsers.sort(Comparator.comparing(User::getRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluacion
+        rankingUsers.sort(Comparator.comparing(User::getRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
 
         return rankingUsers.subList(0, Math.min(rankingUsers.size(), 10)); //return 10 most valued users
     }
