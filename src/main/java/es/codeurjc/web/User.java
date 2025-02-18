@@ -99,6 +99,10 @@ public class User {
         return this.following;
     }
 
+    public String getEmail (){
+        return this.email;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }

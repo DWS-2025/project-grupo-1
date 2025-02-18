@@ -23,6 +23,10 @@ public class Post {
         this.comments.add(comment);
     }
 
+    public void addContributor(User user) {
+        this.contributors.add(user);
+    }
+
     public String getTitle() {
         return this.title;
     }
