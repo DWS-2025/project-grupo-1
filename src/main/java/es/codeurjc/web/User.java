@@ -21,6 +21,15 @@ public class User {
         this.rate = 0;
     }
 
+    // Constructor for mainUser
+    public User(String userName, String password, String description, String userImage, String email) {
+        this.userName = userName;
+        this.password = password;
+        this.description = description;
+        this.userImage = userImage;
+        this.email = email;
+    }
+
     // Create a new post
     public Post createPost(String title, String content, String postImage) {
         return new Post(title, content, postImage, this);
