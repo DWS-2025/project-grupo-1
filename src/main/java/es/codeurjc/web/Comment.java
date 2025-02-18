@@ -4,14 +4,16 @@ public class Comment {
     private String content;
     private User owner;
     private Post post;
-    private int likes;
-    private int dislikes;
+    private int likes, dislikes;
+    private float rate;
 
-    public Comment(String content, User owner, Post post) {
+    public Comment(String content, User owner, Post post, float rate) {
         this.content = content;
         this.owner = owner;
         this.post = post;
         this.likes = 0;
+        this.dislikes = 0;
+        this.rate = rate;
     }
 
     public void like() {
@@ -48,5 +50,9 @@ public class Comment {
 
     public int getTotalLikes() {
         return this.likes - this.dislikes;
+    }
+
+    public float getRate() {
+        return this.rate;
     }
 }

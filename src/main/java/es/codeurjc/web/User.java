@@ -38,7 +38,7 @@ public class User {
 
     // Comment on a post 
     public void comment(Post post, String content) {
-        post.addComment(new Comment(content, this, post));
+        post.addComment(new Comment(content, this, post, rate));
     }
 
     // Follow a user
@@ -88,10 +88,6 @@ public class User {
 
     public List<User> getFollowing() {
         return this.following;
-    }
-
-    public String getEmail (){
-        return this.email;
     }
 
     public void setDescription(String description) {
