@@ -5,6 +5,7 @@ public class Comment {
     private User owner;
     private Post post;
     private int likes;
+    private int dislikes;
 
     public Comment(String content, User owner, Post post) {
         this.content = content;
@@ -17,10 +18,14 @@ public class Comment {
         this.likes++;
     }
 
-    public void dislike() {
+    public void dislike() { // yo quitaria esta, me parece que tiene mas sentido tener a parte los dislikes en lugar de un contador de solo likes
         this.likes--;
     }
 
+    public void addDislike() {
+        this.dislikes++;
+    }
+    
     public String getContent() {
         return this.content;
     }
@@ -37,4 +42,11 @@ public class Comment {
         return this.likes;
     }
     
+    public int getDislikes() {
+        return this.dislikes;
+    }
+
+    public int getTotalLikes() {
+        return this.likes - this.dislikes;
+    }
 }

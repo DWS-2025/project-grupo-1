@@ -1,10 +1,12 @@
 package es.codeurjc.web;
 
+import java.util.List;
+
 public class Section {
      private String title;
      private String description;
      private String sectionImage;
-     private Post posts[];
+     private List <Post> posts; // he cambiado el array por la lista, mas facil de manejar
   
     
      public Section(String title, String description, String sectionImage) {
@@ -26,9 +28,14 @@ public class Section {
           return this.sectionImage;
      }
     
-     public Post[] getPosts() {
+     public void addPost (Post post) {
+          this.posts.add(post);
+     }
+     
+     public List<Post> getPosts() {
           return this.posts;
      }
     
+     
     
 }
