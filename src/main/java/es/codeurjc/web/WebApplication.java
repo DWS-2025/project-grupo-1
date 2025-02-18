@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class WebApplication {
 
 	public static void main(String[] args) {
+		Manager manager = new Manager();
+		manager.init();
 		SpringApplication.run(WebApplication.class, args);
 	}
 
