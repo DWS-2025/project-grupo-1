@@ -68,6 +68,7 @@ public class Manager {
                 new User("user4", "password1", "description User4 " + description, "userImage4", "usuario4@urjc.es"),
                 new User("user5", "password1", "description User5 " + description, "userImage5", "usuario5@urjc.es"),
                 new User("user6", "password1", "description User6 " + description, "userImage6", "usuario6@urjc.es")));
+
         return users;
 
     }
