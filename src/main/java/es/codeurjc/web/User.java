@@ -74,6 +74,10 @@ public class User {
         return this.userImage;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
     public List<Post> getPosts() {
         return this.posts;
     }
