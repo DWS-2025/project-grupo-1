@@ -2,8 +2,10 @@ package es.codeurjc.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -61,8 +63,7 @@ public class Manager {
         this.createPosts();
         this.sections = this.createSections();
         this.followSectionAutomated();
-
-
+        this.followUsersAutomated();
     }
 
     public static List<User> createUsers() {
@@ -70,7 +71,7 @@ public class Manager {
 
         List<User> users = new ArrayList<>(Arrays.asList(
                 new User("mainUser", "password1", "Im the main user " + description, "userImage1", "usuario1@urjc.es"),
-                new User("mainUser", "password1", "description User1 " + description, "userImageMain", "usuarioMain@urjc.es"),
+                new User("user1", "password1", "description User1 " + description, "userImageMain", "usuarioMain@urjc.es"),
                 new User("user2", "password1", "description User2 " + description, "userImage2", "usuario2@urjc.es"),
                 new User("user3", "password1", "description User3 " + description, "userImage3", "usuario3@urjc.es"),
                 new User("user4", "password1", "description User4 " + description, "userImage4", "usuario4@urjc.es"),
@@ -113,14 +114,35 @@ public class Manager {
         return sections;
     }
 
+    // *** REVISAR ESTOS DOS METODOS (funcionan pero no se si son los mas optimos) ***
     //This method will make each user follow a random number of sections (at least one) from the available sections in Manager.sections.
     public void followSectionAutomated() {
         Random random = new Random();
         for (User user : this.aplicationUsers) {
             int numberOfSectionsToFollow = random.nextInt(this.sections.size()) + 1; // At least one section
+            Set<Section> followedSections = new HashSet<>();
             for (int i = 0; i < numberOfSectionsToFollow; i++) {
-                Section section = this.sections.get(random.nextInt(this.sections.size()));
+                Section section;
+                do {
+                    section = this.sections.get(random.nextInt(this.sections.size()));
+                } while (followedSections.contains(section)); // Ensure a section is not followed more than once
                 user.followSection(section);
+                followedSections.add(section);
+            }
+        }
+    }
+    public void followUsersAutomated() {
+        Random random = new Random();
+        for (User user : this.aplicationUsers) {
+            int numberOfUsersToFollow = random.nextInt(this.aplicationUsers.size() - 1) + 1; // At least one user, excluding self
+            Set<User> followedUsers = new HashSet<>();
+            for (int i = 0; i < numberOfUsersToFollow; i++) {
+                User userToFollow;
+                do {
+                    userToFollow = this.aplicationUsers.get(random.nextInt(this.aplicationUsers.size()));
+                } while (userToFollow.equals(user) || followedUsers.contains(userToFollow)); // Ensure a user does not follow themselves or the same user more than once
+                user.follow(userToFollow);
+                followedUsers.add(userToFollow);
             }
         }
     }

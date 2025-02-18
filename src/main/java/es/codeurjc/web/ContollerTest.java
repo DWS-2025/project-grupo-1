@@ -41,6 +41,7 @@ public class ContollerTest {
 
     @GetMapping("/profile")
     public String getMethodName(Model model) {
+        model.addAttribute("userName", manager.getMainUser().getName());
         model.addAttribute("NumberOfPublications", manager.getMainUser().getPosts().size());
         model.addAttribute("NumberOfFollowers", manager.getMainUser().getFollowers().size());
         model.addAttribute("NumberOfFollowings", manager.getMainUser().getFollowing().size());
