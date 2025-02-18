@@ -3,7 +3,11 @@ package es.codeurjc.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Manager {
 
     private User mainUser;
@@ -13,6 +17,7 @@ public class Manager {
     public Manager() {
         aplicationUsers = new ArrayList<>(); 
         sections = new ArrayList<>();
+        this.init();
     }
 
     public User getMainUser() {
@@ -51,9 +56,12 @@ public class Manager {
     public void init() {
         // Creates a list of users and add them to the application
         this.aplicationUsers = createUsers();
+        this.mainUser = this.aplicationUsers.get(0);
         // Creates a list of posts and add them to the users(all users have the same posts)
         this.createPosts();
         this.sections = this.createSections();
+        this.followSectionAutomated();
+
 
     }
 
@@ -103,6 +111,18 @@ public class Manager {
                 new Section("XSS", "Cross-Site Scripting, inyección de scripts en páginas web.", "xss.jpg"),
                 new Section("SQLi", "SQL Injection, explotación de vulnerabilidades en bases de datos.", "sqli.jpg")));
         return sections;
+    }
+
+    //This method will make each user follow a random number of sections (at least one) from the available sections in Manager.sections.
+    public void followSectionAutomated() {
+        Random random = new Random();
+        for (User user : this.aplicationUsers) {
+            int numberOfSectionsToFollow = random.nextInt(this.sections.size()) + 1; // At least one section
+            for (int i = 0; i < numberOfSectionsToFollow; i++) {
+                Section section = this.sections.get(random.nextInt(this.sections.size()));
+                user.followSection(section);
+            }
+        }
     }
 
 }

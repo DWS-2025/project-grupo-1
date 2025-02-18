@@ -9,6 +9,7 @@ public class User {
     private float rate;
     private List<Post> posts;
     private List<User> followers, following;
+    private List<Section> followedSections;
 
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {
@@ -21,13 +22,16 @@ public class User {
         this.rate = 0;
     }
 
-    // Constructor for mainUser
+    // Constructor for the user with all the information
     public User(String userName, String password, String description, String userImage, String email) {
         this.userName = userName;
         this.password = password;
         this.description = description;
         this.userImage = userImage;
         this.email = email;
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
+        this.followedSections = new ArrayList<>();
         this.posts = new ArrayList<>();
 
     }
@@ -112,6 +116,17 @@ public class User {
     public float getRate() {
         return this.rate;
     }
+
+ 
+    public List<Section> getFollowedSections() {
+        return this.followedSections;
+    }
+
+    public void followSection(Section section) {
+        this.followedSections.add(section);
+    }
+
+
 
     @Override
     public boolean equals(Object obj) {

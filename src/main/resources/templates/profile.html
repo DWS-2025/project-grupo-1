@@ -17,7 +17,7 @@
                     <div class="main-info header-text">
                       <span>Offline</span>
                       <h4>Alan Smithee</h4>
-                      <p>You Haven't Gone Live yet. Go Live By Touching The Button Below.</p>
+                      <p>{{userDescription}}</p>
                       <div class="main-border-button">
                         <a href="post">Nueva publicación</a>
                       </div>
@@ -25,10 +25,10 @@
                   </div>
                   <div class="col-lg-4 align-self-center">
                     <ul>
-                      <li>Número de publicaciones <span>3</span></li>
-                      <li>Seguidores <span>16</span></li>
-                      <li>Siguiendo <span>None</span></li>
-                      <li>Temas seguidos <span>29</span></li>
+                      <li>Número de publicaciones <span>{{NumberOfPublications}}</span></li>
+                      <li>Seguidores <span>{{NumberOfFollowers}}</span></li>
+                      <li>Siguiendo <span>{{NumberOfFollowings}}</span></li>
+                      <li>Temas seguidos <span>{{NumberOfFollowingSections}}</span></li>
                     </ul>
                   </div>
                 </div>
