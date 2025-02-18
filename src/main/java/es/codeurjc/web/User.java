@@ -15,9 +15,9 @@ public class User {
         this.userName = userName;
         this.password = password;
         this.email = email;
-        this.posts = new ArrayList<Post>();
-        this.followers = new ArrayList<User>();
-        this.following = new ArrayList<User>();
+        this.posts = new ArrayList<>();
+        this.followers = new ArrayList<>();
+        this.following = new ArrayList<>();
         this.rate = 0;
     }
 
@@ -28,6 +28,8 @@ public class User {
         this.description = description;
         this.userImage = userImage;
         this.email = email;
+        this.posts = new ArrayList<>();
+
     }
 
     // Create a new post

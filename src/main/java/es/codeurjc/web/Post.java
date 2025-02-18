@@ -55,6 +55,8 @@ public class Post {
         return this.contributors;
     }
 
+    
+
    @Override
    public boolean equals(Object obj) {
        return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());

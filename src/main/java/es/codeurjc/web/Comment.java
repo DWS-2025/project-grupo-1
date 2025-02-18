@@ -20,10 +20,6 @@ public class Comment {
         this.likes++;
     }
 
-    public void dislike() { // yo quitaria esta, me parece que tiene mas sentido tener a parte los dislikes en lugar de un contador de solo likes
-        this.likes--;
-    }
-
     public void addDislike() {
         this.dislikes++;
     }
