@@ -41,6 +41,7 @@
                             <h4><em>Tus publicaciones</em></h4>
                           </div>
                         </div>
+                        {{#Post}}
                         <div class="col-lg-3 col-sm-6">
                           <div class="item">
                             <div class="thumb">
@@ -48,46 +49,16 @@
                               <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
                             </div>
                             <div class="down-content">
-                              <h4>First Clip</h4>
-                              <span><i class="fa fa-eye"></i> 250</span>
+                              <ul>
+                                <li>
+                                  <h6>{{title}}</h6>
+                                </li>
+                              </ul>
+                              <span><i class="fa fa-eye"></i> {{averageRating}}</span>
                             </div>
                           </div>
                         </div>
-                        <div class="col-lg-3 col-sm-6">
-                          <div class="item">
-                            <div class="thumb">
-                              <img src="assets/images/clip-02.jpg" alt="" style="border-radius: 23px;">
-                              <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
-                            </div>
-                            <div class="down-content">
-                              <h4>Second Clip</h4>
-                              <span><i class="fa fa-eye"></i> 183</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                          <div class="item">
-                            <div class="thumb">
-                              <img src="assets/images/clip-03.jpg" alt="" style="border-radius: 23px;">
-                              <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
-                            </div>
-                            <div class="down-content">
-                              <h4>Third Clip</h4>
-                              <span><i class="fa fa-eye"></i> 141</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                          <div class="item">
-                            <div class="thumb">
-                              <img src="assets/images/clip-04.jpg" alt="" style="border-radius: 23px;">
-                              <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
-                            </div>
-                            <div class="down-content">
-                              <h4>Fourth Clip</h4>
-                              <span><i class="fa fa-eye"></i> 91</span>
-                            </div>
-                          </div>
+                        {{/Post}}
                         </div>
                         <div class="col-lg-12">
                           <div class="main-button">

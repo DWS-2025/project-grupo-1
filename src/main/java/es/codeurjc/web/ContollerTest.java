@@ -47,6 +47,7 @@ public class ContollerTest {
         model.addAttribute("NumberOfFollowings", manager.getMainUser().getFollowing().size());
         model.addAttribute("NumberOfFollowingSections", manager.getMainUser().getFollowedSections().size());
         model.addAttribute("userDescription", manager.getMainUser().getDescription());
+        model.addAttribute("Post", manager.getMainUser().getPosts());
         return "profile";
     }
 
