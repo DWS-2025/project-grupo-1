@@ -8,9 +8,12 @@ public class Section {
      private String sectionImage;
      private List <Post> posts; // he cambiado el array por la lista, mas facil de manejar
      private  float averageRating;
+     private int numberOfPublications = 0;
+    
   
     
      public Section(String title, String description, String sectionImage, float averageRating) {
+    
           this.title = title;
           this.description = description;
           this.sectionImage = sectionImage;
@@ -40,8 +43,14 @@ public class Section {
      public List<Post> getPosts() {
           return this.posts;
      }
-     
-    
+     public int getNumberOfPosts() {
+          return this.posts.size();
+     }
+     public void deletePost(Post post) {
+          this.numberOfPublications--;
+          this.posts.remove(post);
+     }
+  
      
     
 }
