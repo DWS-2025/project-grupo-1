@@ -13,7 +13,7 @@ public class User {
     private String userName, password, description, userImage, email;
     private float rate;
     private List<Post> posts;
-    private List<User> followers, following;
+    private List<User> followers, followings;
     private List<Section> followedSections;
 
     // Constructor with the information that the user provides when registering
@@ -23,7 +23,7 @@ public class User {
         this.email = email;
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
-        this.following = new ArrayList<>();
+        this.followings = new ArrayList<>();
         this.rate = 0;
     }
 
@@ -35,7 +35,7 @@ public class User {
         this.userImage = userImage;
         this.email = email;
         this.followers = new ArrayList<>();
-        this.following = new ArrayList<>();
+        this.followings = new ArrayList<>();
         this.followedSections = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.rate = 0;
@@ -63,13 +63,13 @@ public class User {
 
     // Follow a user
     public void follow(User user) {
-        following.add(user);
+        followings.add(user);
         user.followers.add(this);
     }
 
     // Unfollow a user
     public void unfollow(User user) {
-        following.remove(user);
+        followings.remove(user);
         user.followers.remove(this);
     }
 
@@ -127,7 +127,7 @@ public class User {
     }
 
     public List<User> getFollowing() {
-        return this.following;
+        return this.followings;
     }
 
     public float getRate() {
