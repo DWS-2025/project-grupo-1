@@ -7,13 +7,18 @@ public class Section {
      private String description;
      private String sectionImage;
      private List <Post> posts; // he cambiado el array por la lista, mas facil de manejar
+     private  float averageRating;
   
     
-     public Section(String title, String description, String sectionImage) {
+     public Section(String title, String description, String sectionImage, float averageRating) {
           this.title = title;
           this.description = description;
           this.sectionImage = sectionImage;
+          this.averageRating = averageRating;
          
+     }
+     public float getAverageRating() {
+          return this.averageRating;
      }
     
      public String getTitle() {
@@ -35,6 +40,7 @@ public class Section {
      public List<Post> getPosts() {
           return this.posts;
      }
+     
     
      
     
