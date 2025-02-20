@@ -3,6 +3,11 @@ package es.codeurjc.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
+
+@Component
+@SessionScope
 public class User {
 
     private String userName, password, description, userImage, email;
@@ -33,7 +38,7 @@ public class User {
         this.following = new ArrayList<>();
         this.followedSections = new ArrayList<>();
         this.posts = new ArrayList<>();
-
+        this.rate = 0;
     }
 
     // Create a new post
@@ -76,21 +81,41 @@ public class User {
     public String getName() {
         return this.userName;
     }
+
+    public void setName(String userName) {
+        this.userName = userName;
+    }
     
     public String getPassword() {
         return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getDescription() {
         return this.description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getUserImage() {
         return this.userImage;
     }
 
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
     public String getEmail() {
         return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Post> getPosts() {
@@ -105,18 +130,9 @@ public class User {
         return this.following;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
-
     public float getRate() {
         return this.rate;
     }
-
  
     public List<Section> getFollowedSections() {
         return this.followedSections;
@@ -125,8 +141,6 @@ public class User {
     public void followSection(Section section) {
         this.followedSections.add(section);
     }
-
-
 
     @Override
     public boolean equals(Object obj) {

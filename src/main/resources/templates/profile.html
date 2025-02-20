@@ -17,6 +17,7 @@
                     <div class="main-info header-text">
                       <span>Offline</span>
                       <h4>{{userName}}</h4>
+                      <img src={{userImage}} alt="User image" style="border-radius: 23px;">
                       <p>{{userDescription}}</p>
                       <div class="main-border-button">
                         <a href="post">Nueva publicación</a>
@@ -25,10 +26,11 @@
                   </div>
                   <div class="col-lg-4 align-self-center">
                     <ul>
-                      <li>Número de publicaciones <span>{{NumberOfPublications}}</span></li>
-                      <li>Seguidores <span>{{NumberOfFollowers}}</span></li>
-                      <li>Siguiendo <span>{{NumberOfFollowings}}</span></li>
-                      <li>Temas seguidos <span>{{NumberOfFollowingSections}}</span></li>
+                      <li>Número de publicaciones <span>{{numberOfPublications}}</span></li>
+                      <li>Seguidores <span>{{numberOfFollowers}}</span></li>
+                      <li>Siguiendo <span>{{numberOfFollowings}}</span></li>
+                      <li>Temas seguidos <span>{{numberOfFollowedSections}}</span></li>
+                      <li>Valoración de usuario <span>{{rate}}</span></li>
                     </ul>
                   </div>
                 </div>
