@@ -1,9 +1,10 @@
 {{>header}}
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="page-content">
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="page-content">
 
+<<<<<<< HEAD
           <!-- ***** Featured Games Start ***** -->
           <div class="row">
             <div class="col-lg-8">
@@ -65,14 +66,60 @@
                     <span> {{userName}} - {{rate}}</span>
                     <div class="main-button">
                       <a href="/view_profile/{{userName}}">Ver perfil</a>
+=======
+        <!-- ***** Featured Games Start ***** -->
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="featured-games header-text">
+              <div class="heading-section">
+                <h4><em>Todas las</em> categorías</h4>
+              </div>
+              <div class="owl-features owl-carousel">
+                {{#Sections}}
+                <div class="item">
+                  <div class="thumb">
+                    <img src="assets/images/featured-01.jpg" alt="">
+                    <div class="hover-effect">
+                      <h6>{{description}}</h6>
+>>>>>>> 8fb1b09790b4de448bd685ca24e72c089ac7e9ec
                     </div>
-                  </li>
-                  {{/topUsers}}
-                </ul>
+                  </div>
+                  <h4>{{title}}<br><span>Publicaciones: </span></h4>
+                  <ul>
+                    <li><i class="fa fa-star"></i> {{averageRating}}</li>
+                    <li><i class="fa fa-eye"></i> {{numberOfPublications}}</li>
+                  </ul>
+                </div>
+                {{/Sections}}
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           
+=======
+          <!-- Top 10 users --> 
+          <div class="col-lg-4">
+            <div class="top-users">
+              <div class="heading-section">
+                <h4><em>Top 10</em> Usuarios</h4>
+              </div>
+              <ul> 
+                {{#topUsers}}
+                <li>
+                  <span>{{@index + 1}}</span> <!-- Index based on users list position --> 
+                  <img src={{userImage}} alt="" style="max-width: 46px; border-radius: 50%; margin-right: 15px;">
+                  <span> {{userName}} - {{rate}}</span>
+                  <div class="main-button">
+                    <a href="/profile/{{userName}}">Ver perfil</a>
+                  </div>
+                </li>
+                {{/topUsers}}
+              </ul>
+            </div>
+          </div>
+        </div>
+         <!-- ***** Featured Games End ***** -->
+>>>>>>> 8fb1b09790b4de448bd685ca24e72c089ac7e9ec
 
           <!-- TOP PUBLICACIONES -->
           <div class="live-stream">
