@@ -61,8 +61,10 @@ public class Manager {
         this.mainUser = this.aplicationUsers.get(0);
         // Creates a list of posts and add them to the users(all users have the same posts)
         this.createPosts();
+        // Creates  the sections and make the users follow them
         this.sections = this.createSections();
         this.followSectionAutomated();
+        // Make the users follow each other
         this.followUsersAutomated();
     }
 

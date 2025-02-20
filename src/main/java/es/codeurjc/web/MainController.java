@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ContollerTest {
+public class MainController {
 
     @Autowired
     // This is the manager that contains all the information of the application. With @Autowired we are telling Spring to inject the manager here, and it creates only one instance of the manager.
