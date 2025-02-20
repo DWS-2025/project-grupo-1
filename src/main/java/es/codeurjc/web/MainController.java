@@ -29,6 +29,7 @@ public class MainController {
 
     @GetMapping("/following")
     public String following(Model model) {
+        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
         return "following";
     }
 
@@ -39,6 +40,7 @@ public class MainController {
 
     @GetMapping("/discover")
     public String discover(Model model) {
+        model.addAttribute("Sections", manager.getSections());
         return "discover";
     }
 

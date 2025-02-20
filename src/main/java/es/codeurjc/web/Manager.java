@@ -38,6 +38,9 @@ public class Manager {
         }
         return null;
     }
+    public List<Section> getSections() {
+        return this.sections;
+    }
 
     public void addSection(Section section) {
         sections.add(section);
@@ -88,14 +91,21 @@ public class Manager {
         // Create users Posts
         String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec dictum ex. Sed eu lectus ut velit pharetra dictum quis et nisi. Suspendisse in nisl quam. Vestibulum non dapibus magna. Duis volutpat magna eget venenatis egestas. Fusce tincidunt, neque et finibus suscipit, mi tortor facilisis arcu, eu euismod diam magna non metus. Aliquam blandit sodales dui, sit amet imperdiet ipsum euismod sed. Mauris luctus neque eu nulla posuere, sit amet dignissim augue lacinia. Aliquam viverra ullamcorper lacus, sit amet interdum nisi venenatis non. Curabitur et tellus a ligula auctor porta eu facilisis diam. Cras quis malesuada mi, quis dictum erat. Phasellus vel justo nec purus aliquet lacinia a sed dolor. Nam gravida ut mauris ut ultrices.";
 
-        Post post1, post2, post3;
+        Post post1, post2, post3, post4, post5, post6;
         for (User user : this.aplicationUsers) {
             post1 = user.createPost("Post1", content, "postImage1");
             post2 = user.createPost("Post2", content, "postImage2");
             post3 = user.createPost("Post3", content, "postImage3");
+            post4 = user.createPost("Post4", content, "postImage4");
+            post5 = user.createPost("Post5", content, "postImage5");
+            post6 = user.createPost("Post6", content, "postImage6");
             user.addPost(post1);
             user.addPost(post2);
             user.addPost(post3);
+            user.addPost(post4);
+            user.addPost(post5);
+            user.addPost(post6);
+
         }
 
     }
@@ -103,16 +113,14 @@ public class Manager {
     public List<Section> createSections() {
         List<Section> sections = new ArrayList<>(Arrays.asList(
                 new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.",
-                        "reversing.jpg"),
-                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "hacking_web.jpg"),
-                new Section("Escalada de Privilegios en Linux",
-                        "Técnicas para obtener mayores privilegios en sistemas Linux.", "escalada_linux.jpg"),
-                new Section("Escalada de Privilegios en Windows",
-                        "Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpg"),
-                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpg"),
-                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "wifi.jpg"),
-                new Section("XSS", "Cross-Site Scripting, inyección de scripts en páginas web.", "xss.jpg"),
-                new Section("SQLi", "SQL Injection, explotación de vulnerabilidades en bases de datos.", "sqli.jpg")));
+                        "reversing.jpg", 4.5f),
+                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "hacking_web.jpg", 4.0f),
+                new Section("Escalada de Privilegios",
+                        "Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpg",3.0f),
+                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpg", 2.5f),
+                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "wifi.jpg", 2.0f),
+                new Section("XSS", "Cross-Site Scripting, inyección de scripts en páginas web.", "xss.jpg",4.5f),
+                new Section("SQLi", "SQL Injection, explotación de vulnerabilidades en bases de datos.", "sqli.jpg",5f)));
         return sections;
     }
 
