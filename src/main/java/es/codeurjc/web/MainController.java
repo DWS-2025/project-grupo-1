@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class MainController {
@@ -11,6 +13,7 @@ public class MainController {
     @Autowired
     // This is the manager that contains all the information of the application. With @Autowired we are telling Spring to inject the manager here, and it creates only one instance of the manager.
     private Manager manager;
+    private User user;
 
     @GetMapping({"/home", "/"})
     public String index(Model model) {
@@ -39,20 +42,46 @@ public class MainController {
         return "discover";
     }
 
-    @GetMapping("/profile")
-    public String getMethodName(Model model) {
-        model.addAttribute("userName", manager.getMainUser().getName());
-        model.addAttribute("NumberOfPublications", manager.getMainUser().getPosts().size());
-        model.addAttribute("NumberOfFollowers", manager.getMainUser().getFollowers().size());
-        model.addAttribute("NumberOfFollowings", manager.getMainUser().getFollowing().size());
-        model.addAttribute("NumberOfFollowingSections", manager.getMainUser().getFollowedSections().size());
-        model.addAttribute("userDescription", manager.getMainUser().getDescription());
-        model.addAttribute("Post", manager.getMainUser().getPosts());
-        return "profile";
-    }
-
     @GetMapping({"/login"})
     public String login(Model model) {
         return "login";
+    }
+
+    @GetMapping("/profile") 
+    public String showProfile(Model model) {
+        // We check if the user is logged in, if it is we show the user information, if not we show the main user information.
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
+            model.addAttribute("userImage", user.getUserImage());
+            model.addAttribute("userDescription", user.getDescription());
+            model.addAttribute("numberOfPublications", user.getPosts().size());
+            model.addAttribute("numberOfFollowers", user.getFollowers().size());
+            model.addAttribute("numberOfFollowing", user.getFollowing().size());
+            model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
+            model.addAttribute("rate", user.getRate());
+            return "profile";
+        } else {
+            model.addAttribute("userName", manager.getMainUser().getName());
+            model.addAttribute("numberOfPublications", manager.getMainUser().getPosts().size());
+            model.addAttribute("numberOfFollowers", manager.getMainUser().getFollowers().size());
+            model.addAttribute("numberOfFollowings", manager.getMainUser().getFollowing().size());
+            model.addAttribute("numberOfFollowedSections", manager.getMainUser().getFollowedSections().size());
+            model.addAttribute("userDescription", manager.getMainUser().getDescription());
+            model.addAttribute("Post", manager.getMainUser().getPosts());
+            model.addAttribute("rate", manager.getMainUser().getRate());
+            return "profile";
+
+        }
+
+    }
+
+    @PostMapping("/procesarFormulario")
+    public String postMethodName(@RequestBody String userName, @RequestBody String password, @RequestBody String email) {
+
+        user.setUserImage(userName);
+        user.setPassword(password);
+        user.setEmail(email);
+
+        return "redirect:/profile";
     }
 }
