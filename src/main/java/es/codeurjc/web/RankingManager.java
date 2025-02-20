@@ -15,7 +15,7 @@ public class RankingManager {
     }
 
 
-    public List<User> getUsersRanking() {
+    public List<User> topUsers() {
         List<User> rankingUsers = users;
         rankingUsers.sort(Comparator.comparing(User::getRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
 
@@ -23,7 +23,7 @@ public class RankingManager {
     }
 
 
-    public List<Post> getPostsRanking(){
+    public List<Post> topPosts(){
         List<Post> rankingPost = posts;
         rankingPost.sort(Comparator.comparing(Post::getAverageRating).reversed());
 
@@ -50,6 +50,8 @@ public class RankingManager {
         return rate /= comments.size(); 
 
     }
+
+    
 }
 
 
