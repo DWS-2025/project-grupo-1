@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class MainController {
@@ -42,14 +43,14 @@ public class MainController {
         return "discover";
     }
 
-    @GetMapping({"/login"})
+    @GetMapping("/login")
     public String login(Model model) {
         return "login";
     }
 
     @GetMapping("/profile") 
     public String showProfile(Model model) {
-        // We check if the user is logged in, if it is we show the user information, if not we show the main user information.
+        // We check if the user is logged in, if it is we show the user information, if not we redirect him to login page.
         if (user != null) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("userImage", user.getUserImage());
@@ -59,18 +60,10 @@ public class MainController {
             model.addAttribute("numberOfFollowing", user.getFollowing().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("rate", user.getRate());
-            return "profile";
+            return "/profile";
         } else {
-            model.addAttribute("userName", manager.getMainUser().getName());
-            model.addAttribute("numberOfPublications", manager.getMainUser().getPosts().size());
-            model.addAttribute("numberOfFollowers", manager.getMainUser().getFollowers().size());
-            model.addAttribute("numberOfFollowings", manager.getMainUser().getFollowing().size());
-            model.addAttribute("numberOfFollowedSections", manager.getMainUser().getFollowedSections().size());
-            model.addAttribute("userDescription", manager.getMainUser().getDescription());
-            model.addAttribute("Post", manager.getMainUser().getPosts());
-            model.addAttribute("rate", manager.getMainUser().getRate());
-            return "profile";
-
+            model.addAttribute("redirected", true);
+            return login(model);
         }
 
     }
