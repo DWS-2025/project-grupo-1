@@ -15,7 +15,7 @@
                 {{#Sections}}
                 <div class="item">
                   <div class="thumb">
-                    <img src="assets/images/featured-01.jpg" alt="">
+                    <img src="{{sectionImage}}" alt="">
                     <div class="hover-effect">
                       <h6>{{description}}</h6>
                     </div>
@@ -30,7 +30,7 @@
               </div>
             </div>
           </div>
-
+        
           <!-- Top 10 users -->
           <div class="col-lg-4">
             <div class="top-users">
@@ -61,14 +61,13 @@
               <h4><em>Top 10</em> publicaciones</h4>
             </div>
           </div>
+
           <div class="row">
-
-
             <div class="col-lg-3 col-sm-6">
               {{#topPosts}}
               <div class="item">
                 <div class="thumb">
-                  <img src={{postImage}} alt="">
+                  <img src="{{postImage}}" alt="">
                   <div class="hover-effect">
                     <div class="content">
                       <div class="live">
@@ -86,13 +85,12 @@
                     <img src="assets/images/avatar-01.jpg" alt=""
                       style="max-width: 46px; border-radius: 50%; float: left;">
                   </div>
-                  <span><i class="fa fa-check"></i> {{owner.getName()}}</span> <!-- comprobar que la sintaxis es asi-->
+                  <span><i class="fa fa-check"></i> {{owner.userName}}</span> <!-- comprobar que la sintaxis es asi-->
                   <h4> {{title}}</h4>
                 </div>
               </div>
               {{/topPosts}}
             </div>
-
 
           </div>
         </div>

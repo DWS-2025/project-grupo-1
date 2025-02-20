@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class MainController {
@@ -14,6 +16,7 @@ public class MainController {
     // This is the manager that contains all the information of the application. With @Autowired we are telling Spring to inject the manager here, and it creates only one instance of the manager.
     private Manager manager;
     private User user;
+    private RankingManager rankingManager;
 
     @GetMapping({"/home", "/"})
     public String index(Model model) {
@@ -41,6 +44,8 @@ public class MainController {
     @GetMapping("/discover")
     public String discover(Model model) {
         model.addAttribute("Sections", manager.getSections());
+        model.addAttribute("TopUsers", rankingManager.topUsers());
+        model.addAttribute("TopPosts", rankingManager.topPosts());
         return "discover";
     }
 
@@ -72,9 +77,6 @@ public class MainController {
             model.addAttribute("Post", manager.getMainUser().getPosts());
             model.addAttribute("rate", manager.getMainUser().getRate());
             return "profile";
-            // We will use it the next fase of the project.
-            /*model.addAttribute("redirected", true);
-            return login(model); */
 
         }
 
@@ -83,10 +85,27 @@ public class MainController {
     @PostMapping("/procesarFormulario")
     public String postMethodName(@RequestBody String userName, @RequestBody String password, @RequestBody String email) {
 
-        user.setUserImage(userName);
+        user.setName(userName);
         user.setPassword(password);
         user.setEmail(email);
 
         return "redirect:/profile";
     }
+
+    
+    @GetMapping("/viewProfile")
+    public String showUserProfile(@RequestParam String param) {
+
+
+
+        return "discover";
+    }
+    
+
+
+
+
 }
+
+
+
