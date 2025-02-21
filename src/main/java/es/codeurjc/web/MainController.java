@@ -102,7 +102,6 @@ public class MainController {
         model.addAttribute("User", manager.getMainUser());
         return "editProfile";
     }
-<<<<<<< HEAD
     
     @PostMapping("/editarPerfil")
     public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam String userImage) {
@@ -114,7 +113,6 @@ public class MainController {
         return showProfile(model);
     }
 }
-=======
 
     @GetMapping("/view_post")
     public String showUserPost(Model model, @RequestParam String postTitle) {
@@ -159,4 +157,3 @@ public class MainController {
     }
 
 }
->>>>>>> 182bfeb42333ea38eee7b3973eb4326a75755b5f
