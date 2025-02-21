@@ -117,12 +117,12 @@ public class Manager {
     public List<Section> createSections() {
         List<Section> sections = new ArrayList<>(Arrays.asList(
                 new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.",
-                        "/src/main/resources/static/assets/images/reversing.png", 4.5f),
-                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "/src/main/resources/static/assets/images/hacking_web.png", 4.0f),
+                        "assets/images/reversing.png", 4.5f),
+                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "assets/images/hacking_web.png", 4.0f),
                 new Section("Escalada de Privilegios",
-                        "Métodos para obtener acceso administrativo en Windows.", "/src/main/resources/static/assets/images/escalada_windows.jpeg",3.0f),
-                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "/src/main/resources/static/assets/images/hardware.jpeg", 2.5f),
-                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "/src/main/resources/static/assets/images/wifi.jpg", 2.0f)));
+                        "Métodos para obtener acceso administrativo en Windows.", "assets/images/escalada_windows.jpeg",3.0f),
+                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "assets/images/hardware.jpeg", 2.5f),
+                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "assets/images/wifi.jpg", 2.0f)));
         return sections;
     }
 
