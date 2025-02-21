@@ -42,7 +42,7 @@
                 <li>
                   <!-- <span>{{@index + 1}}</span> Index based on users list position -->
                   <img src="{{userImage}}" alt="" style="max-width: 46px; border-radius: 50%; margin-right: 15px;">
-                  <span> {{userName}} - {{rate}}</span>
+                  <span>{{userName}} - {{rate}}</span>
                   <div class="main-button">
                     <a href="/viewProfile/{{userName}}">Ver perfil</a>
                   </div>
@@ -85,8 +85,9 @@
                     <img src="assets/images/avatar-01.jpg" alt=""
                       style="max-width: 46px; border-radius: 50%; float: left;">
                   </div>
-                  <span><i class="fa fa-check"></i> {{owner.userName}}</span> <!-- comprobar que la sintaxis es asi-->
+                  <span><i class="fa fa-check"></i> {{owner.getUserName()}}</span> <!-- comprobar que la sintaxis es asi-->
                   <h4> {{title}}</h4>
+                  
                 </div>
               </div>
               {{/TopPosts}}

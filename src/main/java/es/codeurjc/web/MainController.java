@@ -48,12 +48,6 @@ public class MainController {
 
     @GetMapping("/discover")
     public String discover(Model model) {
-        List<User> topUsers = rankingManager.topUsers();
-        List<Post> topPosts = rankingManager.topPosts();
-
-        System.out.println("Usuarios en el ranking: " + topUsers);
-        System.out.println("Publicaciones en el ranking: " + topPosts);
-
         model.addAttribute("Sections", manager.getSections());
         model.addAttribute("TopUsers", rankingManager.topUsers());
         model.addAttribute("TopPosts", rankingManager.topPosts());
