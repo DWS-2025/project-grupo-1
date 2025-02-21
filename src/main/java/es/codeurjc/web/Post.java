@@ -5,6 +5,7 @@ import java.util.List;
 public class Post {
     private String title, content, postImage;
     private User owner;
+    private String ownerName;
     private float  averageRating; // [0.00, 5.00]
     private List<Comment> comments;
     private List<User> contributors;
@@ -14,6 +15,7 @@ public class Post {
         this.content = content;
         this.postImage = postImage;
         this.owner = owner;
+        this.ownerName = owner.getName();
         this.averageRating = 0;
         this.comments = new ArrayList<Comment>();
         this.contributors = new ArrayList<User>();
@@ -41,6 +43,10 @@ public class Post {
 
     public User getOwner() {
         return this.owner;
+    }
+
+    public String getUsername() {
+        return this.ownerName;
     }
 
     public float getAverageRating() {

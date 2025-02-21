@@ -15,10 +15,13 @@ public class Manager {
     private User mainUser;
     private List<User> aplicationUsers;
     private List<Section> sections;
+    //añadir lista de posts para pasarle al rankingManger
+    private List<Post> aplicationPosts;
 
     public Manager() {
         aplicationUsers = new ArrayList<>(); 
         sections = new ArrayList<>();
+        aplicationPosts = new ArrayList<>();
         this.init();
     }
 
@@ -52,6 +55,22 @@ public class Manager {
 
     public List<User> getAplicationUsers(){
         return this.aplicationUsers;
+    }
+
+    public List<Post> getAplicationPosts(){
+        List<User> totalUsers = getAplicationUsers();
+        List<Post> userPosts;
+
+        for (User user : totalUsers){
+            userPosts = new ArrayList<>();
+            userPosts = user.getPosts();
+
+            for (Post userPost : userPosts){ //añadir cada post a la lista de todos los post publicados de la app
+               aplicationPosts.add(userPost);
+            }
+        }
+
+        return aplicationPosts;
     }
     
     public void addUser(User user) {
