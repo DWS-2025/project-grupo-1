@@ -57,8 +57,8 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/profile")
-    public String showProfile(Model model) {
+    @GetMapping("/profile/{userName}")
+    public String showProfile(Model model, @RequestParam(required = false) String userName) {
         // We check if the user is logged in, if it is we show the user information, if
         // not we show the main user information.
         if (user != null) {
