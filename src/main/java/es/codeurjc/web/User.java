@@ -78,6 +78,9 @@ public class User {
         // TODO: Implement rating system
     }
 
+
+
+
     public String getName() {
         return this.userName;
     }
@@ -130,9 +133,17 @@ public class User {
         return this.followings;
     }
 
-    public float getRate() {
-        return this.rate;
+    public float getRate() {  
+        for(Post post : this.posts){
+            rate += post.getAverageRating();
+        }
+        return this.rate /= posts.size();
     }
+
+    public void setRate() {
+        this.rate = getRate();
+    }
+    
  
     public List<Section> getFollowedSections() {
         return this.followedSections;

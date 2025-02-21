@@ -73,17 +73,7 @@ public class Manager {
         return aplicationPosts;
     }
 
-    public float getUserRate(User user){
-        List<Post> posts = user.getPosts();
-        float totalPostsRate = 0;
-
-        for(Post post : posts){
-            totalPostsRate += post.getAverageRating();
-        }
-        return totalPostsRate /= posts.size();
-    }
-    
-    
+       
     public void addUser(User user) {
         aplicationUsers.add(user);
     }
