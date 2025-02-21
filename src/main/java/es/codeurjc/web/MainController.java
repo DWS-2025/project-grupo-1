@@ -99,10 +99,19 @@ public class MainController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/viewProfile")
-    public String showUserProfile(@RequestParam String param) {
-
-        return "discover";
+    @GetMapping("/editarPerfil")
+    public String getMethodName(Model model) {
+        model.addAttribute("User", manager.getMainUser());
+        return "editProfile";
     }
-
+    
+    @PostMapping("/editarPerfil")
+    public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam String userImage) {
+        user.setName(userName);
+        user.setDescription(description);
+        if(userImage != null){
+        user.setUserImage(userImage);
+        }
+        return showProfile(model);
+    }
 }
