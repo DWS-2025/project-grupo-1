@@ -11,10 +11,12 @@ public class RankingManager {
 
     private List<User> users;
     private List<Post> posts;
+    private Manager manager;
 
     public RankingManager(){
-        this.users = new ArrayList<>();
-        this.posts = new ArrayList<>();
+        manager = new Manager();
+        this.users = manager.getAplicationUsers();
+        this.posts = manager.getAplicationPosts();
     }
 
 
