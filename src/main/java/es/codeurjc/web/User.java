@@ -14,7 +14,12 @@ public class User {
     private float rate;
     private List<Post> posts;
     private List<User> followers, followings;
+<<<<<<< HEAD
     private List<Section> followedSections; 
+=======
+    private List<Section> followedSections;
+    private List<Comment> comments;
+>>>>>>> 182bfeb42333ea38eee7b3973eb4326a75755b5f
 
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {
@@ -78,6 +83,9 @@ public class User {
         // TODO: Implement rating system
     }
 
+
+
+
     public String getName() {
         return this.userName;
     }
@@ -130,9 +138,17 @@ public class User {
         return this.followings;
     }
 
-    public float getRate() {
-        return this.rate;
+    public float getRate() {  
+        for(Post post : this.posts){
+            rate += post.getAverageRating();
+        }
+        return this.rate /= posts.size();
     }
+
+    public void setRate() {
+        this.rate = getRate();
+    }
+    
  
     public List<Section> getFollowedSections() {
         return this.followedSections;

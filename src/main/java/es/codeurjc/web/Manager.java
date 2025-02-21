@@ -72,7 +72,8 @@ public class Manager {
 
         return aplicationPosts;
     }
-    
+
+       
     public void addUser(User user) {
         aplicationUsers.add(user);
     }
@@ -92,6 +93,24 @@ public class Manager {
         this.followSectionAutomated();
         // Make the users follow each other
         this.followUsersAutomated();
+        // Make the users comment on their posts
+        this.commentOnPostsAutomated();
+    }
+
+    public static List<User> createUsers() {
+        String description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec dictum ex. Sed eu lectus ut velit pharetra dictum quis et nisi. Suspendisse in nisl quam. Vestibulum non dapibus magna. Duis volutpat magna eget venenatis egestas. Fusce tincidunt, neque et finibus suscipit, mi tortor facilisis arcu, eu euismod diam magna non metus. Aliquam blandit sodales dui, sit amet imperdiet ipsum euismod sed. Mauris luctus neque eu nulla posuere, sit amet dignissim augue lacinia. Aliquam viverra ullamcorper lacus, sit amet interdum nisi venenatis non. Curabitur et tellus a ligula auctor porta eu facilisis diam. Cras quis malesuada mi, quis dictum erat. Phasellus vel justo nec purus aliquet lacinia a sed dolor. Nam gravida ut mauris ut ultrices.";
+
+        List<User> users = new ArrayList<>(Arrays.asList(
+                new User("mainUser", "password1", "Im the main user " + description, "userImage1", "usuario1@urjc.es"),
+                new User("user1", "password1", "description User1 " + description, "userImageMain", "usuarioMain@urjc.es"),
+                new User("user2", "password1", "description User2 " + description, "userImage2", "usuario2@urjc.es"),
+                new User("user3", "password1", "description User3 " + description, "userImage3", "usuario3@urjc.es"),
+                new User("user4", "password1", "description User4 " + description, "userImage4", "usuario4@urjc.es"),
+                new User("user5", "password1", "description User5 " + description, "userImage5", "usuario5@urjc.es"),
+                new User("user6", "password1", "description User6 " + description, "userImage6", "usuario6@urjc.es")));
+
+        return users;
+
     }
 
     public void createPosts() {
@@ -117,34 +136,16 @@ public class Manager {
 
     }
 
-    public static List<Section> createSections() {
-            List<Section> sections = new ArrayList<>(Arrays.asList(
-                    new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.",
-                            "reversing.png", 4.5f),
-                    new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "hacking_web.png", 4.0f),
-                    new Section("Escalada de Privilegios",
-                            "Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpeg",3.0f),
-                    new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpeg", 2.5f),
-                    new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "wifi.jpg", 2.0f)));
-            return sections;
-        }
-    
-        public static List<User> createUsers() {
-            String description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam nec dictum ex. Sed eu lectus ut velit pharetra dictum quis et nisi. Suspendisse in nisl quam. Vestibulum non dapibus magna. Duis volutpat magna eget venenatis egestas. Fusce tincidunt, neque et finibus suscipit, mi tortor facilisis arcu, eu euismod diam magna non metus. Aliquam blandit sodales dui, sit amet imperdiet ipsum euismod sed. Mauris luctus neque eu nulla posuere, sit amet dignissim augue lacinia. Aliquam viverra ullamcorper lacus, sit amet interdum nisi venenatis non. Curabitur et tellus a ligula auctor porta eu facilisis diam. Cras quis malesuada mi, quis dictum erat. Phasellus vel justo nec purus aliquet lacinia a sed dolor. Nam gravida ut mauris ut ultrices.";
-    
-            List<User> users = new ArrayList<>(Arrays.asList(
-                    new User("mainUser", "password1", "Im the main user " + description, "userImage1", "usuario1@urjc.es"),
-                    new User("user1", "password1", "description User1 " + description, "userImageMain",
-                            "usuarioMain@urjc.es"),
-                    new User("user2", "password1", "description User2 " + description, "userImage2", "usuario2@urjc.es"),
-                    new User("user3", "password1", "description User3 " + description, "userImage3", "usuario3@urjc.es"),
-                    new User("user4", "password1", "description User4 " + description, "userImage4", "usuario4@urjc.es"),
-                    new User("user5", "password1", "description User5 " + description, "userImage5", "usuario5@urjc.es"),
-                    new User("user6", "password1", "description User6 " + description, "userImage6", "usuario6@urjc.es")));
-                    users.getFirst().followSection(createSections().get(0));
-                    users.getFirst().followSection(createSections().get(1));
-        return users;
-
+    public List<Section> createSections() {
+        List<Section> sections = new ArrayList<>(Arrays.asList(
+                new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.",
+                        "reversing.png", 4.5f),
+                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "hacking_web.png", 4.0f),
+                new Section("Escalada de Privilegios",
+                        "Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpeg",3.0f),
+                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpeg", 2.5f),
+                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "wifi.jpg", 2.0f)));
+        return sections;
     }
 
     // *** REVISAR ESTOS DOS METODOS (funcionan pero no se si son los mas optimos) ***
@@ -176,6 +177,17 @@ public class Manager {
                 } while (userToFollow.equals(user) || followedUsers.contains(userToFollow)); // Ensure a user does not follow themselves or the same user more than once
                 user.follow(userToFollow);
                 followedUsers.add(userToFollow);
+            }
+        }
+    }
+    public void commentOnPostsAutomated() {
+        Random random = new Random();
+        for (User user : this.aplicationUsers) {
+            for (Post post : user.getPosts()) {
+                int numberOfComments = random.nextInt(5) + 1; // At least one comment
+                for (int i = 0; i < numberOfComments; i++) {
+                    user.comment(post, "This is a comment by " + user.getName());
+                }
             }
         }
     }

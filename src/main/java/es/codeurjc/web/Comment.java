@@ -6,6 +6,7 @@ public class Comment {
     private Post post;
     private int likes, dislikes;
     private float rate;
+   
 
     public Comment(String content, User owner, Post post, float rate) {
         this.content = content;
