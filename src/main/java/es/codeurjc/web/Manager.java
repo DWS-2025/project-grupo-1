@@ -95,6 +95,8 @@ public class Manager {
         this.followSectionAutomated();
         // Make the users follow each other
         this.followUsersAutomated();
+        // Make the users comment on their posts
+        this.commentOnPostsAutomated();
     }
 
     public static List<User> createUsers() {
@@ -139,12 +141,12 @@ public class Manager {
     public List<Section> createSections() {
         List<Section> sections = new ArrayList<>(Arrays.asList(
                 new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.",
-                        "assets/images/reversing.png", 4.5f),
-                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "assets/images/hacking_web.png", 4.0f),
+                        "reversing.png", 4.5f),
+                new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "hacking_web.png", 4.0f),
                 new Section("Escalada de Privilegios",
-                        "Métodos para obtener acceso administrativo en Windows.", "assets/images/escalada_windows.jpeg",3.0f),
-                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "assets/images/hardware.jpeg", 2.5f),
-                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "assets/images/wifi.jpg", 2.0f)));
+                        "Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpeg",3.0f),
+                new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpeg", 2.5f),
+                new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "wifi.jpg", 2.0f)));
         return sections;
     }
 
@@ -179,6 +181,17 @@ public class Manager {
                 } while (userToFollow.equals(user) || followedUsers.contains(userToFollow)); // Ensure a user does not follow themselves or the same user more than once
                 user.follow(userToFollow);
                 followedUsers.add(userToFollow);
+            }
+        }
+    }
+    public void commentOnPostsAutomated() {
+        Random random = new Random();
+        for (User user : this.aplicationUsers) {
+            for (Post post : user.getPosts()) {
+                int numberOfComments = random.nextInt(5) + 1; // At least one comment
+                for (int i = 0; i < numberOfComments; i++) {
+                    user.comment(post, "This is a comment by " + user.getName());
+                }
             }
         }
     }

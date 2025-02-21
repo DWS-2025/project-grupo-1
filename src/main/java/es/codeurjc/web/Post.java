@@ -20,6 +20,9 @@ public class Post {
         this.comments = new ArrayList<Comment>();
         this.contributors = new ArrayList<User>();
     }
+    public Post(){
+        
+    }
 
     public void addComment(Comment comment) {
         this.comments.add(comment);

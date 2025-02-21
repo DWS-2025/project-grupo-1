@@ -1,7 +1,5 @@
 package es.codeurjc.web;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +20,7 @@ public class MainController {
     @Autowired
     private RankingManager rankingManager;
 
-    @GetMapping({ "/home", "/" })
+    @GetMapping({"/home", "/"})
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -54,7 +52,7 @@ public class MainController {
         return "discover";
     }
 
-    @GetMapping({ "/login" })
+    @GetMapping({"/login"})
     public String login(Model model) {
         return "login";
     }
@@ -99,10 +97,61 @@ public class MainController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/viewProfile")
-    public String showUserProfile(@RequestParam String param) {
+    @GetMapping("/editarPerfil")
+    public String getMethodName(Model model) {
+        model.addAttribute("User", manager.getMainUser());
+        return "editProfile";
+    }
+    
+    @PostMapping("/editarPerfil")
+    public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam String userImage) {
+        user.setName(userName);
+        user.setDescription(description);
+        if(userImage != null){
+        user.setUserImage(userImage);
+        }
+        return showProfile(model);
+    }
 
-        return "discover";
+    @GetMapping("/view_post")
+    public String showUserPost(Model model, @RequestParam String postTitle) {
+        Post requestedPost = new Post();
+        for (Post post : manager.getAplicationPosts()) {
+            if (post.getTitle().equals(postTitle)) {
+                model.addAttribute("post", post);
+                requestedPost = post;
+            }
+        }
+        if (requestedPost == null) {
+            return "error";
+        } else {
+            model.addAttribute("Post", requestedPost);
+            return "view_post";
+
+        }
+
+    }
+
+    @GetMapping("comment_form")
+    public String comment(Model model, @RequestParam String postTitle) {
+        Post requestedPost = new Post();
+        for (Post post : manager.getAplicationPosts()) {
+            if (post.getTitle().equals(postTitle)) {
+                model.addAttribute("post", post);
+                requestedPost = post;
+            }
+        }
+        if (requestedPost == null) {
+
+            return "error";
+
+
+        } else {
+            model.addAttribute("Post", requestedPost);
+            return "comment_form";
+
+        }
+
     }
 
 }
