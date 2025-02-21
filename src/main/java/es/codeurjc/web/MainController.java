@@ -110,7 +110,7 @@ public class MainController {
         if(userImage != null){
         user.setUserImage(userImage);
         }
-        return showProfile(model);
+        return showProfile(model, userName);
     }
 
     @GetMapping("/view_post")
