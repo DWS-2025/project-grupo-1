@@ -11,7 +11,7 @@ import org.springframework.web.context.annotation.SessionScope;
 public class User {
 
     private String userName, password, description, userImage, email;
-    private float rate;
+    private float userRate;
     private List<Post> posts;
     private List<User> followers, followings;
     private List<Section> followedSections;
@@ -24,7 +24,7 @@ public class User {
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.followings = new ArrayList<>();
-        this.rate = 0;
+        this.userRate = 0;
     }
 
     // Constructor for the user with all the information
@@ -38,7 +38,7 @@ public class User {
         this.followings = new ArrayList<>();
         this.followedSections = new ArrayList<>();
         this.posts = new ArrayList<>();
-        this.rate = 0;
+        this.userRate = 0;
     }
 
     // Create a new post
@@ -58,7 +58,7 @@ public class User {
 
     // Comment on a post 
     public void comment(Post post, String content) {
-        post.addComment(new Comment(content, this, post, rate));
+        post.addComment(new Comment(content, this, post, userRate));
     }
 
     // Follow a user
@@ -73,14 +73,7 @@ public class User {
         user.followers.remove(this);
     }
 
-    // Rate a post
-    public void ratePost(Post post, float rating) {
-        // TODO: Implement rating system
-    }
-
-
-
-
+    
     public String getName() {
         return this.userName;
     }
@@ -133,15 +126,19 @@ public class User {
         return this.followings;
     }
 
-    public float getRate() {  
+    public float calculateUserRate() {  
         for(Post post : this.posts){
-            rate += post.getAverageRating();
+            userRate += post.getAverageRating();
         }
-        return this.rate /= posts.size();
+        return this.userRate /= posts.size();
     }
 
-    public void setRate() {
-        this.rate = getRate();
+    public void setUserRate() {
+        this.userRate = calculateUserRate();
+    }
+
+    public float getUserRate(){
+        return this.userRate;
     }
     
  

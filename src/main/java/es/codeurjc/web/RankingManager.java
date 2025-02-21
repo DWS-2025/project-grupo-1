@@ -22,7 +22,7 @@ public class RankingManager {
 
     public List<User> topUsers() {
         List<User> rankingUsers = users;
-        rankingUsers.sort(Comparator.comparing(User::getRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
+        rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
 
         return rankingUsers.subList(0, Math.min(rankingUsers.size(), 10)); //return 10 most valued users
     }
@@ -44,17 +44,7 @@ public class RankingManager {
     }
 
 
-    public float postsAverageRating(Post post) { 
-        List<Comment> comments = post.getComments();
-        float rate = 0;
-
-        for (Comment comment: comments) {
-            rate += comment.getRate();
-        }
-
-        return rate /= comments.size(); 
-
-    }
+    
 
     
 }

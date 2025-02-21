@@ -61,7 +61,21 @@ public class Post {
         return this.contributors;
     }
 
-    
+    public float calculatePostAverageRating() { 
+        List<Comment> comments = getComments();
+       
+        for (Comment comment: comments) {
+            averageRating += comment.getRate();
+        }
+
+        return averageRating /= comments.size(); 
+    }
+
+    public void setAverageRating(){
+        this.averageRating = calculatePostAverageRating();
+    }
+
+   
 
    @Override
    public boolean equals(Object obj) {

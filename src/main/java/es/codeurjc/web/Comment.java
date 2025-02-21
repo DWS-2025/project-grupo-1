@@ -5,7 +5,7 @@ public class Comment {
     private User owner;
     private Post post;
     private int likes, dislikes;
-    private float rate;
+    private float postRate;
 
     public Comment(String content, User owner, Post post, float rate) {
         this.content = content;
@@ -13,7 +13,7 @@ public class Comment {
         this.post = post;
         this.likes = 0;
         this.dislikes = 0;
-        this.rate = rate;
+        this.postRate = rate;
     }
 
     public void like() {
@@ -49,6 +49,15 @@ public class Comment {
     }
 
     public float getRate() {
-        return this.rate;
+        return this.postRate;
     }
+
+    
+    // Rate a post
+    public void ratePost(Post post, float rating) {
+        
+    }
+
+
+
 }

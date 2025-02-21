@@ -71,7 +71,7 @@ public class MainController {
             model.addAttribute("numberOfFollowers", user.getFollowers().size());
             model.addAttribute("numberOfFollowing", user.getFollowing().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
-            model.addAttribute("rate", user.getRate());
+            model.addAttribute("rate", user.getUserRate());
             return "profile";
         } else {
             model.addAttribute("userName", manager.getMainUser().getName());
@@ -81,7 +81,7 @@ public class MainController {
             model.addAttribute("numberOfFollowedSections", manager.getMainUser().getFollowedSections().size());
             model.addAttribute("userDescription", manager.getMainUser().getDescription());
             model.addAttribute("Post", manager.getMainUser().getPosts());
-            model.addAttribute("rate", manager.getMainUser().getRate());
+            model.addAttribute("rate", manager.getMainUser().getUserRate());
             return "profile";
 
         }

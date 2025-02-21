@@ -17,11 +17,13 @@ public class Manager {
     private List<Section> sections;
     //añadir lista de posts para pasarle al rankingManger
     private List<Post> aplicationPosts;
+    private List<Comment> postComments;
 
     public Manager() {
         aplicationUsers = new ArrayList<>(); 
         sections = new ArrayList<>();
         aplicationPosts = new ArrayList<>();
+        postComments = new ArrayList<>();
         this.init();
     }
 
@@ -145,6 +147,8 @@ public class Manager {
                 new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "assets/images/wifi.jpg", 2.0f)));
         return sections;
     }
+
+    // public List<Comment> createComments(){}
 
     // *** REVISAR ESTOS DOS METODOS (funcionan pero no se si son los mas optimos) ***
     //This method will make each user follow a random number of sections (at least one) from the available sections in Manager.sections.
