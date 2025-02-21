@@ -6,7 +6,7 @@ public class Section {
      private String title;
      private String description;
      private String sectionImage;
-     private List <Post> posts; // he cambiado el array por la lista, mas facil de manejar
+     private List <Post> posts;
      private  float averageRating;
      private int numberOfPublications = 0;
     
