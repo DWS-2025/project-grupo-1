@@ -30,25 +30,38 @@
               </div>
             </div>
           </div>
-        
+
           <!-- Top 10 users -->
-          <div class="col-lg-4">
+          <div class="col-lg-4 ">
             <div class="top-users">
-              <div class="heading-section">
-                <h4><em>Top 10</em> Usuarios</h4>
+              <div class="featured-games header-text">
+                <div class="heading-section">
+                  <h4><em>Top 10</em> Usuarios</h4>
+                </div>
+                {{#topUsers}}
+
+                <ol>
+                  <li>
+                    <h2> {{-index}}º</h2>
+                  </li>
+                  <li>
+                    <div class="avatar-05">
+                      <img src="assets/images/avatar-01.jpg" alt=""
+                        style="max-width: 46px; border-radius: 50%; float: left;">
+                    </div>
+                    
+                    <h5> {{userName}}</h5>
+                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
+
+                    <div class="main-border-button">
+                      <a href="/profile/{{userName}}">Ver perfil</a>
+                    </div>
+                  </li>
+                  {{/topUsers}}
+                </ol>
+
+
               </div>
-              <ul>
-                {{#TopUsers}}
-                <li>
-                  
-                  <img src="{{userImage}}" alt="" style="max-width: 46px; border-radius: 50%; margin-right: 15px;">
-                  <span>{{userName}} - {{userRate}}</span>
-                  <div class="main-button">
-                    <a href="/viewProfile">Ver perfil</a>
-                  </div>
-                </li>
-                {{/TopUsers}}
-              </ul>
             </div>
           </div>
         </div>
@@ -64,17 +77,17 @@
 
           <div class="row">
             <div class="col-lg-3 col-sm-6">
-              {{#TopPosts}}
+              {{#topPosts}}
               <div class="item">
                 <div class="thumb">
                   <img src="{{postImage}}" alt="">
                   <div class="hover-effect">
                     <div class="content">
                       <div class="live">
-                        <a href="/viewProfile"> Ver perfil</a>
+                        <a href="/profile"> Ver perfil</a>
                       </div>
                       <ul>
-                        <li><a><i class=""></i> {{averageRating}}</a></li> <!-- En "class" añadir boton de like-->
+                        <li><a><i class="fa fa-star"></i> {{averageRating}}</a></li>
                       </ul>
                     </div>
                   </div>
@@ -85,12 +98,12 @@
                     <img src="assets/images/avatar-01.jpg" alt=""
                       style="max-width: 46px; border-radius: 50%; float: left;">
                   </div>
-                  <span><i class="fa fa-check"></i> {{ownerName}}</span> 
+                  <span><i class="fa fa-check"></i> {{ownerName}}</span>
                   <h4> {{title}}</h4>
-                  
+
                 </div>
               </div>
-              {{/TopPosts}}
+              {{/topPosts}}
             </div>
           </div>
         </div>

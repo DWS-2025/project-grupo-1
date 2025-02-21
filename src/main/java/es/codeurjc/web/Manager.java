@@ -58,6 +58,7 @@ public class Manager {
     public List<User> getAplicationUsers(){
         return this.aplicationUsers;
     }
+    
 
     public List<Post> getAplicationPosts(){
         List<User> totalUsers = getAplicationUsers();
@@ -195,5 +196,15 @@ public class Manager {
             }
         }
     }
+    public List<User> printAplicationUsers(){
+        System.out.println("Usuarios en la aplicación: " + aplicationUsers.size());  // 🔎 Verificar si hay usuarios
+        return this.aplicationUsers;
+    }
+    
+    public List<Post> printAplicationPosts(){
+        System.out.println("Posts en la aplicación: " + aplicationPosts.size());  // 🔎 Verificar si hay posts
+        return this.aplicationPosts;
+    }
+    
 
 }

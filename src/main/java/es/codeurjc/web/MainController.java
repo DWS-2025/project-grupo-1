@@ -47,8 +47,8 @@ public class MainController {
     @GetMapping("/discover")
     public String discover(Model model) {
         model.addAttribute("Sections", manager.getSections());
-        model.addAttribute("TopUsers", rankingManager.topUsers());
-        model.addAttribute("TopPosts", rankingManager.topPosts());
+        model.addAttribute("topUsers", rankingManager.topUsers());
+        model.addAttribute("topPosts", rankingManager.topPosts());
         return "discover";
     }
 
