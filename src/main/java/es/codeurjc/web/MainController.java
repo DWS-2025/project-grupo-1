@@ -1,23 +1,31 @@
 package es.codeurjc.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
 
     @Autowired
-    // This is the manager that contains all the information of the application. With @Autowired we are telling Spring to inject the manager here, and it creates only one instance of the manager.
+    // This is the manager that contains all the information of the application.
+    // With @Autowired we are telling Spring to inject the manager here, and it
+    // creates only one instance of the manager.
     private Manager manager;
     private User user;
+    @Autowired
+    private RankingManager rankingManager;
 
-    @GetMapping({"/home", "/"})
+    @GetMapping({ "/home", "/" })
     public String index(Model model) {
-        // We add the user name to the model to show it in the home page, if theres any problem with the user name we show "Invitado" as a default value.
+        // We add the user name to the model to show it in the home page, if theres any
+        // problem with the user name we show "Invitado" as a default value.
         if (manager.getMainUser() != null) {
             model.addAttribute("userName", manager.getMainUser().getName());
         } else {
@@ -40,18 +48,27 @@ public class MainController {
 
     @GetMapping("/discover")
     public String discover(Model model) {
+        List<User> topUsers = rankingManager.topUsers();
+        List<Post> topPosts = rankingManager.topPosts();
+
+        System.out.println("Usuarios en el ranking: " + topUsers);
+        System.out.println("Publicaciones en el ranking: " + topPosts);
+
         model.addAttribute("Sections", manager.getSections());
+        model.addAttribute("TopUsers", rankingManager.topUsers());
+        model.addAttribute("TopPosts", rankingManager.topPosts());
         return "discover";
     }
 
-    @GetMapping({"/login"})
+    @GetMapping({ "/login" })
     public String login(Model model) {
         return "login";
     }
 
-    @GetMapping("/profile") 
+    @GetMapping("/profile")
     public String showProfile(Model model) {
-        // We check if the user is logged in, if it is we show the user information, if not we show the main user information.
+        // We check if the user is logged in, if it is we show the user information, if
+        // not we show the main user information.
         if (user != null) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("userImage", user.getUserImage());
@@ -72,21 +89,26 @@ public class MainController {
             model.addAttribute("Post", manager.getMainUser().getPosts());
             model.addAttribute("rate", manager.getMainUser().getRate());
             return "profile";
-            // We will use it the next fase of the project.
-            /*model.addAttribute("redirected", true);
-            return login(model); */
 
         }
 
     }
 
     @PostMapping("/procesarFormulario")
-    public String postMethodName(@RequestBody String userName, @RequestBody String password, @RequestBody String email) {
+    public String postMethodName(@RequestBody String userName, @RequestBody String password,
+            @RequestBody String email) {
 
-        user.setUserImage(userName);
+        user.setName(userName);
         user.setPassword(password);
         user.setEmail(email);
 
         return "redirect:/profile";
     }
+
+    @GetMapping("/viewProfile")
+    public String showUserProfile(@RequestParam String param) {
+
+        return "discover";
+    }
+
 }

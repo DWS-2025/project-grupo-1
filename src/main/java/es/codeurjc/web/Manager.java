@@ -50,6 +50,10 @@ public class Manager {
         sections.remove(section);
     }
 
+    public List<User> getAplicationUsers(){
+        return this.aplicationUsers;
+    }
+    
     public void addUser(User user) {
         aplicationUsers.add(user);
     }

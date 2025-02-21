@@ -15,7 +15,7 @@
                 {{#Sections}}
                 <div class="item">
                   <div class="thumb">
-                    <img src="assets/images/featured-01.jpg" alt="">
+                    <img src="{{sectionImage}}" alt="">
                     <div class="hover-effect">
                       <h6>{{description}}</h6>
                     </div>
@@ -30,7 +30,7 @@
               </div>
             </div>
           </div>
-
+        
           <!-- Top 10 users -->
           <div class="col-lg-4">
             <div class="top-users">
@@ -38,16 +38,16 @@
                 <h4><em>Top 10</em> Usuarios</h4>
               </div>
               <ul>
-                {{#topUsers}}
+                {{#TopUsers}}
                 <li>
-                  <span>{{@index + 1}}</span> <!-- Index based on users list position -->
+                  <!-- <span>{{@index + 1}}</span> Index based on users list position -->
                   <img src="{{userImage}}" alt="" style="max-width: 46px; border-radius: 50%; margin-right: 15px;">
                   <span> {{userName}} - {{rate}}</span>
                   <div class="main-button">
-                    <a href="/view_profile/{{userName}}">Ver perfil</a>
+                    <a href="/viewProfile/{{userName}}">Ver perfil</a>
                   </div>
                 </li>
-                {{/topUsers}}
+                {{/TopUsers}}
               </ul>
             </div>
           </div>
@@ -61,21 +61,20 @@
               <h4><em>Top 10</em> publicaciones</h4>
             </div>
           </div>
+
           <div class="row">
-
-
             <div class="col-lg-3 col-sm-6">
-              {{#topPosts}}
+              {{#TopPosts}}
               <div class="item">
                 <div class="thumb">
-                  <img src={{postImage}} alt="">
+                  <img src="{{postImage}}" alt="">
                   <div class="hover-effect">
                     <div class="content">
                       <div class="live">
-                        <a href="/view_profile/{{userName}}"> Ver perfil</a>
+                        <a href="/viewProfile/{{userName}}"> Ver perfil</a>
                       </div>
                       <ul>
-                        <li><a></a><i class=""></i> {{averageRating}}</a></li> <!-- En "class" añadir boton de like-->
+                        <li><a><i class=""></i> {{averageRating}}</a></li> <!-- En "class" añadir boton de like-->
                       </ul>
                     </div>
                   </div>
@@ -86,13 +85,12 @@
                     <img src="assets/images/avatar-01.jpg" alt=""
                       style="max-width: 46px; border-radius: 50%; float: left;">
                   </div>
-                  <span><i class="fa fa-check"></i> {{owner.getName()}}</span> <!-- comprobar que la sintaxis es asi-->
+                  <span><i class="fa fa-check"></i> {{owner.userName}}</span> <!-- comprobar que la sintaxis es asi-->
                   <h4> {{title}}</h4>
                 </div>
               </div>
-              {{/topPosts}}
+              {{/TopPosts}}
             </div>
-
 
           </div>
         </div>
