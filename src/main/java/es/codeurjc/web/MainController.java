@@ -34,22 +34,24 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/following")
-    public String following(Model model) {
-        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
-        return "following";
-    }
-
     @GetMapping("/post")
     public String post(Model model) {
         return "post";
+    }
+    @GetMapping("/following")
+    public String following(Model model) {
+        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
+        model.addAttribute("topUsers", rankingManager.topUsersFollowed(manager.getMainUser()));
+        model.addAttribute("topPosts", rankingManager.topPostsFollowed(manager.getMainUser()));
+
+        return "following";
     }
 
     @GetMapping("/discover")
     public String discover(Model model) {
         model.addAttribute("Sections", manager.getSections());
-        model.addAttribute("topUsers", rankingManager.topUsers());
-        model.addAttribute("topPosts", rankingManager.topPosts());
+        model.addAttribute("topUsers", rankingManager.topUsersApp());
+        model.addAttribute("topPosts", rankingManager.topPostsApp());
         return "discover";
     }
 
