@@ -15,6 +15,7 @@ public class User {
     private List<Post> posts;
     private List<User> followers, followings;
     private List<Section> followedSections;
+    private List<Comment> comments;
 
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {
