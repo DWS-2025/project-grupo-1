@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class MainController {
@@ -103,15 +104,23 @@ public class MainController {
         return "editProfile";
     }
     
-    @PostMapping("/editarPerfil")
-    public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam String userImage) {
-        user.setName(userName);
-        user.setDescription(description);
-        if(userImage != null){
-        user.setUserImage(userImage);
-        }
-        return showProfile(model, userName);
+@PostMapping("/editarPerfil")
+public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
+    User user = manager.getMainUser();
+    if (user == null) {
+        // Manejar el caso en que el usuario no esté inicializado
+        return "error";
     }
+
+    if (userName != null && !userName.isEmpty()) {
+        user.setName(userName);
+    }
+
+    if (description != null && !description.isEmpty()) {
+        user.setDescription(description);
+    }
+    return "redirect:/profile/" + user.getName();
+}
 
     @GetMapping("/view_post")
     public String showUserPost(Model model, @RequestParam String postTitle) {
