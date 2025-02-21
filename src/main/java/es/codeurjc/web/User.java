@@ -14,12 +14,8 @@ public class User {
     private float rate;
     private List<Post> posts;
     private List<User> followers, followings;
-<<<<<<< HEAD
     private List<Section> followedSections; 
-=======
-    private List<Section> followedSections;
     private List<Comment> comments;
->>>>>>> 182bfeb42333ea38eee7b3973eb4326a75755b5f
 
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {

@@ -112,7 +112,6 @@ public class MainController {
         }
         return showProfile(model);
     }
-}
 
     @GetMapping("/view_post")
     public String showUserPost(Model model, @RequestParam String postTitle) {
