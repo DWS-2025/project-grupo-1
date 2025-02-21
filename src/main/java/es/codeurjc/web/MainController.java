@@ -123,7 +123,6 @@ public class MainController {
             }
         }
         if (requestedPost == null) {
-
             return "error";
         } else {
             model.addAttribute("Post", requestedPost);
