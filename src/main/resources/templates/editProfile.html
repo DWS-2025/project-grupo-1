@@ -12,10 +12,10 @@
                                 <h2>Personaliza tu perfil</h2>
                                 {{#User}}
                                 <!-- Form to create a new post-->
-                                <form action="/editarPerfil" method="post" enctype="multipart/form-data">
+                                <form action="/editarPerfil/{{userName}}" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="userName">Nombre:</label>
-                                        <input type="text" class="form-control" id="userName" name="userName" value="{{userName}}" required>
+                                        <input type="text" class="form-control" id="newUserName" name="newUserName" value="{{userName}}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Descripción:</label>
