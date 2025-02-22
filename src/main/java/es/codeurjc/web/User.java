@@ -11,7 +11,7 @@ import org.springframework.web.context.annotation.SessionScope;
 public class User {
 
     private String userName, password, description, userImage, email;
-    private float userRate;
+    private float userRate, userPostRate;
     private List<Post> posts;
     private List<User> followers, followings;
     private List<Section> followedSections; 
@@ -26,6 +26,7 @@ public class User {
         this.followers = new ArrayList<>();
         this.followings = new ArrayList<>();
         this.userRate = 0;
+        this.userPostRate = 0;
     }
 
     // Constructor for the user with all the information
@@ -59,7 +60,7 @@ public class User {
 
     // Comment on a post 
     public void comment(Post post, String content) {
-        post.addComment(new Comment(content, this, post, userRate));
+        post.addComment(new Comment(content, this, post, userPostRate));
     }
 
     // Follow a user

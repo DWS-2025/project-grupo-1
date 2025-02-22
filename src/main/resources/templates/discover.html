@@ -44,19 +44,19 @@
                   <li>
                     <h2> {{-index}}º</h2>
                   </li>
+                  <div class="avatar-05">
+                    <img src="assets/images/avatar-01.jpg" alt=""
+                      style="max-width: 46px; border-radius: 50%; float: left;">
+                  </div>
                   <li>
-                    <div class="avatar-05">
-                      <img src="assets/images/avatar-01.jpg" alt=""
-                        style="max-width: 46px; border-radius: 50%; float: left;">
-                    </div>
-                    
-                    <h5> {{userName}}</h5>
-                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
-
-                    <div class="main-border-button">
+                    <h5 style="text-align: center;"> {{userName}} </h5>
+                    <h6 style="text-align: center;"> <i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
+                  </li>
+                    <div class="main-border-button" style="text-align: right">
                       <a href="/profile/{{userName}}">Ver perfil</a>
                     </div>
-                  </li>
+                    <br></br>
+                  
                   {{/topUsers}}
                 </ol>
 
@@ -83,7 +83,7 @@
                   <img src="{{postImage}}" alt="">
                   <div class="hover-effect">
                     <div class="content">
-                      <div class="live">
+                      <div class="live" style="text-align: left">
                         <a href="/profile"> Ver perfil</a>
                       </div>
                       <ul>

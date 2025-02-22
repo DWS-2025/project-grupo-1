@@ -151,15 +151,17 @@ public class Manager {
         return sections;
     }
 
-    // public List<Comment> createComments(){}
 
     // *** REVISAR ESTOS DOS METODOS (funcionan pero no se si son los mas optimos) ***
     //This method will make each user follow a random number of sections (at least one) from the available sections in Manager.sections.
+
     public void followSectionAutomated() {
         Random random = new Random();
+
         for (User user : this.aplicationUsers) {
             int numberOfSectionsToFollow = random.nextInt(this.sections.size()) + 1; // At least one section
             Set<Section> followedSections = new HashSet<>();
+
             for (int i = 0; i < numberOfSectionsToFollow; i++) {
                 Section section;
                 do {
@@ -170,41 +172,44 @@ public class Manager {
             }
         }
     }
+
+
     public void followUsersAutomated() {
         Random random = new Random();
+
         for (User user : this.aplicationUsers) {
             int numberOfUsersToFollow = random.nextInt(this.aplicationUsers.size() - 1) + 1; // At least one user, excluding self
             Set<User> followedUsers = new HashSet<>();
+
             for (int i = 0; i < numberOfUsersToFollow; i++) {
                 User userToFollow;
+
                 do {
                     userToFollow = this.aplicationUsers.get(random.nextInt(this.aplicationUsers.size()));
                 } while (userToFollow.equals(user) || followedUsers.contains(userToFollow)); // Ensure a user does not follow themselves or the same user more than once
+                
                 user.follow(userToFollow);
                 followedUsers.add(userToFollow);
             }
         }
     }
+
+
     public void commentOnPostsAutomated() {
         Random random = new Random();
+
         for (User user : this.aplicationUsers) {
+
             for (Post post : user.getPosts()) {
                 int numberOfComments = random.nextInt(5) + 1; // At least one comment
+
                 for (int i = 0; i < numberOfComments; i++) {
                     user.comment(post, "This is a comment by " + user.getName());
                 }
             }
         }
     }
-    public List<User> printAplicationUsers(){
-        System.out.println("Usuarios en la aplicación: " + aplicationUsers.size());  // 🔎 Verificar si hay usuarios
-        return this.aplicationUsers;
-    }
-    
-    public List<Post> printAplicationPosts(){
-        System.out.println("Posts en la aplicación: " + aplicationPosts.size());  // 🔎 Verificar si hay posts
-        return this.aplicationPosts;
-    }
-    
 
 }
+
+//Comment(String content, User owner, Post post, float rate)
