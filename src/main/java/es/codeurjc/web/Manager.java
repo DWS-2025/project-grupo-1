@@ -69,14 +69,13 @@ public class Manager {
             userPosts = user.getPosts();
 
             for (Post userPost : userPosts){ //añadir cada post a la lista de todos los post publicados de la app
-               aplicationPosts.add(userPost);
+                aplicationPosts.add(userPost);
             }
         }
 
         return aplicationPosts;
     }
 
-       
     public void addUser(User user) {
         aplicationUsers.add(user);
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,22 +35,24 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/following")
-    public String following(Model model) {
-        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
-        return "following";
-    }
-
     @GetMapping("/post")
     public String post(Model model) {
         return "post";
+    }
+    @GetMapping("/following")
+    public String following(Model model) {
+        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
+        model.addAttribute("topUsers", rankingManager.topUsersFollowed(manager.getMainUser()));
+        model.addAttribute("topPosts", rankingManager.topPostsFollowed(manager.getMainUser()));
+
+        return "following";
     }
 
     @GetMapping("/discover")
     public String discover(Model model) {
         model.addAttribute("Sections", manager.getSections());
-        model.addAttribute("topUsers", rankingManager.topUsers());
-        model.addAttribute("topPosts", rankingManager.topPosts());
+        model.addAttribute("topUsers", rankingManager.topUsersApp());
+        model.addAttribute("topPosts", rankingManager.topPostsApp());
         return "discover";
     }
 
@@ -59,7 +62,7 @@ public class MainController {
     }
 
     @GetMapping("/profile/{userName}")
-    public String showProfile(Model model, @RequestParam(required = false) String userName) {
+    public String showProfile(Model model, @PathVariable String userName) {
         // We check if the user is logged in, if it is we show the user information, if
         // not we show the main user information.
         if (user != null) {
@@ -98,22 +101,22 @@ public class MainController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/editarPerfil")
-    public String getMethodName(Model model) {
-        model.addAttribute("User", manager.getMainUser());
+    @GetMapping("/editarPerfil/{userName}")
+    public String getMethodName(Model model, @PathVariable String userName) {
+        model.addAttribute("User", manager.getUser(userName));
         return "editProfile";
     }
     
-@PostMapping("/editarPerfil")
-public String processUserEdit(Model model, @RequestParam String userName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
-    User user = manager.getMainUser();
+@PostMapping("/editarPerfil/{userName}")
+public String processUserEdit(Model model,  @PathVariable String userName, @RequestParam String newUserName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
+    User user = manager.getUser(userName);
     if (user == null) {
         // Manejar el caso en que el usuario no esté inicializado
         return "error";
     }
 
-    if (userName != null && !userName.isEmpty()) {
-        user.setName(userName);
+    if (newUserName != null && !newUserName.isEmpty()) {
+        user.setName(newUserName);
     }
 
     if (description != null && !description.isEmpty()) {

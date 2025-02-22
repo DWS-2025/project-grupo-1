@@ -19,16 +19,29 @@ public class RankingManager {
     }
 
 
-    public List<User> topUsers() {
+    public List<User> topUsersApp() {
         List<User> rankingUsers = users;
         rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
 
         return rankingUsers.subList(0, Math.min(rankingUsers.size(), 10)); //return 10 most valued users
     }
 
+    public List<User> topUsersFollowed(User user) {
+        List<User> rankingUsers = user.getFollowers();
+        rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed()); //ordena de manera descendente a los usuarios en funcion de su evaluación
 
-    public List<Post> topPosts(){
+        return rankingUsers.subList(0, Math.min(rankingUsers.size(), 10)); //return 10 most valued users
+    }
+
+
+    public List<Post> topPostsApp(){
         List<Post> rankingPost = posts;
+        rankingPost.sort(Comparator.comparing(Post::getAverageRating).reversed());
+
+        return rankingPost.subList(0, Math.min(rankingPost.size(), 10));
+    }
+    public List<Post> topPostsFollowed( User user){
+        List<Post> rankingPost = user.getPosts();
         rankingPost.sort(Comparator.comparing(Post::getAverageRating).reversed());
 
         return rankingPost.subList(0, Math.min(rankingPost.size(), 10));
