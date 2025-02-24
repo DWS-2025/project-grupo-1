@@ -40,6 +40,7 @@ public class MainController {
         return "post";
     }
 
+
     @GetMapping("/following")
     public String following(Model model) {
         model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
@@ -109,8 +110,7 @@ public class MainController {
     }
 
     @PostMapping("/editarPerfil/{userName}")
-    public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName,
-            @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
+    public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
         User user = manager.getUser(userName);
         if (user == null) {
             // Manejar el caso en que el usuario no esté inicializado
@@ -163,6 +163,7 @@ public class MainController {
             model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
             return "error";
         } else {
+            model.addAttribute("isEditing", false);
             model.addAttribute("Post", requestedPost);
             return "/comment_form";
         }
@@ -198,5 +199,34 @@ public class MainController {
         }
 
     }
+
+    @GetMapping("/edit_comment/{postTitle}/{commentId}")
+    public String editCommentForm(Model model, @PathVariable String postTitle, @PathVariable int commentId) {
+        Post requestedPost = new Post();
+        Comment requestedComment = new Comment();
+
+        // Look for the post and the comment
+        for (Post post : manager.getAplicationPosts()) {
+            if (post.getTitle().equals(postTitle)) {
+                requestedPost = post;
+                // We get the comment with the id commentId, -1 because the id starts at 1 {{-index}})
+                requestedComment = post.getComment(commentId - 1);
+                break;
+            }
+        }
+
+        if (requestedPost.getTitle() == null) {
+            model.addAttribute("errorType", "No se ha encontrado ningún post con el título: " + postTitle);
+            return "error";
+        } else if (requestedComment == null) {
+            model.addAttribute("errorType", "No se ha encontrado el comentario.");
+            return "error";
+        }
+        model.addAttribute("Comment", requestedComment);
+        model.addAttribute("Post", requestedPost);
+        model.addAttribute("isEditing", true);
+        return "/comment_form/" + postTitle;
+    }
+
 
 }

@@ -68,6 +68,9 @@ public class Post {
     public void setAverageRating(float averageRating){
         this.averageRating = averageRating;
     }
+    public Comment getComment(int index){
+        return this.comments.get(index);
+    }
 
    
 

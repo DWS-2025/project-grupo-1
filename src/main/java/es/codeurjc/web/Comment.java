@@ -1,28 +1,35 @@
 package es.codeurjc.web;
 
 public class Comment {
-    private String content;
+    private String commentContent;
     private User owner;
+    private String commentOwnerName;
     private Post post;
     private int likes, dislikes;
+    
     private float postRate;
 
     //Constructor for the initial comments
-    public Comment(String content, User owner, Post post, float rate) {
-        this.content = content;
+    public Comment(){
+        
+    }
+    public Comment(String commentContent, User owner, Post post, float rate) {
+        this.commentContent = commentContent;
         this.owner = owner;
         this.post = post;
         this.likes = 0;
+        this.commentOwnerName = owner.getName();
         this.dislikes = 0;
         this.postRate = rate;
     }
     //Constructor for the comments made by the user
-    public Comment(String content, User owner, float rate) {
-        this.content = content;
+    public Comment(String commentContent, User owner, float rate) {
+        this.commentContent = commentContent;
         this.owner = owner;
         this.likes = 0;
         this.dislikes = 0;
         this.postRate = rate;
+        this.commentOwnerName = owner.getName();
     }
 
     public void like() {
@@ -33,8 +40,8 @@ public class Comment {
         this.dislikes++;
     }
     
-    public String getContent() {
-        return this.content;
+    public String getcommentContent() {
+        return this.commentContent;
     }
 
     public User getOwner() {
