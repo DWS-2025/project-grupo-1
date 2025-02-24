@@ -128,15 +128,9 @@ public class User {
         return this.followings;
     }
 
-    public float calculateUserRate() {  
-        for(Post post : this.posts){
-            userRate += post.getAverageRating();
-        }
-        return this.userRate /= posts.size();
-    }
 
-    public void setUserRate() {
-        this.userRate = calculateUserRate();
+    public void setUserRate(float userRate) {
+        this.userRate = userRate;
     }
 
     public float getUserRate(){

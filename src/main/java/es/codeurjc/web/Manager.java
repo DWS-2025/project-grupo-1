@@ -209,6 +209,28 @@ public class Manager {
         }
     }
 
+    public void calculatePostAverageRating(Post post) { 
+        List<Comment> comments = post.getComments();
+        float averageRating = 0;
+       
+        for (Comment comment: comments) {
+            averageRating += comment.getRate();
+        }
+        averageRating /= comments.size();
+        post.setAverageRating(averageRating); 
+    }
+
+    public void calculateUserRate(User user) {  
+        List<Post> posts = user.getPosts();
+        float userRate = 0;
+
+        for(Post post : posts){
+            userRate += post.getAverageRating();
+        }
+        
+        user.setUserRate(userRate /= posts.size());
+    }
+
 }
 
 //Comment(String content, User owner, Post post, float rate)
