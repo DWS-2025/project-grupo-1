@@ -3,15 +3,15 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-content">
-
                 <div class="container" style="color: white;">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="page-content header-text">
-                                <h2>Comentario</h2>
+                                <h2>Comentario</h2> 
                                 <!-- Form to create a new post-->
-                                <form action="/post" method="post" enctype="multipart/form-data">
-
+                                {{#Post}}
+                                <form action="/comment_form/{{title}}" method="post">
+                                    {{/Post}}
                                     <div class="form-group">
                                         <label for="content">Contenido:</label>
                                         <textarea class="form-control" id="content" name="content" rows="10"

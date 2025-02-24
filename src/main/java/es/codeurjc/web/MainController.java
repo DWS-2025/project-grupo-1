@@ -125,8 +125,8 @@ public String processUserEdit(Model model,  @PathVariable String userName, @Requ
     return "redirect:/profile/" + user.getName();
 }
 
-    @GetMapping("/view_post")
-    public String showUserPost(Model model, @RequestParam String postTitle) {
+    @GetMapping("/view_post/{postTitle}")
+    public String showUserPost(Model model, @PathVariable String postTitle) {
         Post requestedPost = new Post();
         for (Post post : manager.getAplicationPosts()) {
             if (post.getTitle().equals(postTitle)) {
@@ -134,18 +134,20 @@ public String processUserEdit(Model model,  @PathVariable String userName, @Requ
                 requestedPost = post;
             }
         }
-        if (requestedPost == null) {
+        // We check if the post exists, if it doesn't we show an error page explaining the problem.
+        if (requestedPost.getTitle() == null) {
+            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
             return "error";
         } else {
             model.addAttribute("Post", requestedPost);
             return "view_post";
-
         }
+        
 
     }
 
-    @GetMapping("comment_form")
-    public String comment(Model model, @RequestParam String postTitle) {
+    @GetMapping("/comment_form/{postTitle}")
+    public String commentForm(Model model, @PathVariable String postTitle) {
         Post requestedPost = new Post();
         for (Post post : manager.getAplicationPosts()) {
             if (post.getTitle().equals(postTitle)) {
@@ -153,17 +155,48 @@ public String processUserEdit(Model model,  @PathVariable String userName, @Requ
                 requestedPost = post;
             }
         }
-        if (requestedPost == null) {
-
+        // We check if the post exists, if it doesn't we show an error page explaining the problem.
+        if (requestedPost.getTitle() == null) {
+            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
             return "error";
-
-
         } else {
             model.addAttribute("Post", requestedPost);
-            return "comment_form";
-
+            return "/comment_form";
         }
+    
 
     }
+    @PostMapping("/comment_form/{postTitle}")
+    public String sendComment(Model model, @RequestParam String content, @RequestParam int rating, @PathVariable String postTitle) {
+        Post requestedPost = new Post();
+        for (Post post : manager.getAplicationPosts()) {
+            if (post.getTitle().equals(postTitle)) {
+                model.addAttribute("post", post);
+                requestedPost = post;
+            }
+        }
+        // We check if the post exists, if it doesn't we show an error page explaining the problem.
+        if (requestedPost.getTitle() == null) {
+            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
+            return "error";
+        }
+        else if (rating < 0 || rating > 5) {
+            model.addAttribute("errorType", "La valoración debe estar entre 0 y 5");
+            return "error";
+        }
+        else if (content == null || content.isEmpty()) {
+            model.addAttribute("errorType", "El comentario no puede estar vacio");
+            return "error";
+        }
+        else {
+            Comment newComment = new Comment(content, manager.getMainUser(), rating);
+            requestedPost.addComment(newComment);
+            model.addAttribute("Post", requestedPost);
+            return "view_post";
+        }
+    
+
+    }
+
 
 }

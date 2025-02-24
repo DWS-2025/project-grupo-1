@@ -7,10 +7,19 @@ public class Comment {
     private int likes, dislikes;
     private float postRate;
 
+    //Constructor for the initial comments
     public Comment(String content, User owner, Post post, float rate) {
         this.content = content;
         this.owner = owner;
         this.post = post;
+        this.likes = 0;
+        this.dislikes = 0;
+        this.postRate = rate;
+    }
+    //Constructor for the comments made by the user
+    public Comment(String content, User owner, float rate) {
+        this.content = content;
+        this.owner = owner;
         this.likes = 0;
         this.dislikes = 0;
         this.postRate = rate;
