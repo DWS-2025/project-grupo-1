@@ -210,5 +210,3 @@ public class Manager {
     }
 
 }
-
-//Comment(String content, User owner, Post post, float rate)

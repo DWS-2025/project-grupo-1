@@ -52,16 +52,19 @@
             <ul>
               <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li> <!--Poner la imagen de perfil del usuario-->
               <li>
-                <h4>Nombre de usuario</h4><span>{{ownerName}}</span>
+                <h4>Nombre de usuario</h4><span>{{commentOwnerName}}</span>
               </li>
               <li>
-                <h4>Valoración</h4><span><i class="fa fa-star"></i> {{averageRating}}</span>
+                <h4>Valoración</h4><span><i class="fa fa-star"></i> {{postRate}}</span>
               </li>
               <li>
-                <h4>Contenido</h4><span>{{content}}</span>
+                <h4>Contenido</h4><span>{{commentContent}}</span>
               </li>
               <li>
                 <div class="main-border-button border-no-active"><a href="#">Ver perfil</a></div>
+              </li>
+              <li>
+                <div class="main-border-button border-active"><a href="/edit_comment/{{postTitle}}/{{-index}}">Editar </a></div>
               </li>
             </ul>
           </div>

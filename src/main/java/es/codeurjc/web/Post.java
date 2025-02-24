@@ -77,6 +77,9 @@ public class Post {
     public void setAverageRating(){
         this.averageRating = calculatePostAverageRating();
     }
+    public Comment getComment(int index){
+        return this.comments.get(index);
+    }
 
    
 
