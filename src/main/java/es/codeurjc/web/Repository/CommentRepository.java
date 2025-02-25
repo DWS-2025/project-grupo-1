@@ -19,7 +19,7 @@ public class CommentRepository {
         return Optional.ofNullable(comments.get(id));
     }
 
-    public void save (Comment comment){
+    public void saveInRepository (Comment comment){
         long id = comment.getId();
 
         if (id == 0){
@@ -29,8 +29,8 @@ public class CommentRepository {
         comments.put(id, comment);
     }
 
-    public void deleteById(long id){
-        comments.remove(id);
+    public void deleteComment(Comment comment){
+        comments.remove(comment.getId());
     }
 }
 
