@@ -5,6 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.User;
+
 @Component
 public class RankingManager {
 

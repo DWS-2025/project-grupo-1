@@ -9,6 +9,11 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
+import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.Section;
+import es.codeurjc.web.Model.User;
+
 @Component
 public class Manager {
 

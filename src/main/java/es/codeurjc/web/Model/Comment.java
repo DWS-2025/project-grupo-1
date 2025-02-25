@@ -1,4 +1,4 @@
-package es.codeurjc.web;
+package es.codeurjc.web.Model;
 
 public class Comment {
     private String commentContent;
