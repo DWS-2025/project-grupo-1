@@ -191,7 +191,7 @@ public class MainController {
         if (requestedPost.getTitle() == null) {
             model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
             return "error";
-        } else if (rating < 0 || rating > 5) {
+        } else if (rating < 0 || rating > 5 ) {
             model.addAttribute("errorType", "La valoración debe estar entre 0 y 5");
             return "error";
         } else if (content == null || content.isEmpty()) {
@@ -215,7 +215,6 @@ public class MainController {
             if (post.getTitle().equals(postTitle)) {
                 requestedPost = post;
                 // We get the comment with the id commentId, -1 because the id starts at 1 {{-index}})
-                requestedComment = post.getComment(commentId - 1);
                 break;
             }
         }
@@ -223,41 +222,34 @@ public class MainController {
         if (requestedPost.getTitle() == null) {
             model.addAttribute("errorType", "No se ha encontrado ningún post con el título: " + postTitle);
             return "error";
-        } else if (requestedComment == null) {
-            model.addAttribute("errorType", "No se ha encontrado el comentario.");
-            return "error";
-        }
+        } 
+           
         model.addAttribute("Post", requestedPost);
         model.addAttribute("isEditing", true);
         model.addAttribute("commentId", commentId);
-        return "/comment_form/" + postTitle;
+        model.addAttribute("content", requestedPost.getComment(commentId).getCommentContent());
+        return "comment_form";
     }
 
     @PostMapping("/edit_comment/{postTitle}/{commentId}")
-    public String updateComment(Model model, @PathVariable String postTitle, @PathVariable int commentId) {
+    public String updateComment(Model model, @PathVariable String postTitle, @PathVariable int commentId, @RequestParam String content, @RequestParam int rating) {
         Post requestedPost = new Post();
-        Comment requestedComment = new Comment();
-
-        // Look for the post and the comment
         for (Post post : manager.getAplicationPosts()) {
             if (post.getTitle().equals(postTitle)) {
-                requestedPost = post;
-                // We get the comment with the id commentId, -1 because the id starts at 1 {{-index}})
-                requestedComment = post.getComment(commentId - 1);
+                requestedPost = post;     
                 break;
             }
         }
-
-        if (requestedPost.getTitle() == null) {
-            model.addAttribute("errorType", "No se ha encontrado ningún post con el título: " + postTitle);
+        if (rating < 0 || rating > 5) {
+            model.addAttribute("errorType", "La valoración debe estar entre 0 y 5");
             return "error";
-        } else if (requestedComment == null) {
-            model.addAttribute("errorType", "No se ha encontrado el comentario.");
+        } else if (content == null || content.isEmpty()) {
+            model.addAttribute("errorType", "El comentario no puede estar vacio");
             return "error";
+        } else {
+            requestedPost.getComment(commentId - 1).updateComment(content, rating);
+            model.addAttribute("Post", requestedPost);
+            return "redirect:/view_post" + postTitle;
         }
-        model.addAttribute("Comment", requestedComment);
-        model.addAttribute("Post", requestedPost);
-        model.addAttribute("isEditing", true);
-        return "/comment_form/" + postTitle;
     }
 }

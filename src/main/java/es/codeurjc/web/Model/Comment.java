@@ -83,6 +83,16 @@ public class Comment {
     public float getRate() {
         return this.postRate;
     }
+    public void setRate(float rate) {
+        this.postRate = rate;
+    }
+
+    public void updateComment(String content, float rate) {
+        if(!content.equals(this.commentContent))
+        this.setCommentContent(content);
+        if(rate != this.postRate)
+        this.setRate(rate);
+    }
     
     // Rate a post
     public void ratePost(Post post, float rating) {
