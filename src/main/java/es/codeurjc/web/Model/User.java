@@ -153,7 +153,8 @@ public class User {
     public void followSection(Section section) {
         this.followedSections.add(section);
     }
-    
+
+      
 
     public void calculateUserRate() {  
         List<Post> posts = getPosts();
@@ -169,6 +170,14 @@ public class User {
     @Override
     public boolean equals(Object obj) {
         return this.userName.equals(((User)obj).getName());
+    }
+
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
+    public void addCommentToUser(Comment comment) {
+        comments.add(comment);
     }
 
 }

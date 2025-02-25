@@ -14,14 +14,13 @@ public class SectionRepository {
     
     public List<Section> findAll(){
         return sections.values().stream().toList();
-
     }
 
     public Optional<Section> findById(long id) {
         return Optional.ofNullable(sections.get(id));
     }
 
-    public void save (Section section){
+    public void saveSectionInRepository (Section section){
         long id = section.getId();
 
         if (id == 0){
@@ -31,7 +30,7 @@ public class SectionRepository {
         sections.put(id, section);
     }
 
-    public void deleteById(long id){
+    public void deleteSectionById(long id){
         sections.remove(id);
     }
 
