@@ -1,4 +1,4 @@
-package es.codeurjc.web;
+package es.codeurjc.web.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import es.codeurjc.web.Manager;
+import es.codeurjc.web.RankingManager;
+import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.User;
 
 @Controller
 public class MainController {
