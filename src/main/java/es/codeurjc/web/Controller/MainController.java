@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.Manager;
-import es.codeurjc.web.RankingManager;
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
+import es.codeurjc.web.RankingManager;
 
 @Controller
 public class MainController {
@@ -28,7 +28,7 @@ public class MainController {
     @Autowired
     private RankingManager rankingManager;
 
-    @GetMapping({ "/home", "/" })
+    @GetMapping({"/home", "/"})
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -46,7 +46,6 @@ public class MainController {
         return "post";
     }
 
-
     @GetMapping("/following")
     public String following(Model model) {
         model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
@@ -61,11 +60,11 @@ public class MainController {
         model.addAttribute("Sections", manager.getSections());
         model.addAttribute("topUsers", rankingManager.topUsersApp());
         model.addAttribute("topPosts", rankingManager.topPostsApp());
-        
+
         return "discover";
     }
 
-    @GetMapping({ "/login" })
+    @GetMapping({"/login"})
     public String login(Model model) {
         return "login";
     }
@@ -201,8 +200,7 @@ public class MainController {
         } else {
             Comment newComment = new Comment(content, manager.getMainUser(), rating);
             requestedPost.addComment(newComment);
-            model.addAttribute("Post", requestedPost);
-            return "view_post";
+            return "redirect:/view_post/" + postTitle;
         }
 
     }
@@ -229,11 +227,37 @@ public class MainController {
             model.addAttribute("errorType", "No se ha encontrado el comentario.");
             return "error";
         }
+        model.addAttribute("Post", requestedPost);
+        model.addAttribute("isEditing", true);
+        model.addAttribute("commentId", commentId);
+        return "/comment_form/" + postTitle;
+    }
+
+    @PostMapping("/edit_comment/{postTitle}/{commentId}")
+    public String updateComment(Model model, @PathVariable String postTitle, @PathVariable int commentId) {
+        Post requestedPost = new Post();
+        Comment requestedComment = new Comment();
+
+        // Look for the post and the comment
+        for (Post post : manager.getAplicationPosts()) {
+            if (post.getTitle().equals(postTitle)) {
+                requestedPost = post;
+                // We get the comment with the id commentId, -1 because the id starts at 1 {{-index}})
+                requestedComment = post.getComment(commentId - 1);
+                break;
+            }
+        }
+
+        if (requestedPost.getTitle() == null) {
+            model.addAttribute("errorType", "No se ha encontrado ningún post con el título: " + postTitle);
+            return "error";
+        } else if (requestedComment == null) {
+            model.addAttribute("errorType", "No se ha encontrado el comentario.");
+            return "error";
+        }
         model.addAttribute("Comment", requestedComment);
         model.addAttribute("Post", requestedPost);
         model.addAttribute("isEditing", true);
         return "/comment_form/" + postTitle;
     }
-
-
 }
