@@ -10,6 +10,7 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 public class User {
 
+    private long id;
     private String userName, password, description, userImage, email;
     private float userRate, userPostRate;
     private List<Post> posts;
@@ -75,7 +76,14 @@ public class User {
         user.followers.remove(this);
     }
 
-    
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return this.userName;
     }

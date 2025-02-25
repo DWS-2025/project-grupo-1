@@ -1,6 +1,8 @@
 package es.codeurjc.web.Model;
 
 public class Comment {
+    
+    private long id;
     private String commentContent;
     private User owner;
     private String commentOwnerName;
@@ -13,6 +15,7 @@ public class Comment {
     public Comment(){
         
     }
+
     public Comment(String commentContent, User owner, Post post, float rate) {
         this.commentContent = commentContent;
         this.owner = owner;
@@ -22,6 +25,7 @@ public class Comment {
         this.dislikes = 0;
         this.postRate = rate;
     }
+    
     //Constructor for the comments made by the user
     public Comment(String commentContent, User owner, float rate) {
         this.commentContent = commentContent;
@@ -36,12 +40,24 @@ public class Comment {
         this.likes++;
     }
 
-    public void addDislike() {
+    public void dislike() {
         this.dislikes++;
     }
     
-    public String getcommentContent() {
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getCommentContent() {
         return this.commentContent;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
     }
 
     public User getOwner() {
@@ -67,13 +83,10 @@ public class Comment {
     public float getRate() {
         return this.postRate;
     }
-
     
     // Rate a post
     public void ratePost(Post post, float rating) {
         
     }
-
-
 
 }
