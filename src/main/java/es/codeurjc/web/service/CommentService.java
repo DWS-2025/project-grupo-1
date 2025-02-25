@@ -26,7 +26,7 @@ public class CommentService {
         commentRepository.saveInRepository(comment);
     }
 
-    public void deleteCommentInPost (Post commentedPost, Long commentId){
+    public void deleteCommentFromPost (Post commentedPost, Long commentId){
         Comment commentToDelete = commentRepository.findBy(commentId).get();    
         commentedPost.getComments().remove(commentToDelete);
         User owner = commentToDelete.getOwner();

@@ -30,8 +30,8 @@ public class SectionRepository {
         sections.put(id, section);
     }
 
-    public void deleteSectionById(long id){
-        sections.remove(id);
+    public void deleteSectionById(Section section){
+        sections.remove(section.getId());
     }
 
 

@@ -26,17 +26,17 @@ public class SectionService {
     }
 
 
-    public void deleteSection(long sectionId){
+    public void deleteSection(Section sectionToDelete){
 
         List<User> users = userRepository.findAll();
-        Section section = sectionRepository.findById(sectionId).get();
+        Section section = sectionRepository.findById(sectionToDelete.getId()).get();
 
-        for (User user : users){
+        for (User user : users){ //delete section from followed sections of all users
             if(user.getFollowedSections().contains(section)){
                 user.getFollowedSections().remove(section);
             }
         }
-        sectionRepository.deleteSectionById(sectionId);
+        sectionRepository.deleteSectionById(sectionToDelete);
 
     }
 
