@@ -61,6 +61,7 @@ public class MainController {
         model.addAttribute("Sections", manager.getSections());
         model.addAttribute("topUsers", rankingManager.topUsersApp());
         model.addAttribute("topPosts", rankingManager.topPostsApp());
+        
         return "discover";
     }
 

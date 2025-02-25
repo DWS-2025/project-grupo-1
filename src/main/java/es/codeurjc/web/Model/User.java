@@ -145,8 +145,6 @@ public class User {
     public void followSection(Section section) {
         this.followedSections.add(section);
     }
-
-
     
 
     public void calculateUserRate() {  
@@ -155,7 +153,6 @@ public class User {
         for(Post post : posts){
             userRate += post.getAverageRating();
         }
-        
         setUserRate(userRate /= posts.size());
     }
 
