@@ -61,6 +61,7 @@ public class MainController {
         model.addAttribute("Sections", manager.getSections());
         model.addAttribute("topUsers", rankingManager.topUsersApp());
         model.addAttribute("topPosts", rankingManager.topPostsApp());
+        
         return "discover";
     }
 
@@ -71,18 +72,19 @@ public class MainController {
 
     @GetMapping("/profile/{userName}")
     public String showProfile(Model model, @PathVariable String userName) {
+        User user = manager.getUser(userName);
         // We check if the user is logged in, if it is we show the user information, if
         // not we show the main user information.
-        if (user != null) {
+        /*if (user != null) { */
             model.addAttribute("userName", user.getName());
             model.addAttribute("userImage", user.getUserImage());
             model.addAttribute("userDescription", user.getDescription());
             model.addAttribute("numberOfPublications", user.getPosts().size());
             model.addAttribute("numberOfFollowers", user.getFollowers().size());
-            model.addAttribute("numberOfFollowing", user.getFollowing().size());
+            model.addAttribute("numberOfFollowings", user.getFollowing().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("rate", user.getUserRate());
-            return "profile";
+            return "profile";/*
         } else {
             model.addAttribute("userName", manager.getMainUser().getName());
             model.addAttribute("numberOfPublications", manager.getMainUser().getPosts().size());
@@ -94,7 +96,7 @@ public class MainController {
             model.addAttribute("rate", manager.getMainUser().getUserRate());
             return "profile";
 
-        }
+        }*/
 
     }
 
@@ -109,17 +111,16 @@ public class MainController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/editarPerfil/{userName}")
+    @GetMapping("/editProfile/{userName}")
     public String getMethodName(Model model, @PathVariable String userName) {
         model.addAttribute("User", manager.getUser(userName));
         return "editProfile";
     }
 
-    @PostMapping("/editarPerfil/{userName}")
+    @PostMapping("/editProfile/{userName}")
     public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
         User user = manager.getUser(userName);
         if (user == null) {
-            // Manejar el caso en que el usuario no esté inicializado
             return "error";
         }
 

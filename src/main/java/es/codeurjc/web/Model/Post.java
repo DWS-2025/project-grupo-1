@@ -95,9 +95,20 @@ public class Post {
         return this.comments.get(index);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+    public void calculatePostAverageRating() { 
+        List<Comment> comments = getComments();
+               
+        for (Comment comment: comments) {
+            averageRating += comment.getRate();
+        }
+        averageRating /= comments.size();
+        setAverageRating(averageRating); 
     }
+   
+
+   @Override
+   public boolean equals(Object obj) {
+       return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+   }
     
 }
