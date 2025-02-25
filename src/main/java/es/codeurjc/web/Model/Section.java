@@ -3,11 +3,13 @@ package es.codeurjc.web.Model;
 import java.util.List;
 
 public class Section {
+
+     private long id;
      private String title;
      private String description;
      private String sectionImage;
      private List <Post> posts;
-     private  float averageRating;
+     private float averageRating;
      private int numberOfPublications = 0;
     
   
@@ -20,37 +22,58 @@ public class Section {
           this.averageRating = averageRating;
          
      }
-     public float getAverageRating() {
-          return this.averageRating;
+
+     public void addPost (Post post) {
+          this.posts.add(post);
+     }
+
+     public void deletePost(Post post) {
+          this.numberOfPublications--;
+          this.posts.remove(post);
      }
     
+     public long getId() {
+          return this.id;
+     }
+
+     public void setId(long id) {
+          this.id = id;
+     }
+
      public String getTitle() {
           return this.title;
+     }
+
+     public void setTitle(String title) {
+          this.title = title;
      }
     
      public String getDescription() {
           return this.description;
      }
+
+     public void setDescription(String description) {
+          this.description = description;
+     }
     
      public String getSectionImage() {
           return this.sectionImage;
      }
-    
-     public void addPost (Post post) {
-          this.posts.add(post);
+
+     public void setSectionImage(String sectionImage) {
+          this.sectionImage = sectionImage;
      }
      
      public List<Post> getPosts() {
           return this.posts;
      }
+
+     public float getAverageRating() {
+          return this.averageRating;
+     }
+
      public int getNumberOfPosts() {
           return this.posts.size();
-     }
-     public void deletePost(Post post) {
-          this.numberOfPublications--;
-          this.posts.remove(post);
-     }
-  
-     
+     }  
     
 }
