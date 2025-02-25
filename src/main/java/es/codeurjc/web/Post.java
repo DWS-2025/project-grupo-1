@@ -72,6 +72,15 @@ public class Post {
         return this.comments.get(index);
     }
 
+    public void calculatePostAverageRating() { 
+        List<Comment> comments = getComments();
+               
+        for (Comment comment: comments) {
+            averageRating += comment.getRate();
+        }
+        averageRating /= comments.size();
+        setAverageRating(averageRating); 
+    }
    
 
    @Override

@@ -146,6 +146,21 @@ public class User {
         this.followedSections.add(section);
     }
 
+
+    
+
+    public void calculateUserRate() {  
+        List<Post> posts = getPosts();
+
+        for(Post post : posts){
+            userRate += post.getAverageRating();
+        }
+        
+        setUserRate(userRate /= posts.size());
+    }
+
+
+
     @Override
     public boolean equals(Object obj) {
         return this.userName.equals(((User)obj).getName());
