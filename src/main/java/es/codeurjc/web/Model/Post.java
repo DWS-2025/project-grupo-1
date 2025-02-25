@@ -3,6 +3,8 @@ package es.codeurjc.web.Model;
 import java.util.ArrayList;
 import java.util.List;
 public class Post {
+
+    private long id;
     private String title, content, postImage;
     private User owner;
     private String ownerName;
@@ -20,6 +22,7 @@ public class Post {
         this.comments = new ArrayList<Comment>();
         this.contributors = new ArrayList<User>();
     }
+
     public Post(){
         
     }
@@ -32,16 +35,36 @@ public class Post {
         this.contributors.add(user);
     }
 
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
         return this.content;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getPostImage() {
         return this.postImage;
+    }
+
+    public void setPostImage(String postImage) {
+        this.postImage = postImage;
     }
 
     public User getOwner() {
@@ -56,6 +79,10 @@ public class Post {
         return this.averageRating;
     }
 
+    public void setAverageRating(float averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public List<Comment> getComments() {
         return this.comments;
     }
@@ -64,19 +91,13 @@ public class Post {
         return this.contributors;
     }
 
-    
-    public void setAverageRating(float averageRating){
-        this.averageRating = averageRating;
-    }
     public Comment getComment(int index){
         return this.comments.get(index);
     }
 
-   
-
-   @Override
-   public boolean equals(Object obj) {
-       return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
-   }
+    @Override
+    public boolean equals(Object obj) {
+        return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+    }
     
 }
