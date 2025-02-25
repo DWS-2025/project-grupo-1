@@ -9,17 +9,17 @@
                             <div class="page-content header-text">
                                 {{#Post}}                                
                                 <h2>Comentario en el Post: {{title}}</h2>
-                                <!-- Form to create a new post-->
-                               {{#isEditing}}
-                               <form action="/edit_comment/{{postTitle}}/{{commentId}}" method="post">
-                                    {{/isEditing}}
-                                    {{^isEditing}}
-                                    <form action="/comment_form/{{title}}" method="post">
-                                        {{/isEditing}}
-                                    {{/Post}}
+                                <!-- Form to create or edit a comment -->
+                                {{#isEditing}}
+                                <form action="/edit_comment/{{postTitle}}/{{commentId}}" method="post">
+                                {{/isEditing}}
+                                {{^isEditing}}
+                                <form action="/comment_form/{{title}}" method="post">
+                                {{/isEditing}}
+                                {{/Post}}
                                     <div class="form-group">
                                         <label for="content">Contenido:</label>
-                                        <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                                        <textarea class="form-control" id="content" name="content" rows="10" required>{{#isEditing}}{{content}}{{/isEditing}}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="rating">Valoración</label>
@@ -37,8 +37,8 @@
                                         </div>
                                     </div>
                             </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Comentar</button>
+                                        </div>
+                        <button type="submit" class="btn btn-primary">{{#isEditing}}Actualizar Comentario{{/isEditing}}{{^isEditing}}Comentar{{/isEditing}}  </button>
                         </form>
                     </div>
                 </div>

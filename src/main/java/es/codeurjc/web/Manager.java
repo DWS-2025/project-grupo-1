@@ -100,8 +100,7 @@ public class Manager {
         this.followSectionAutomated();
         // Make the users follow each other
         this.followUsersAutomated();
-        // Make the users comment on their posts
-        this.commentOnPostsAutomated();
+     
     }
 
     public static List<User> createUsers() {
@@ -198,21 +197,6 @@ public class Manager {
         }
     }
 
-
-    public void commentOnPostsAutomated() {
-        Random random = new Random();
-
-        for (User user : this.aplicationUsers) {
-
-            for (Post post : user.getPosts()) {
-                int numberOfComments = random.nextInt(5) + 1; // At least one comment
-
-                for (int i = 0; i < numberOfComments; i++) {
-                    user.comment(post, "This is a comment by " + user.getName());
-                }
-            }
-        }
-    }
 
 
 
