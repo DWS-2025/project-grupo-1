@@ -20,6 +20,7 @@ public class Section {
           this.description = description;
           this.sectionImage = sectionImage;
           this.averageRating = averageRating;
+          this.id = 0;
          
      }
 
