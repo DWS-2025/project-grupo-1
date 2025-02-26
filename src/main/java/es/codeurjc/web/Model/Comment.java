@@ -64,6 +64,10 @@ public class Comment {
         return this.owner;
     }
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public Post getPost() {
         return this.post;
     }

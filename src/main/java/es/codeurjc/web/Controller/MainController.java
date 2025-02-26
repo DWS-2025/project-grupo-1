@@ -41,10 +41,10 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/post")
-    public String post(Model model) {
-        return "post";
-    }
+    // @GetMapping("/post")
+    // public String post(Model model) {
+    //     return "post";
+    // }
 
     @GetMapping("/following")
     public String following(Model model) {

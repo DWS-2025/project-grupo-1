@@ -16,12 +16,6 @@ import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.UserService;
 
-
-
-
-
-
-
 @Controller
 public class PostController {
     @Autowired
@@ -97,7 +91,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/post/{postId}/comment/{commentId}/delete")
+    @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId) {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {

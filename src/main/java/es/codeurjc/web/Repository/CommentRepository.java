@@ -5,8 +5,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.stereotype.Component;
+
 import es.codeurjc.web.Model.Comment;
 
+@Component
 public class CommentRepository {
     private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, Comment> comments = new ConcurrentHashMap<>();
