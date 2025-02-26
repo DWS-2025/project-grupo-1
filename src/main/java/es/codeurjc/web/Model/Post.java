@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 public class Post {
 
-    private long id;
+    private long id = 0;
     private String title, content, postImage;
     private User owner;
     private String ownerName;
-    private float  averageRating; // [0.00, 5.00]
-    private List<Comment> comments;
-    private List<User> contributors;
+    private float  averageRating = 0; // [0.00, 5.00]
+    private List<Comment> comments = new ArrayList<>();
+    private List<User> contributors = new ArrayList<>();
 
     public Post(String title, String content, String postImage, User owner){
         this.title = title;
@@ -18,9 +18,6 @@ public class Post {
         this.postImage = postImage;
         this.owner = owner;
         this.ownerName = owner.getName();
-        this.averageRating = 0;
-        this.comments = new ArrayList<Comment>();
-        this.contributors = new ArrayList<User>();
     }
 
     public Post(){

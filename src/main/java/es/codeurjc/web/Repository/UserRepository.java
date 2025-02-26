@@ -3,8 +3,12 @@ package es.codeurjc.web.Repository;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Component;
+
 import es.codeurjc.web.Model.User;
 
+@Component
 public class UserRepository {
     
     private AtomicLong nextId = new AtomicLong(1L);
