@@ -36,4 +36,8 @@ public class UserRepository {
         users.remove(id);
     }
     
+    public User getUserById(long id) {
+        return users.get(id);
+    }
+    
 }

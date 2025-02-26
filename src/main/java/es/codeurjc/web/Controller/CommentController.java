@@ -2,12 +2,14 @@ package es.codeurjc.web.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.codeurjc.web.service.CommentService;
+import es.codeurjc.web.service.PostService;
 
 public class CommentController {
-    @Autowired
-    private CommentService commentService;
 
+    @Autowired
+    private PostService postService;
+    
+    
 
 
 
