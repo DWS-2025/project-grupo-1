@@ -179,5 +179,8 @@ public class User {
     public void addCommentToUser(Comment comment) {
         comments.add(comment);
     }
+    public User getUserById(long id) {
+        return this;
+    }
 
 }

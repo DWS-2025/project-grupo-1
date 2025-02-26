@@ -27,4 +27,8 @@ public class UserRepository {
         users.put(id, user);
     }
     
+    public User getUserById(long id) {
+        return users.get(id);
+    }
+    
 }

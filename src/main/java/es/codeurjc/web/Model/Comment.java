@@ -93,7 +93,9 @@ public class Comment {
         if(rate != this.postRate)
         this.setRate(rate);
     }
-    
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
     // Rate a post
     public void ratePost(Post post, float rating) {
         

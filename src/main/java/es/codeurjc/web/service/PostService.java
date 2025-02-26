@@ -43,5 +43,8 @@ public class PostService {
         post.setPostImage(updatedPost.getPostImage());
         postRepository.save(post);
     }
+    public CommentService getCommentService() {
+        return this.commentService;
+    }
 
 }
