@@ -8,27 +8,20 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
-import es.codeurjc.web.Repository.CommentRepository;
 import es.codeurjc.web.Repository.SectionRepository;
-import es.codeurjc.web.Repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 
 @Component
 public class Manager {
     @Autowired
-    private UserService userRepository;
+    private UserService userService;
     @Autowired
-    private PostService postRepository;
+    private PostService postService;
     @Autowired
     private SectionRepository sectionRepository;
-    @Autowired
-    private CommentRepository commentRepository;
-	@Autowired
-	private UserService userService;
 	@Autowired
 	private SectionService sectionService;
 
@@ -55,18 +48,7 @@ public class Manager {
 		Post post6 = new Post("HOLA 6", "Esto es un post de prueba 6", "/assets/images/stream-06.jpg");
 		Post post7 = new Post("HOLA 7", "Esto es un post de prueba 7", "/assets/images/stream-07.jpg");
 		Post post8 = new Post("HOLA 8", "Esto es un post de prueba 8", "/assets/images/stream-08.jpg");
-		
-		Comment comment = new Comment();
-		comment.setOwner(mainUser);
-		mainUser.getComments().add(comment);
-		post.getComments().add(comment);
-		commentRepository.save(comment);
-
-		Comment comment2 = new Comment();
-		comment2.setOwner(user1);
-		user1.getComments().add(comment2);
-		post.getComments().add(comment2);
-		commentRepository.save(comment2);
+	
 
 		//Create new sections
         Section defaultSection1 = new Section("Reversing","Análisis y descompilación de binarios para entender su funcionamiento.", "reversing.png");
@@ -75,21 +57,23 @@ public class Manager {
         Section defaultSection4 = new Section("Hardware Hacking","Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpeg");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.","wifi.jpg");
 
-		userRepository.save(mainUser);
-		userRepository.save(user1);
-		userRepository.save(user2);
-		userRepository.save(user3);
-		userRepository.save(user4);
-		userRepository.save(user5);
-		userRepository.save(user6);
-		postRepository.save(post);
-		postRepository.save(post2);
-		postRepository.save(post3);
-		postRepository.save(post4);
-		postRepository.save(post5);
-		postRepository.save(post6);
-		postRepository.save(post7);
-		postRepository.save(post8);
+		userService.save(mainUser);
+		userService.save(user1);
+		userService.save(user2);
+		userService.save(user3);
+		userService.save(user4);
+		userService.save(user5);
+		userService.save(user6);
+
+		postService.save(post);
+		postService.save(post2);
+		postService.save(post3);
+		postService.save(post4);
+		postService.save(post5);
+		postService.save(post6);
+		postService.save(post7);
+		postService.save(post8);
+		
 		sectionRepository.save(defaultSection1);
 		sectionRepository.save(defaultSection2);
 		sectionRepository.save(defaultSection3);

@@ -9,22 +9,22 @@ import org.springframework.stereotype.Component;
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
-import es.codeurjc.web.service.UserService;
 import es.codeurjc.web.service.PostService;
+import es.codeurjc.web.service.UserService;
 
 @Component
 public class RankingManager {
     @Autowired
-    private UserService userRepository;
+    private UserService userService;
     @Autowired
-    private PostService postRepository;
+    private PostService postService;
 
     private List<User> users;
     private List<Post> posts;
 
     public RankingManager(){
-        this.users = userRepository.findAllUsers();
-        this.posts = postRepository.findAllPosts();
+       // this.users = userService.findAllUsers();
+        // this.posts = postService.findAllPosts();
     }
 
 
