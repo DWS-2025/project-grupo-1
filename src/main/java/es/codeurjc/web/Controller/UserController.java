@@ -60,7 +60,7 @@ public class UserController {
         return "discover";
     }
 
-    @GetMapping({ "/login" })
+    @GetMapping("/login")
     public String login(Model model) {
         return "login";
     }
@@ -73,7 +73,12 @@ public class UserController {
         if (user != null) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("userImage", user.getUserImage());
-            model.addAttribute("userDescription", user.getDescription());
+            if (user.getDescription() == null) {
+                model.addAttribute("userDescription", "No description");
+                
+            }else{
+                model.addAttribute("userDescription", user.getDescription());
+            }
             model.addAttribute("numberOfPublications", user.getPosts().size());
             model.addAttribute("numberOfFollowers", user.getFollowers().size());
             model.addAttribute("numberOfFollowing", user.getFollowing().size());
