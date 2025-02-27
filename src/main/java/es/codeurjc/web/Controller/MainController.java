@@ -54,8 +54,5 @@ public class MainController {
             model.addAttribute("Post", requestedPost);
             return "view_post";
         }
-
     }
-
-    
 }

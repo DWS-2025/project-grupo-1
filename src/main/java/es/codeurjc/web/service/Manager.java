@@ -88,3 +88,36 @@ public class Manager {
 		sectionRepository.save(defaultSection5);
 	}
 } 
+//TODO Implementar esto para que los usuarios sigan secciones y otros usuarios al iniciar la aplicación
+/* 
+	public void followSectionAutomated() {
+		Random random = new Random();
+		for (User user : this.aplicationUsers) {
+			int numberOfSectionsToFollow = random.nextInt(this.sections.size()) + 1; // At least one section
+			Set<Section> followedSections = new HashSet<>();
+			for (int i = 0; i < numberOfSectionsToFollow; i++) {
+				Section section;
+				do {
+					section = this.sections.get(random.nextInt(this.sections.size()));
+				} while (followedSections.contains(section)); // Ensure a section is not followed more than once
+				user.followSection(section);
+				followedSections.add(section);
+			}
+		}
+	}
+
+	public void followUsersAutomated() {
+        Random random = new Random();
+        for (User user : this.aplicationUsers) {
+            int numberOfUsersToFollow = random.nextInt(this.aplicationUsers.size() - 1) + 1; // At least one user, excluding self
+            Set<User> followedUsers = new HashSet<>();
+            for (int i = 0; i < numberOfUsersToFollow; i++) {
+                User userToFollow;
+                do {
+                    userToFollow = this.aplicationUsers.get(random.nextInt(this.aplicationUsers.size()));
+                } while (userToFollow.equals(user) || followedUsers.contains(userToFollow)); // Ensure a user does not follow themselves or the same user more than once
+                user.follow(userToFollow);
+                followedUsers.add(userToFollow);
+            }
+        }
+    }*/
