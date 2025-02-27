@@ -11,20 +11,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.Manager;
+import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 import es.codeurjc.web.RankingManager;
 
 @Controller
 public class UserController {
-    @Autowired
     // This is the manager that contains all the information of the application.
     // With @Autowired we are telling Spring to inject the manager here, and it
     // creates only one instance of the manager.
-    private Manager manager;
-    private User user;
+    @Autowired
+    private RankingManager ranking;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SectionService sectionService;
 
 
     @GetMapping({ "/home", "/" })
@@ -42,18 +45,18 @@ public class UserController {
 
     @GetMapping("/following")
     public String following(Model model) {
-        model.addAttribute("Sections", manager.getMainUser().getFollowedSections());
-        model.addAttribute("topUsers", rankingManager.topUsersFollowed(manager.getMainUser()));
-        model.addAttribute("topPosts", rankingManager.topPostsFollowed(manager.getMainUser()));
+        model.addAttribute("Sections", userService.getLoggedUser().getFollowedSections());
+        model.addAttribute("topUsers", ranking.topUsersFollowed(userService.getLoggedUser()));
+        model.addAttribute("topPosts", ranking.topPostsFollowed(userService.getLoggedUser()));
 
         return "following";
     }
 
     @GetMapping("/discover")
     public String discover(Model model) {
-        model.addAttribute("Sections", manager.getSections());
-        model.addAttribute("topUsers", rankingManager.topUsersApp());
-        model.addAttribute("topPosts", rankingManager.topPostsApp());
+        model.addAttribute("Sections", sectionService.findAll());
+        model.addAttribute("topUsers", ranking.topUsersApp());
+        model.addAttribute("topPosts", ranking.topPostsApp());
 
         return "discover";
     }
@@ -63,8 +66,9 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/profile/{userName}")
-    public String showProfile(Model model, @PathVariable String userName) {
+    @GetMapping("/profile/{id}")
+    public String showProfile(Model model, @PathVariable Long id) {
+        User user = userService.getUserById(id);
         // We check if the user is logged in, if it is we show the user information, if
         // not we show the main user information.
         if (user != null) {
@@ -90,10 +94,10 @@ public class UserController {
         return "editProfile";
     }
 
-    @PostMapping("/editarPerfil/{userName}")
-    public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName,
+    @PostMapping("/editarPerfil/{id}")
+    public String processUserEdit(Model model, @PathVariable long id, @RequestParam String newUserName,
             @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
-        User user = manager.getUser(userName);
+        User user = userService.getUserById(id);
         if (user == null) {
             // Manejar el caso en que el usuario no esté inicializado
             return "error";
