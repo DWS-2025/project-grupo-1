@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
@@ -14,7 +14,8 @@ import es.codeurjc.web.Model.User;
 import es.codeurjc.web.Repository.SectionRepository;
 import jakarta.annotation.PostConstruct;
 
-@Component
+
+@Service
 public class Manager {
     @Autowired
     private UserService userService;
@@ -119,5 +120,4 @@ public class Manager {
 			}
 		}
 	}
-	   
 }

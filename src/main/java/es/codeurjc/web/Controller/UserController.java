@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.Model.User;
-import es.codeurjc.web.RankingManager;
+//import es.codeurjc.web.RankingManager;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 
@@ -19,8 +19,8 @@ public class UserController {
     // This is the manager that contains all the information of the application.
     // With @Autowired we are telling Spring to inject the manager here, and it
     // creates only one instance of the manager.
-    @Autowired
-    private RankingManager ranking;
+/*   @Autowired
+    private RankingManager ranking;*/
 
     @Autowired
     private UserService userService;
@@ -45,8 +45,8 @@ public class UserController {
     @GetMapping("/following")
     public String following(Model model) {
         model.addAttribute("Sections", userService.getLoggedUser().getFollowedSections());
-        model.addAttribute("topUsers", ranking.topUsersFollowed(userService.getLoggedUser()));
-        model.addAttribute("topPosts", ranking.topPostsFollowed(userService.getLoggedUser()));
+//        model.addAttribute("topUsers", ranking.topUsersFollowed(userService.getLoggedUser()));
+//        model.addAttribute("topPosts", ranking.topPostsFollowed(userService.getLoggedUser()));
 
         return "following";
     }
@@ -54,8 +54,8 @@ public class UserController {
     @GetMapping("/discover")
     public String discover(Model model) {
         model.addAttribute("Sections", sectionService.findAll());
-        model.addAttribute("topUsers", ranking.topUsersApp());
-        model.addAttribute("topPosts", ranking.topPostsApp());
+//        model.addAttribute("topUsers", ranking.topUsersApp());
+//        model.addAttribute("topPosts", ranking.topPostsApp());
 
         return "discover";
     }
