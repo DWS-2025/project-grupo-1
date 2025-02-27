@@ -26,6 +26,8 @@ public class User {
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.followings = new ArrayList<>();
+        this.followedSections = new ArrayList<>();
+        this.comments = new ArrayList<>();
         this.userRate = 0;
         this.userPostRate = 0;
     }

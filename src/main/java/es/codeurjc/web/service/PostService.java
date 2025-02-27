@@ -37,6 +37,11 @@ public class PostService {
         currentUser.getPosts().add(post);
         postRepository.save(post);
     }
+    public void saveOtherUsersPost(Post post, User user) {
+        post.setOwner(user);
+        user.getPosts().add(post);
+        postRepository.save(post);
+    }
     
     public void deletePost(Post post) {
         for (Comment comment : post.getComments()) {

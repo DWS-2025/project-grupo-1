@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
-import es.codeurjc.web.Repository.SectionRepository;
 import jakarta.annotation.PostConstruct;
 
 
@@ -21,8 +20,6 @@ public class Manager {
     private UserService userService;
     @Autowired
     private PostService postService;
-    @Autowired
-    private SectionRepository sectionRepository;
 	@Autowired
 	private SectionService sectionService;
 
@@ -66,20 +63,24 @@ public class Manager {
 		userService.save(user5);
 		userService.save(user6);
 
-		postService.save(post);
-		postService.save(post2);
-		postService.save(post3);
-		postService.save(post4);
-		postService.save(post5);
-		postService.save(post6);
-		postService.save(post7);
-		postService.save(post8);
+		postService.saveOtherUsersPost(post, mainUser);
+		postService.saveOtherUsersPost(post2, mainUser);
+		postService.saveOtherUsersPost(post3, user2);
+		postService.saveOtherUsersPost(post4, user2);
+		postService.saveOtherUsersPost(post5, user3);
+		postService.saveOtherUsersPost(post6, user3);
+		postService.saveOtherUsersPost(post7, user4);
+		postService.saveOtherUsersPost(post8, user4);
 		
-		sectionRepository.save(defaultSection1);
-		sectionRepository.save(defaultSection2);
-		sectionRepository.save(defaultSection3);
-		sectionRepository.save(defaultSection4);
-		sectionRepository.save(defaultSection5);
+		sectionService.saveSection(defaultSection5);
+		sectionService.saveSection(defaultSection1);
+		sectionService.saveSection(defaultSection3);
+		sectionService.saveSection(defaultSection2);
+		sectionService.saveSection(defaultSection4);
+
+		this.followSectionAutomated();
+		this.followUsersAutomated();
+		
 	}
 
 
