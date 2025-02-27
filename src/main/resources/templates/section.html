@@ -12,19 +12,19 @@
               <h4><em>Todas las</em> Secciones</h4>
             </div>
           </div>
-          {{#sections}}
           <div class="row">
-            <div class="col-lg-3 col-sm-6">
+            
+            {{#sections}}
+            <div class="col-lg-4 col-md-6 col-sm-12">
               <div class="item">
                 <div class="thumb">
-                  <img src="{{sectionImage}}" alt="">
+                  <img src="assets/images/popular-08.jpg" alt="">
                   <div class="hover-effect">
-                    <div class="content">
-                      <ul>
-                        <li>{{description}}</a></li>
-                        <li><a href="#"><i class="fa fa-gamepad"></i> CS-GO</a></li>
-                      </ul>
-                    </div>
+                    <ul>
+                      <li></i>{{description}}</a></li>
+                      <li><a href="#"></i> Borrar sección</a></li>
+                    </ul>
+
                   </div>
                 </div>
                 <div class="down-content">
@@ -32,15 +32,16 @@
                 </div>
               </div>
             </div>
-            
+            {{/sections}}
+
             <div class="col-lg-12">
               <div class="main-button">
-                <a href="/create_section">Añade una nueva sección</a>
+                <a href="/create_section">Añadir sección</a>
               </div>
             </div>
 
           </div>
-          {{/sections}}
+
         </div>
       </div>
     </div>

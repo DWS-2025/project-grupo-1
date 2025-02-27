@@ -27,7 +27,7 @@ public class SectionController {
     @GetMapping("/section")
     public String showSections(Model model) {
         List<Section> sections = sectionService.findAll();
-        model.addAttribute(sections);
+        model.addAttribute("sections", sections);
 
         boolean islogged = userService.isLogged(userService.getLoggedUser());
         model.addAttribute("islogged", islogged);
