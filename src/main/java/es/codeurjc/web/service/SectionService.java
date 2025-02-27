@@ -4,12 +4,14 @@ import java.lang.foreign.Linker.Option;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.Repository.SectionRepository;
 import es.codeurjc.web.Repository.UserRepository;
 
+@Service
 public class SectionService {
     @Autowired
     private UserRepository userRepository;

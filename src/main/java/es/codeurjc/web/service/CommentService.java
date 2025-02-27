@@ -2,12 +2,14 @@ package es.codeurjc.web.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post; 
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.Repository.CommentRepository;
 
+@Service
 public class CommentService {
 
     @Autowired
@@ -22,7 +24,7 @@ public class CommentService {
         comment.setOwner(currentUser);
         postToComment.getComments().add(comment);
 		currentUser.getComments().add(comment);
-		commentRepository.saveInRepository(comment);
+		commentRepository.saveInRepository(comment); // ! Esta línea creo que está duplicada
     }
 
     public void deleteCommentFromPost (Post commentedPost, Long commentId){

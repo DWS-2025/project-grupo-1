@@ -5,8 +5,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.stereotype.Component;
+
 import es.codeurjc.web.Model.Section;
 
+@Component
 public class SectionRepository {
     
     private AtomicLong nextId = new AtomicLong(1L);

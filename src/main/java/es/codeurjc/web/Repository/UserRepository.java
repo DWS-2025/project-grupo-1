@@ -1,6 +1,7 @@
 package es.codeurjc.web.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,6 +19,10 @@ public class UserRepository {
         return users.values().stream().toList();
     }
 
+    public Optional<User> findById(long id) {
+        return Optional.ofNullable(users.get(id));
+    }
+
     public void save(User user) {
         long id = user.getId();
         if (id == 0) {
@@ -25,6 +30,10 @@ public class UserRepository {
             user.setId(id);
         }
         users.put(id, user);
+    }
+
+    public void deleteById(long id) {
+        users.remove(id);
     }
     
     public User getUserById(long id) {

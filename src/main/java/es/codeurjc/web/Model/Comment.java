@@ -64,6 +64,10 @@ public class Comment {
         return this.owner;
     }
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public Post getPost() {
         return this.post;
     }
@@ -93,9 +97,7 @@ public class Comment {
         if(rate != this.postRate)
         this.setRate(rate);
     }
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+
     // Rate a post
     public void ratePost(Post post, float rating) {
         
