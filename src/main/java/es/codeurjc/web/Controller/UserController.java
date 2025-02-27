@@ -78,23 +78,15 @@ public class UserController {
             model.addAttribute("rate", user.getUserRate());
             return "profile";
         } else {
-            model.addAttribute("userName", manager.getMainUser().getName());
-            model.addAttribute("numberOfPublications", manager.getMainUser().getPosts().size());
-            model.addAttribute("numberOfFollowers", manager.getMainUser().getFollowers().size());
-            model.addAttribute("numberOfFollowings", manager.getMainUser().getFollowing().size());
-            model.addAttribute("numberOfFollowedSections", manager.getMainUser().getFollowedSections().size());
-            model.addAttribute("userDescription", manager.getMainUser().getDescription());
-            model.addAttribute("Post", manager.getMainUser().getPosts());
-            model.addAttribute("rate", manager.getMainUser().getUserRate());
-            return "profile";
+            return "login";
 
         }
 
     }
 
     @GetMapping("/editarPerfil/{userName}")
-    public String getMethodName(Model model, @PathVariable String userName) {
-        model.addAttribute("User", manager.getUser(userName));
+    public String getMethodName(Model model, @PathVariable long id) {
+        model.addAttribute("User", userService.getUserById(id));
         return "editProfile";
     }
 

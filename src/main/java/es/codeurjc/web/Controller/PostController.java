@@ -35,7 +35,7 @@ public class PostController {
 
     @PostMapping("/post/new")
     public String newPost(Model model, Post post) {
-        postService.savePost(post);
+        postService.save(post);
         return "view_post";
     }
 

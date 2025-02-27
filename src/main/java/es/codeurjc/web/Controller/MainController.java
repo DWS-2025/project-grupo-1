@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.Manager;
-import es.codeurjc.web.RankingManager;
+//import es.codeurjc.web.RankingManager;
 
 @Controller
 public class MainController {
@@ -54,8 +54,5 @@ public class MainController {
             model.addAttribute("Post", requestedPost);
             return "view_post";
         }
-
     }
-
-    
 }

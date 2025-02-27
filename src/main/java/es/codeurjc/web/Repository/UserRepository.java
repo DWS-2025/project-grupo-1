@@ -44,7 +44,5 @@ public class UserRepository {
     public User getUserById(long id) {
         return users.get(id);
     }
-
-    
     
 }

@@ -12,16 +12,13 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private List<User> contributors = new ArrayList<>();
 
-    public Post(String title, String content, String postImage, User owner){
+    public Post() {}
+
+    public Post(String title, String content, String postImage){
         this.title = title;
         this.content = content;
         this.postImage = postImage;
-        this.owner = owner;
         this.ownerName = owner.getName();
-    }
-
-    public Post(){
-        
     }
 
     public void addComment(Comment comment) {
@@ -64,6 +61,10 @@ public class Post {
         this.postImage = postImage;
     }
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public User getOwner() {
         return this.owner;
     }
@@ -94,18 +95,18 @@ public class Post {
 
     public void calculatePostAverageRating() { 
         List<Comment> comments = getComments();
-               
+
         for (Comment comment: comments) {
             averageRating += comment.getRate();
         }
         averageRating /= comments.size();
         setAverageRating(averageRating); 
     }
-   
 
-   @Override
-   public boolean equals(Object obj) {
-       return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
-   }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+    }
+
 }
