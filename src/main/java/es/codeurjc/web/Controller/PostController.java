@@ -95,16 +95,30 @@ public class PostController {
             return "error";
         }
     }
-
-    @PostMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostComment(@PathVariable long postId, @PathVariable long commentId) {
+    // this should work, but the user can delete a comment from a post that is not on that post, need to be implemented a checker
+    @GetMapping("/post/{postId}/comment/{commentId}/edit")
+    public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
         Optional<Post> op = postService.findPostById(postId);
-        if (op.isPresent()) {
-            commentService.deleteCommentFromPost(op.get(), commentId);
-            return "view_post";
+        Optional<Comment> opComment = commentService.findCommentById(commentId);
+        if (op.isPresent() && opComment.isPresent()) {
+            model.addAttribute("Post", op.get());
+            model.addAttribute("Comment", opComment.get());
+            model.addAttribute("isEditing", true);
+            return "comment_form";
         } else {
             return "post_not_found";
-        }
+        }    
+    }
+    @PostMapping("/post/{postId}/comment/{commentId}/edit")
+    public String editPostCommentInfo(@PathVariable long postId, @PathVariable long commentId, Model model, Comment updatedComment) {
+        Optional<Post> op = postService.findPostById(postId);
+        Optional<Comment> opComment = commentService.findCommentById(commentId);
+        if (op.isPresent() && opComment.isPresent()) {
+            commentService.updateComment(commentId, updatedComment);
+            return "view_post" + postId;
+        } else {
+            return "post_not_found";
+        }    
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")

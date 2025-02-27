@@ -18,7 +18,7 @@ public class CommentRepository {
         return comments.values().stream().toList();
     }
 
-    public Optional<Comment> findBy(Long id){
+    public Optional<Comment> findById(Long id){
         return Optional.ofNullable(comments.get(id));
     }
 

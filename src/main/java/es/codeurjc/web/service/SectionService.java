@@ -42,6 +42,10 @@ public class SectionService {
 
     }
 
+    public Section findById(long id) {
+        return sectionRepository.findById(id).get();
+    }
+
 
 
 }

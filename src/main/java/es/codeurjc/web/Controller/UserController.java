@@ -23,7 +23,8 @@ public class UserController {
     private User user;
     @Autowired
     private RankingManager rankingManager;
-  @GetMapping({"/home", "/"})
+
+    @GetMapping({ "/home", "/" })
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -54,7 +55,7 @@ public class UserController {
         return "discover";
     }
 
-    @GetMapping({"/login"})
+    @GetMapping({ "/login" })
     public String login(Model model) {
         return "login";
     }
@@ -87,14 +88,16 @@ public class UserController {
         }
 
     }
-      @GetMapping("/editarPerfil/{userName}")
+
+    @GetMapping("/editarPerfil/{userName}")
     public String getMethodName(Model model, @PathVariable String userName) {
         model.addAttribute("User", manager.getUser(userName));
         return "editProfile";
     }
 
     @PostMapping("/editarPerfil/{userName}")
-    public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName, @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
+    public String processUserEdit(Model model, @PathVariable String userName, @RequestParam String newUserName,
+            @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
         User user = manager.getUser(userName);
         if (user == null) {
             // Manejar el caso en que el usuario no esté inicializado

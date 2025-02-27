@@ -26,4 +26,8 @@ public class UserService {
         return userRepository.findById(id).get();
     }
 
+    public Boolean isLogged(User user){
+        return userRepository.findAll().get(0).equals(user);
+    }
+
 }
