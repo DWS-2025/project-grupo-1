@@ -24,7 +24,7 @@ public class SectionService {
     }
 
     public void saveSection(Section section){
-        sectionRepository.saveSectionInRepository(section);
+        sectionRepository.save(section);
     }
 
 
