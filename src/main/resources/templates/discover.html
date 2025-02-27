@@ -1,0 +1,115 @@
+{{>Common/header}}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="page-content">
+
+        <!-- ***** Featured Games Start ***** -->
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="featured-games header-text">
+              <div class="heading-section">
+                <h4><em>Todas las</em> categorías</h4>
+              </div>
+              <div class="owl-features owl-carousel">
+                {{#Sections}}
+                <div class="item">
+                  <div class="thumb">
+                    <img src="assets/images/{{sectionImage}}" alt="">
+                    <div class="hover-effect">
+                      <h6>{{description}}</h6>
+                    </div>
+                  </div>
+                  <h4>{{title}}<br><span>Publicaciones: </span></h4>
+                  <ul>
+                    <li><i class="fa fa-star"></i> {{averageRating}}</li>
+                    <li><i class="fa fa-eye"></i> {{numberOfPublications}}</li>
+                  </ul>
+                </div>
+                {{/Sections}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 10 users -->
+          <div class="col-lg-4 ">
+            <div class="top-users">
+              <div class="featured-games header-text">
+                <div class="heading-section">
+                  <h4><em>Top 10</em> Usuarios</h4>
+                </div>
+                {{#topUsers}}
+
+                <ol>
+                  <li>
+                    <h2> {{-index}}º</h2>
+                  </li>
+                  <li>
+                    <div class="avatar-05">
+                      <img src="assets/images/avatar-01.jpg" alt=""
+                        style="max-width: 46px; border-radius: 50%; float: left;">
+                    </div>
+                    
+                    <h5> {{userName}}</h5>
+                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
+
+                    <div class="main-border-button">
+                      <a href="/profile/{{userName}}">Ver perfil</a>
+                    </div>
+                  </li>
+                  {{/topUsers}}
+                </ol>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- TOP PUBLICACIONES -->
+        <div class="live-stream">
+          <div class="col-lg-12">
+            <div class="heading-section">
+              <h4><em>Top 10</em> publicaciones</h4>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 col-sm-6">
+              {{#topPosts}}
+              <div class="item">
+                <div class="thumb">
+                  <img src="{{postImage}}" alt="">
+                  <div class="hover-effect">
+                    <div class="content">
+                      <div class="live">
+                        <a href="/profile"> Ver perfil</a>
+                      </div>
+                      <ul>
+                        <li><a><i class="fa fa-star"></i> {{averageRating}}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="down-content">
+                  <div class="avatar">
+                    <img src="assets/images/avatar-01.jpg" alt=""
+                      style="max-width: 46px; border-radius: 50%; float: left;">
+                  </div>
+                  <span><i class="fa fa-check"></i> {{ownerName}}</span>
+                  <h4> {{title}}</h4>
+
+                </div>
+              </div>
+              {{/topPosts}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>Common/footer}}
