@@ -8,7 +8,6 @@ import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
 import jakarta.annotation.PostConstruct;
-import es.codeurjc.web.Repository.UserRepository;
 import es.codeurjc.web.Repository.CommentRepository;
 import es.codeurjc.web.Repository.SectionRepository;
 
