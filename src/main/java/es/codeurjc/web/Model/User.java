@@ -49,11 +49,6 @@ public class User {
         return new Post(title, content, postImage, this);
     }
 
-    // Add the post to the user's posts
-    public void addPost(Post post) {
-        posts.add(post);
-    }
-
     // Delete the post from the user's posts if it exists
     public void deletePost(Post post) {
         posts.remove(post);

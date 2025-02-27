@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.User;
 import es.codeurjc.web.Repository.PostRepository;
 
 @Service
@@ -19,6 +20,9 @@ public class PostService {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private UserService userService;
+
     public List<Post> findAllPosts() {
         return postRepository.findAll();
     }
@@ -28,6 +32,9 @@ public class PostService {
     }
 
     public void savePost(Post post) {
+        User currentUser = userService.getLoggedUser();
+        post.setOwner(currentUser);
+        currentUser.getPosts().add(post);
         postRepository.save(post);
     }
     
