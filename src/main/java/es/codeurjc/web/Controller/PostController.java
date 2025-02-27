@@ -106,7 +106,8 @@ public class PostController {
             model.addAttribute("isEditing", true);
             return "comment_form";
         } else {
-            return "post_not_found";
+            model.addAttribute("message", "No se ha encontrado un post o comentario con ese nombre");
+            return "post";
         }    
     }
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
@@ -132,98 +133,4 @@ public class PostController {
         }
     }
 
-
-    /*@GetMapping("/comment_form/{postTitle}")
-    public String commentForm(Model model, @PathVariable String postTitle) {
-        Post requestedPost = new Post();
-    
-        // We check if the post exists, if it doesn't we show an error page explaining
-        // the problem.
-        if (requestedPost.getTitle() == null) {
-            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
-            return "error";
-        } else {
-            model.addAttribute("isEditing", false);
-            model.addAttribute("Post", requestedPost);
-            return "/comment_form";
-        }
-
-    }
-
-    @PostMapping("/comment_form/{postTitle}")
-    public String sendComment(Model model, @RequestParam String content, @RequestParam int rating,
-            @PathVariable String postTitle) {
-        Post requestedPost = new Post();
-        for (Post post : manager.getAplicationPosts()) {
-            if (post.getTitle().equals(postTitle)) {
-                requestedPost = post;
-            }
-        }
-        // We check if the post exists, if it doesn't we show an error page explaining
-        // the problem.
-        if (requestedPost.getTitle() == null) {
-            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
-            return "error";
-        } else if (rating < 0 || rating > 5 ) {
-            model.addAttribute("errorType", "La valoración debe estar entre 0 y 5");
-            return "error";
-        } else if (content == null || content.isEmpty()) {
-            model.addAttribute("errorType", "El comentario no puede estar vacio");
-            return "error";
-        } else {
-            Comment newComment = new Comment(content, manager.getMainUser(), rating);
-            requestedPost.addComment(newComment);
-            return "redirect:/view_post/" + postTitle;
-        }
-
-    }
-
-    @GetMapping("/edit_comment/{postTitle}/{commentId}")
-    public String editCommentForm(Model model, @PathVariable String postTitle, @PathVariable int commentId) {
-        Post requestedPost = new Post();
-        Comment requestedComment = new Comment();
-
-        // Look for the post and the comment
-        for (Post post : manager.getAplicationPosts()) {
-            if (post.getTitle().equals(postTitle)) {
-                requestedPost = post;
-                // We get the comment with the id commentId, -1 because the id starts at 1 {{-index}})
-                break;
-            }
-        }
-
-        if (requestedPost.getTitle() == null) {
-            model.addAttribute("errorType", "No se ha encontrado ningún post con el título: " + postTitle);
-            return "error";
-        } 
-           
-        model.addAttribute("Post", requestedPost);
-        model.addAttribute("isEditing", true);
-        model.addAttribute("commentId", commentId);
-        model.addAttribute("content", requestedPost.getComment(commentId-1).getCommentContent());
-        return "comment_form";
-    }
-
-    @PostMapping("/edit_comment/{postTitle}/{commentId}")
-    public String updateComment(Model model, @PathVariable String postTitle, @PathVariable int commentId, @RequestParam String content, @RequestParam int rating) {
-        Post requestedPost = new Post();
-        for (Post post : manager.getAplicationPosts()) {
-            if (post.getTitle().equals(postTitle)) {
-                requestedPost = post;     
-                break;
-            }
-        }
-        if (rating < 0 || rating > 5) {
-            model.addAttribute("errorType", "La valoración debe estar entre 0 y 5");
-            return "error";
-        } else if (content == null || content.isEmpty()) {
-            model.addAttribute("errorType", "El comentario no puede estar vacio");
-            return "error";
-        } else {
-            requestedPost.getComment(commentId - 1).updateComment(content, rating);
-            model.addAttribute("Post", requestedPost);
-            return "redirect:/view_post" + postTitle;
-        }
-    }
-     */
 }
