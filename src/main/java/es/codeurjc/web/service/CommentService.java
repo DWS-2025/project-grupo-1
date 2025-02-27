@@ -1,6 +1,8 @@
 package es.codeurjc.web.service;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +30,26 @@ public class CommentService {
     }
 
     public void deleteCommentFromPost (Post commentedPost, Long commentId){
-        Comment commentToDelete = commentRepository.findBy(commentId).get();    
+        Comment commentToDelete = commentRepository.findById(commentId).get();    
         commentedPost.getComments().remove(commentToDelete);
         User owner = userService.getUserById(0);
         owner.getComments().remove(commentToDelete);
         commentRepository.deleteComment(commentToDelete);
     }
-    public void updateComment (Long commentId, String newContent, int newRating){
-        if (commentRepository.findBy(commentId).isPresent()) {
-             commentRepository.findBy(commentId).get().updateComment(newContent, newRating);
+    public void updateComment (Long commentId, Comment updatedComment){
+        if (commentRepository.findById(commentId).isPresent()) {
+             commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRate());
         } else {
             // not found
-        }       
+        }    
+  
     }
+     public Optional<Comment> findCommentById(long id) {
+        return commentRepository.findById(id);
+    }
+
+ 
+    
 
 
 
