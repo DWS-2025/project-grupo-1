@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import es.codeurjc.web.Model.User;
 
 @Component
-public class UserRepository {
+public class UserRepository { 
     
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();

@@ -30,7 +30,7 @@ public class User {
         this.userPostRate = 0;
     }
 
-    // Constructor for the user with all the information
+    /* Constructor for the user with all the information
     public User(String userName, String password, String description, String userImage, String email) {
         this.userName = userName;
         this.password = password;
@@ -42,7 +42,7 @@ public class User {
         this.followedSections = new ArrayList<>();
         this.posts = new ArrayList<>();
         this.userRate = 0;
-    }
+    }*/
 
     // Create a new post
     public Post createPost(String title, String content, String postImage) {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
+import es.codeurjc.web.service.Manager;
 
 @Component
 public class RankingManager {

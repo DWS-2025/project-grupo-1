@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.Manager;
 import es.codeurjc.web.Model.User;
+import es.codeurjc.web.service.Manager;
 import es.codeurjc.web.RankingManager;
 
 @Controller

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import es.codeurjc.web.Manager;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
+import es.codeurjc.web.service.Manager;
 import es.codeurjc.web.RankingManager;
 
 @Controller
