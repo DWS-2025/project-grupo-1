@@ -1,3 +1,4 @@
+/* 
 package es.codeurjc.web;
 
 import java.util.Comparator;
@@ -59,5 +60,4 @@ public class RankingManager {
         return comments;
     }
 }
-
-
+*/
