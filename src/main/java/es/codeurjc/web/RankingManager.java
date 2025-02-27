@@ -1,17 +1,24 @@
-/*package es.codeurjc.web;
+package es.codeurjc.web;
 
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.Manager;
+import es.codeurjc.web.service.UserService;
+import es.codeurjc.web.service.PostService;
 
 @Component
 public class RankingManager {
+    @Autowired
+    private UserService userRepository;
+    @Autowired
+    private PostService postRepository;
 
     private List<User> users;
     private List<Post> posts;
@@ -19,7 +26,7 @@ public class RankingManager {
 
     public RankingManager(){
         manager = new Manager();
-        this.users = manager.getAplicationUsers();
+        this.users = userRepository.get;
         this.posts = manager.getAplicationPosts();
     }
 
@@ -65,7 +72,5 @@ public class RankingManager {
 
     
 }
-
- */
 
 
