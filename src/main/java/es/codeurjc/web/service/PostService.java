@@ -31,7 +31,7 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public void savePost(Post post) {
+    public void save(Post post) {
         User currentUser = userService.getLoggedUser();
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);

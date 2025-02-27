@@ -12,16 +12,13 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     private List<User> contributors = new ArrayList<>();
 
-    public Post(String title, String content, String postImage, User owner){
+    public Post() {}
+
+    public Post(String title, String content, String postImage){
         this.title = title;
         this.content = content;
         this.postImage = postImage;
-        this.owner = owner;
         this.ownerName = owner.getName();
-    }
-
-    public Post(){
-        
     }
 
     public void addComment(Comment comment) {

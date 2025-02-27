@@ -22,7 +22,7 @@ public class CommentRepository {
         return Optional.ofNullable(comments.get(id));
     }
 
-    public void saveInRepository (Comment comment){
+    public void save(Comment comment){
         long id = comment.getId();
 
         if (id == 0){

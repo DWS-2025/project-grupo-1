@@ -1,12 +1,5 @@
 package es.codeurjc.web.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,19 +38,26 @@ public class Manager {
 
 
 		// Some examples of posts and comments
-		Post post = new Post();
+		Post post = new Post("HOLA", "Esto es un post de prueba", "/assets/images/stream-01.jpg");
+		Post post2 = new Post("HOLA 2", "Esto es un post de prueba 2", "/assets/images/stream-02.jpg");
+		Post post3 = new Post("HOLA 3", "Esto es un post de prueba 3", "/assets/images/stream-03.jpg");
+		Post post4 = new Post("HOLA 4", "Esto es un post de prueba 4", "/assets/images/stream-04.jpg");
+		Post post5 = new Post("HOLA 5", "Esto es un post de prueba 5", "/assets/images/stream-05.jpg");
+		Post post6 = new Post("HOLA 6", "Esto es un post de prueba 6", "/assets/images/stream-06.jpg");
+		Post post7 = new Post("HOLA 7", "Esto es un post de prueba 7", "/assets/images/stream-07.jpg");
+		Post post8 = new Post("HOLA 8", "Esto es un post de prueba 8", "/assets/images/stream-08.jpg");
 		
 		Comment comment = new Comment();
-		comment.setAuthor();
-		michel.getComments().add();
-		post.getComments().add();
-		commentRepository.save();
+		comment.setOwner(mainUser);
+		mainUser.getComments().add(comment);
+		post.getComments().add(comment);
+		commentRepository.save(comment);
 
 		Comment comment2 = new Comment();
-		comment2.setAuthor();
-		carlos.getComments().add();
-		post.getComments().add();
-		commentRepository.save();
+		comment2.setOwner(user1);
+		user1.getComments().add(comment2);
+		post.getComments().add(comment2);
+		commentRepository.save(comment2);
 
 		//Create new sections
         Section defaultSection1 = new Section("Reversing","Análisis y descompilación de binarios para entender su funcionamiento.", "reversing.png");
@@ -72,7 +72,15 @@ public class Manager {
 		userRepository.save(user3);
 		userRepository.save(user4);
 		userRepository.save(user5);
-		postRepository.save(user6);
+		userRepository.save(user6);
+		postRepository.save(post);
+		postRepository.save(post2);
+		postRepository.save(post3);
+		postRepository.save(post4);
+		postRepository.save(post5);
+		postRepository.save(post6);
+		postRepository.save(post7);
+		postRepository.save(post8);
 		sectionRepository.save(defaultSection1);
 		sectionRepository.save(defaultSection2);
 		sectionRepository.save(defaultSection3);
