@@ -64,12 +64,13 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/profile/{id}")
-    public String showProfile(Model model, @PathVariable Long id) {
-        User user = userService.getUserById(id);
+    @GetMapping("/profile/{userId}")
+    public String showProfile(Model model, @PathVariable Long userId) {
+        User user = userService.getUserById(userId);
         // We check if the user is logged in, if it is we show the user information, if
         // not we show the main user information.
         if (user != null) {
+            model.addAttribute("userId", user.getId());
             model.addAttribute("userName", user.getName());
             model.addAttribute("userImage", user.getUserImage());
             if (user.getDescription() == null) {
@@ -91,18 +92,17 @@ public class UserController {
 
     }
 
-    @GetMapping("/editarPerfil/{userName}")
-    public String getMethodName(Model model, @PathVariable long id) {
-        model.addAttribute("User", userService.getUserById(id));
+    @GetMapping("/editProfile/{userId}")
+    public String getMethodName(Model model, @PathVariable long userId) {
+        model.addAttribute("User", userService.getUserById(userId));
         return "editProfile";
     }
 
-    @PostMapping("/editarPerfil/{id}")
-    public String processUserEdit(Model model, @PathVariable long id, @RequestParam String newUserName,
-            @RequestParam String description, @RequestParam(required = false) MultipartFile userImage) {
-        User user = userService.getUserById(id);
+    @PostMapping("/editProfile/{userId}")
+    public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage) {
+        User user = userService.getUserById(userId);
         if (user == null) {
-            // Manejar el caso en que el usuario no esté inicializado
             return "error";
         }
 
@@ -113,6 +113,6 @@ public class UserController {
         if (description != null && !description.isEmpty()) {
             user.setDescription(description);
         }
-        return "redirect:/profile/" + user.getName();
+        return "redirect:/profile/" + user.getId();
     }
 }
