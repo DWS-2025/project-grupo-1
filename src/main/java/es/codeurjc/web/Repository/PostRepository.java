@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
 
-import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.Post; 
 
 @Component
 public class PostRepository {
