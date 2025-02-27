@@ -1,4 +1,4 @@
-package es.codeurjc.web.service;
+/*package es.codeurjc.web.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,7 @@ import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
 import jakarta.annotation.PostConstruct;
+
 
 @Component
 public class Manager {
@@ -55,4 +56,4 @@ public class Manager {
 		userRepository.save();
 		userRepository.save();
 	}
-}
+} */

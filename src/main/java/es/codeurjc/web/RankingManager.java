@@ -1,4 +1,4 @@
-package es.codeurjc.web;
+/*package es.codeurjc.web;
 
 import java.util.Comparator;
 import java.util.List;
@@ -66,6 +66,6 @@ public class RankingManager {
     
 }
 
-
+ */
 
 

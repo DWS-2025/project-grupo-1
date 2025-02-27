@@ -35,12 +35,12 @@ public class SectionController {
         return "section";
     }
     
-    @GetMapping("/section/create_section")
+    @GetMapping("/section/new")
     public String createSection (Model model){
         return "create_section";
     }
 
-    @PostMapping("/section/create_section")
+    @PostMapping("/section/new")
     public String createSection(Section section){
         sectionService.saveSection(section);
 

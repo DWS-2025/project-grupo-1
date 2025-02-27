@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.Manager;
+import es.codeurjc.web.service.UserService;
 import es.codeurjc.web.RankingManager;
 
 @Controller
@@ -21,15 +22,17 @@ public class UserController {
     // creates only one instance of the manager.
     private Manager manager;
     private User user;
+
     @Autowired
-    private RankingManager rankingManager;
+    private UserService userService;
+
 
     @GetMapping({ "/home", "/" })
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
-        if (manager.getMainUser() != null) {
-            model.addAttribute("userName", manager.getMainUser().getName());
+        if (userService.getLoggedUser() != null) {
+            model.addAttribute("userName", userService.getLoggedUser().getName());
         } else {
             model.addAttribute("userName", "Invitado");
         }

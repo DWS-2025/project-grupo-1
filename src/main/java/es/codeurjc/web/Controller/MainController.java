@@ -22,8 +22,7 @@ public class MainController {
     // creates only one instance of the manager.
     private Manager manager;
     private User user;
-    @Autowired
-    private RankingManager rankingManager;
+    
 
 
     @PostMapping("/procesarFormulario")
