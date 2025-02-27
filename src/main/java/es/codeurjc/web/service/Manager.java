@@ -6,17 +6,18 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
-import jakarta.annotation.PostConstruct;
 import es.codeurjc.web.Repository.CommentRepository;
 import es.codeurjc.web.Repository.SectionRepository;
 
-@Component
+
+@Service
 public class Manager {
     @Autowired
     private UserService userRepository;
