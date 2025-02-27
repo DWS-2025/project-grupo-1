@@ -101,6 +101,12 @@ public class Post {
         averageRating /= comments.size();
         setAverageRating(averageRating); 
     }
+    public void setOwnerName(String name){
+        
+        this.ownerName = name;
+
+
+    }
 
 
     @Override

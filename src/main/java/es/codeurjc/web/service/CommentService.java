@@ -22,8 +22,9 @@ public class CommentService {
 
 
     public void saveCommentInPost (Post postToComment, Comment comment){
-        User currentUser = userService.getUserById(0);
+        User currentUser = userService.getUserById(2);
         comment.setOwner(currentUser);
+        comment.setCommentOwnerName(currentUser.getName());
         postToComment.getComments().add(comment);
 		currentUser.getComments().add(comment);
 		commentRepository.save(comment); 

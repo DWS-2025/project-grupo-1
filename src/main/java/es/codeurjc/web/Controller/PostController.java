@@ -43,7 +43,10 @@ public class PostController {
     public String viewPost(Model model, @PathVariable long id) {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
+            
             model.addAttribute("post", op.get());
+            model.addAttribute("Comments", op.get().getComments());
+            
             return "view_post";
         } else {
             return "post_not_found";
@@ -77,6 +80,7 @@ public class PostController {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
+          
             return "comment_form";
         } else {
             model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
@@ -84,24 +88,24 @@ public class PostController {
         }
     }
 
-    @PostMapping("/post/{postId}/comment/new/")
-    public String newPostComment(Model model, @PathVariable long postId, Comment updatedComment) {
+    @PostMapping("/post/{postId}/comment/new")
+    public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
-            commentService.saveCommentInPost(op.get(), updatedComment);
-            return "view_post" + postId;
+            commentService.saveCommentInPost(op.get(), newComment);
+            return "redirect:/post/" + postId; 
         } else {
             model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
             return "error";
         }
     }
-    // this should work, but the user can delete a comment from a post that is not on that post, need to be implemented a checker
+    // this should work, but the user can delete a comment from a post that is not on that post (manipulating the request), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
         Optional<Post> op = postService.findPostById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
         if (op.isPresent() && opComment.isPresent()) {
-            model.addAttribute("Post", op.get());
+            model.addAttribute("post", op.get());
             model.addAttribute("Comment", opComment.get());
             model.addAttribute("isEditing", true);
             return "comment_form";
@@ -116,7 +120,7 @@ public class PostController {
         Optional<Comment> opComment = commentService.findCommentById(commentId);
         if (op.isPresent() && opComment.isPresent()) {
             commentService.updateComment(commentId, updatedComment);
-            return "view_post" + postId;
+            return "redirect:/post/" + postId;
         } else {
             return "post_not_found";
         }    

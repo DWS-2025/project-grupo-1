@@ -37,11 +37,6 @@ public class User {
         posts.remove(post);
     }
 
-    // Comment on a post 
-    public void comment(Post post, String content) {
-        post.addComment(new Comment(content, this, post, userPostRate));
-    }
-
     // Follow a user
     public void follow(User user) {
         followings.add(user);

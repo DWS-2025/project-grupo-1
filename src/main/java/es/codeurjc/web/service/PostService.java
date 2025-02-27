@@ -39,6 +39,7 @@ public class PostService {
     }
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
+        post.setOwnerName(user.getName());
         user.getPosts().add(post);
         postRepository.save(post);
     }
