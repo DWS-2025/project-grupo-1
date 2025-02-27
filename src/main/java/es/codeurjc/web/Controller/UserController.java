@@ -1,6 +1,7 @@
 package es.codeurjc.web.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import es.codeurjc.web.Manager;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.RankingManager;
 
+@Controller
 public class UserController {
     @Autowired
     // This is the manager that contains all the information of the application.
