@@ -15,7 +15,7 @@ import es.codeurjc.web.Repository.SectionRepository;
 @Component
 public class Manager {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userRepository;
     @Autowired
     private PostService postRepository;
     @Autowired
