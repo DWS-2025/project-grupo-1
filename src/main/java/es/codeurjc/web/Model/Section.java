@@ -14,12 +14,12 @@ public class Section {
     
   
     
-     public Section(String title, String description, String sectionImage, float averageRating) {
+     public Section(String title, String description, String sectionImage) {
     
           this.title = title;
           this.description = description;
           this.sectionImage = sectionImage;
-          this.averageRating = averageRating;
+          this.averageRating = 0;
           this.id = 0;
          
      }
