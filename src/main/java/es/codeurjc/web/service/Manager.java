@@ -20,7 +20,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class Manager {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userRepository;
     @Autowired
     private PostService postRepository;
     @Autowired
