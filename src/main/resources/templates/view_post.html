@@ -67,8 +67,11 @@
               <li>
                 <div class="main-border-button border-active"><a href="/post/{{id}}/comment/{{commentId}}/edit">Editar
                   </a></div>
-                  <div class="main-border-button border-radius"><a href="#">Borrar
-                  </a></div>
+                  <div class="main-border-button border-radius">
+                    <form action="/post/{{id}}/comment/{{commentId}}/delete" method="post">
+                      <input type='submit' value='Delete post'/>
+                    </form>
+                    </div>
               </li>
               <li>
                 

@@ -96,7 +96,7 @@ public class Post {
         List<Comment> comments = getComments();
 
         for (Comment comment: comments) {
-            averageRating += comment.getRate();
+            averageRating += comment.getRating();
         }
         averageRating /= comments.size();
         setAverageRating(averageRating); 

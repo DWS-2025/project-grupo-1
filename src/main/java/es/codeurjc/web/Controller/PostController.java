@@ -13,6 +13,7 @@ import es.codeurjc.web.Model.Comment;
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
+import jakarta.servlet.ServletRequest;
 
 @Controller
 public class PostController {
@@ -80,7 +81,7 @@ public class PostController {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
-          
+      
             return "comment_form";
         } else {
             model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
@@ -89,7 +90,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
+    public String newPostComment(Model model, @PathVariable long postId, Comment newComment, ServletRequest request) {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
             commentService.saveCommentInPost(op.get(), newComment);
@@ -99,7 +100,7 @@ public class PostController {
             return "error";
         }
     }
-    // this should work, but the user can delete a comment from a post that is not on that post (manipulating the request), need to be implemented a checker
+    // this should work, but the user can delete a comment from a post that is not on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
         Optional<Post> op = postService.findPostById(postId);
@@ -127,11 +128,14 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
-    public String deletePostComment(@PathVariable long postId, @PathVariable long commentId) {
+    public String deletePostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
         Optional<Post> op = postService.findPostById(postId);
-        if (op.isPresent()) {
+        Optional<Comment> opComment = commentService.findCommentById(commentId);
+        if (op.isPresent() && opComment.isPresent()) {
             commentService.deleteCommentFromPost(op.get(), commentId);
-            return "view_post";
+            model.addAttribute("post", op.get());
+            model.addAttribute("Comments", op.get().getComments());         
+            return "redirect:/post/" + postId;
         } else {
             return "post_not_found";
         }

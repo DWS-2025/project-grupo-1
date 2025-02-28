@@ -84,12 +84,12 @@ public class Comment {
         return this.likes - this.dislikes;
     }
 
-    public int getRate() {
+    public int getRating() {
         return this.rating;
     }
 
-    public void setRate(int rate) {
-        this.rating = rate;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public void updateComment(String content, int rating) {
@@ -97,7 +97,7 @@ public class Comment {
             this.setCommentContent(content);
         }
         if (rating != this.rating) {
-            this.setRate(rating);
+            this.setRating(rating);
         }
     }
 

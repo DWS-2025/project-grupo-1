@@ -11,7 +11,9 @@
                                 <h2>Comentario en el Post: {{title}}</h2>
                                 <!-- Form to create or edit a comment -->
                                 {{#isEditing}}
-                                <form action="/post/{{id}}/comment/{{id}}/edit" method="post">
+                                {{#Comment}}
+                                <form action="/post/{{id}}/comment/{{commentId}}/edit" method="post">
+                                    {{/Comment}}
                                 {{/isEditing}}
                                 {{^isEditing}}
                                 <form action="/post/{{id}}/comment/new" method="post">
