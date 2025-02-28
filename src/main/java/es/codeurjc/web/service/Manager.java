@@ -38,7 +38,7 @@ public class Manager {
 
 
 		// Some examples of posts and comments
-		Post post = new Post("HOLA", "Esto es un post de prueba", "/assets/images/stream-01.jpg");
+		Post post1 = new Post("HOLA", "Esto es un post de prueba", "/assets/images/stream-01.jpg");
 		Post post2 = new Post("HOLA 2", "Esto es un post de prueba 2", "/assets/images/stream-02.jpg");
 		Post post3 = new Post("HOLA 3", "Esto es un post de prueba 3", "/assets/images/stream-03.jpg");
 		Post post4 = new Post("HOLA 4", "Esto es un post de prueba 4", "/assets/images/stream-04.jpg");
@@ -63,7 +63,7 @@ public class Manager {
 		userService.save(user5);
 		userService.save(user6);
 
-		postService.saveOtherUsersPost(post, mainUser);
+		postService.saveOtherUsersPost(post1, mainUser);
 		postService.saveOtherUsersPost(post2, mainUser);
 		postService.saveOtherUsersPost(post3, user2);
 		postService.saveOtherUsersPost(post4, user2);
@@ -77,6 +77,14 @@ public class Manager {
 		sectionService.saveSection(defaultSection3);
 		sectionService.saveSection(defaultSection2);
 		sectionService.saveSection(defaultSection4);
+
+		defaultSection1.addPost(post1);
+		defaultSection1.addPost(post2);
+		defaultSection2.addPost(post3);
+		defaultSection2.addPost(post4);
+		defaultSection3.addPost(post5);
+		defaultSection3.addPost(post6);
+		defaultSection4.addPost(post7);
 
 		this.followSectionAutomated();
 		this.followUsersAutomated();

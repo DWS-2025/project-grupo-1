@@ -25,6 +25,7 @@ public class Section {
 
      public void addPost (Post post) {
           this.posts.add(post);
+          numberOfPublications++;
      }
 
      public void deletePost(Post post) {
@@ -73,7 +74,7 @@ public class Section {
      }
 
      public int getNumberOfPosts() {
-          return this.posts.size();
+          return this.numberOfPublications;
      }  
     
 }
