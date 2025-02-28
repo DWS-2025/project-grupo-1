@@ -86,6 +86,17 @@ public class Manager {
 		defaultSection3.addPost(post6);
 		defaultSection4.addPost(post7);
 
+		post1.addContributor(user6);
+		post1.addContributor(user2);
+		post1.addContributor(user4);
+		post2.addContributor(user1);
+		post3.addContributor(user6);
+		post4.addContributor(user6);
+		post5.addContributor(user6);
+		post6.addContributor(user3);
+		post6.addContributor(user2);
+
+
 		this.followSectionAutomated();
 		this.followUsersAutomated();
 		
