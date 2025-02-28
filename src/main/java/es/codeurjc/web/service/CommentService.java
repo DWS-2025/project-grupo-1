@@ -22,7 +22,7 @@ public class CommentService {
 
 
     public void saveCommentInPost (Post postToComment, Comment comment){
-        User currentUser = userService.getUserById(2);
+        User currentUser = userService.getLoggedUser();
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getName());
         postToComment.getComments().add(comment);
@@ -33,7 +33,7 @@ public class CommentService {
     public void deleteCommentFromPost (Post commentedPost, Long commentId){
         Comment commentToDelete = commentRepository.findById(commentId).get();    
         commentedPost.getComments().remove(commentToDelete);
-        User owner = userService.getUserById(2);
+        User owner = userService.getLoggedUser();
         owner.getComments().remove(commentToDelete);
         commentRepository.deleteComment(commentToDelete);
     }
