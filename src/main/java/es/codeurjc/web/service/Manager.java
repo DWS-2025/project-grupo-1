@@ -8,9 +8,9 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.Model.Post;
-import es.codeurjc.web.Model.Section;
-import es.codeurjc.web.Model.User;
+import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
+import es.codeurjc.web.model.User;
 import jakarta.annotation.PostConstruct;
 
 

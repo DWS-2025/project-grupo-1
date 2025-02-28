@@ -1,8 +1,8 @@
-package es.codeurjc.web.Model;
+package es.codeurjc.web.model;
 
 public class Comment {
 
-    private long commentId;
+    private long id;
     private String commentContent;
     private User owner;
     private Post post;
@@ -45,11 +45,11 @@ public class Comment {
     }
 
     public long getId() {
-        return this.commentId;
+        return this.id;
     }
 
     public void setId(long id) {
-        this.commentId = id;
+        this.id = id;
     }
 
     public String getCommentContent() {

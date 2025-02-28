@@ -7,11 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.Model.Post;
-import es.codeurjc.web.Model.Section;
-import es.codeurjc.web.Model.User;
-import es.codeurjc.web.Repository.SectionRepository;
-import es.codeurjc.web.Repository.UserRepository;
+import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.SectionRepository;
+import es.codeurjc.web.repository.UserRepository;
 
 @Service
 public class SectionService {

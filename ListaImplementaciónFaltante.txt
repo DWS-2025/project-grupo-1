@@ -1,14 +1,5 @@
-1. Back-End /profile, falta hacer dinámico las publicaciones en favoritos
-2. Todo el Back-End de hacer una nueva publicación
-3. Todo el Back-End de /discover
-4. todo el back-end de /following
-
-5. Editar el /post para que se pueda tanto publicar como editar un post en /post
-6. Página de error propia
-7. Página de view_post, donde se pueda ver la publicación de un usuario
-8. Ajustar el /profile para tener un botón de "Editar perfil", y hacer una página para editar el perfil
-
 
 Hay que poner el nombre de las carpetas en minuscula
 Poner todas las variables en minuscula
-acceder a las 
+**acceder a los modelos de las platillas como por ej : post.id**
+Eliminar plantillas que no sirvan
