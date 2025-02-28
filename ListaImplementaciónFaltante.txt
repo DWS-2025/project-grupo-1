@@ -7,6 +7,8 @@
 6. Página de error propia
 7. Página de view_post, donde se pueda ver la publicación de un usuario
 8. Ajustar el /profile para tener un botón de "Editar perfil", y hacer una página para editar el perfil
-Preguntas profesor
-Errores si un archivo o enteidad no existe, error si falla algo en un formulario... avisarlo
-Imagenes -> no pueden estar en static, hay que almacenarlas "fuera" del codigo fuente
+
+
+Hay que poner el nombre de las carpetas en minuscula
+Poner todas las variables en minuscula
+acceder a las 

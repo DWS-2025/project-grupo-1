@@ -4,7 +4,7 @@
   <div class="row header-text">
     <div class="col-lg-12">
       <div class="page-content">
-        {{#post}}
+       
 
         <!-- ***** Post Start ***** -->
         <div class="row">
@@ -14,7 +14,7 @@
                 <div class="col-lg-4">
                 </div>
                 <div class="col-lg-4 align-self-center">
-                  <h1>{{title}}</h1>
+                  <h1>{{currentPost.title}}</h1>
                 </div>
               </div>
               <div class="row">
@@ -22,14 +22,14 @@
                   <div class="clips">
                     <div class="row">
                       <div class="col-lg-12">
-                        <p>{{content}}</p>
+                        <p>{{currentPost.content}}</p>
                       </div>
 
 
                     </div>
                     <div class="col-lg-12">
                       <div class="main-button">
-                        <a href="/post/{{id}}/comment/new">Comentar</a>
+                        <a href="/post/{{currentPost.id}}/comment/new">Comentar</a>
                       </div>
                     </div>
                   </div>
@@ -47,7 +47,7 @@
           <div class="heading-section">
             <h4> Comentarios</h4>
           </div>
-          {{#Comments}}
+          {{#currentPost.comments}}
           <div class="item">
             <ul>
               <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
@@ -65,10 +65,10 @@
                 <div class="main-border-button border-no-active"><a href="#">Ver perfil</a></div>
               </li>
               <li>
-                <div class="main-border-button border-active"><a href="/post/{{id}}/comment/{{commentId}}/edit">Editar
+                <div class="main-border-button border-active"><a href="/post/{{currentPost.id}}/comment/{{commentId}}/edit">Editar
                   </a></div>
                   <div class="main-border-button border-radius">
-                    <form action="/post/{{id}}/comment/{{commentId}}/delete" method="post">
+                    <form action="/post/{{currentPost.id}}/comment/{{commentId}}/delete" method="post">
                       <input type='submit' value='Delete post'/>
                     </form>
                     </div>
@@ -78,12 +78,11 @@
               </li>
             </ul>
           </div>
-          {{/Comments}}
+          {{/currentPost.comments}}
         </div>
       </div>
       <!-- ***** Gaming Library End ***** -->
     </div>
-    {{/post}}
   </div>
 </div>
 </div>
