@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import es.codeurjc.web.Model.Section;
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 

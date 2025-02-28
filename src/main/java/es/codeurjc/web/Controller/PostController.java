@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import java.util.Optional;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import es.codeurjc.web.Model.Comment;
-import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.model.Comment;
+import es.codeurjc.web.model.Post;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import jakarta.servlet.ServletRequest;

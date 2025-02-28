@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import es.codeurjc.web.Model.Post;
-import es.codeurjc.web.Model.User;
+
+import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.Manager;
 import es.codeurjc.web.service.PostService;

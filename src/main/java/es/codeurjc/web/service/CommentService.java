@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.Model.Comment;
-import es.codeurjc.web.Model.Post; 
-import es.codeurjc.web.Model.User;
-import es.codeurjc.web.Repository.CommentRepository;
+import es.codeurjc.web.model.Comment;
+import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.CommentRepository;
 
 @Service
 public class CommentService {
