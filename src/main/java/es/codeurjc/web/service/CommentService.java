@@ -33,13 +33,13 @@ public class CommentService {
     public void deleteCommentFromPost (Post commentedPost, Long commentId){
         Comment commentToDelete = commentRepository.findById(commentId).get();    
         commentedPost.getComments().remove(commentToDelete);
-        User owner = userService.getUserById(0);
+        User owner = userService.getUserById(2);
         owner.getComments().remove(commentToDelete);
         commentRepository.deleteComment(commentToDelete);
     }
     public void updateComment (Long commentId, Comment updatedComment){
         if (commentRepository.findById(commentId).isPresent()) {
-            commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRate());
+            commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRating());
         } else {
             // not found
         }    
