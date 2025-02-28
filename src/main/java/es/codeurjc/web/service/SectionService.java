@@ -2,10 +2,12 @@ package es.codeurjc.web.service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.Repository.SectionRepository;
@@ -42,9 +44,11 @@ public class SectionService {
 
     }
 
-    public Section findById(long id) {
-        return sectionRepository.findById(id).get();
+    public Optional<Section> findById(long id) {
+        return sectionRepository.findById(id);
     }
+
+
 
 
 

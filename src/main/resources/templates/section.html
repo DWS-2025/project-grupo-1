@@ -6,6 +6,7 @@
       <div class="page-content">
 
         <h1>Descubre las secciones</h1>
+
         <div class="live-stream">
           <div class="col-lg-12">
             <div class="heading-section">
@@ -22,11 +23,13 @@
                   <div class="hover-effect">
                     <ul>
                       <li>{{description}}</li>
-                      <p>ID de la sección: {{id}}</p>
                       <li>
-                        <form action="/section/{{id}}/delete" method="post" style="display:inline;">
-                          <button type="submit" class="main-button">Borrar sección</button>
-                        </form>
+                        <a href="/section/{{id}}">Ver sección</a>
+                      </li>
+                      <li>
+                        <a><form action="/section/{{id}}/delete" method="post" style="display:inline;">
+                          <button type="submit">Borrar sección</button>
+                        </form></a>
                       </li>
                     </ul>
 
@@ -39,13 +42,13 @@
             </div>
             {{/sections}}
 
-            {{#islogged}}
+          
             <div class="col-lg-12">
               <div class="main-button">
                 <a href="/section/new">Añadir sección</a>
               </div>
             </div>
-            {{/islogged}}
+            
 
 
           </div>

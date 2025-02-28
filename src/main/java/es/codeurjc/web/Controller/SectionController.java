@@ -1,6 +1,8 @@
 package es.codeurjc.web.Controller;
 
 import java.util.List;
+import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import es.codeurjc.web.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -41,7 +44,7 @@ public class SectionController {
     }
 
     @PostMapping("/section/new")
-    public String createSection(Section section) {
+    public String createSection(Model model, Section section) {
         sectionService.saveSection(section);
 
         return "redirect:/section";
@@ -49,12 +52,23 @@ public class SectionController {
 
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
-        Section section = sectionService.findById(id);
+        Section section = sectionService.findById(id).get();
         sectionService.deleteSection(section);
-
-        return "redirect:/section";
+        
+        return "delete_section";
     }
 
+   @GetMapping("/section/{id}")
+   public String viewSection(Model model, @PathVariable long id) {
+        Optional<Section> section = sectionService.findById(id);
+
+        if (section.isPresent()){
+            model.addAttribute("posts", section.get().getPosts());
+            model.addAttribute("section", section.get());   
+        }
+
+       return "view_section";
+   }
    
     
 
