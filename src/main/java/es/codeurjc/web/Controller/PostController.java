@@ -45,8 +45,7 @@ public class PostController {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
             
-            model.addAttribute("post", op.get());
-            model.addAttribute("Comments", op.get().getComments());
+            model.addAttribute("currentPost", op.get());
             
             return "view_post";
         } else {
