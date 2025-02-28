@@ -1,6 +1,7 @@
 package es.codeurjc.web.Model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class Section {
 
@@ -10,18 +11,16 @@ public class Section {
      private String sectionImage;
      private List <Post> posts;
      private float averageRating;
-     private int numberOfPublications = 0;
-    
-  
-    
+     private int numberOfPublications;
+
      public Section(String title, String description, String sectionImage) {
-    
           this.title = title;
           this.description = description;
           this.sectionImage = sectionImage;
           this.averageRating = 0;
           this.id = 0;
-         
+          this.numberOfPublications = 0;
+          this.posts = new ArrayList<>();
      }
 
      public void addPost (Post post) {

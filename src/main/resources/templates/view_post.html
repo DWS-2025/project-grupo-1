@@ -4,7 +4,7 @@
   <div class="row header-text">
     <div class="col-lg-12">
       <div class="page-content">
-        {{#Post}}
+        {{#post}}
 
         <!-- ***** Post Start ***** -->
         <div class="row">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col-lg-12">
                       <div class="main-button">
-                        <a href="/comment_form/{{title}}">Comentar</a>
+                        <a href="/post/{{id}}/comment/new">Comentar</a>
                       </div>
                     </div>
                   </div>
@@ -56,7 +56,7 @@
                 <h4>Nombre de usuario</h4><span>{{commentOwnerName}}</span>
               </li>
               <li>
-                <h4>Valoración</h4><span><i class="fa fa-star"></i> {{postRate}}</span>
+                <h4>Valoración</h4><span><i class="fa fa-star"></i>{{rating}}</span>
               </li>
               <li>
                 <h4>Contenido</h4><span>{{commentContent}}</span>
@@ -65,7 +65,7 @@
                 <div class="main-border-button border-no-active"><a href="#">Ver perfil</a></div>
               </li>
               <li>
-                <div class="main-border-button border-active"><a href="/edit_comment/{{postTitle}}/{{-index}}">Editar
+                <div class="main-border-button border-active"><a href="/post/{{id}}/comment/{{commentId}}/edit">Editar
                   </a></div>
                   <div class="main-border-button border-radius"><a href="#">Borrar
                   </a></div>
@@ -80,7 +80,7 @@
       </div>
       <!-- ***** Gaming Library End ***** -->
     </div>
-    {{/Post}}
+    {{/post}}
   </div>
 </div>
 </div>

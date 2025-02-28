@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.codeurjc.web.Model.Post;
 import es.codeurjc.web.Model.User;
+import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.Manager;
-import es.codeurjc.web.RankingManager;
+import es.codeurjc.web.service.PostService;
+//import es.codeurjc.web.RankingManager;
+import es.codeurjc.web.service.UserService;
 
 @Controller
 public class MainController {
@@ -20,26 +23,21 @@ public class MainController {
     // This is the manager that contains all the information of the application.
     // With @Autowired we are telling Spring to inject the manager here, and it
     // creates only one instance of the manager.
-    private Manager manager;
-    private User user;
-    
-
+    private UserService userService;
+    private PostService postService;
 
     @PostMapping("/procesarFormulario")
     public String postMethodName(@RequestBody String userName, @RequestBody String password,
             @RequestBody String email) {
-
-        user.setName(userName);
-        user.setPassword(password);
-        user.setEmail(email);
-
+        User user = new User(userName, password, email);
+        userService.save(user);
         return "redirect:/profile";
     }
 
-    @GetMapping("/view_post/{postTitle}")
+    @GetMapping("/view_post/{id}")
     public String showUserPost(Model model, @PathVariable String postTitle) {
         Post requestedPost = new Post();
-        for (Post post : manager.getAplicationPosts()) {
+        for (Post post : postService.findAllPosts()) {
             if (post.getTitle().equals(postTitle)) {
                 model.addAttribute("post", post);
                 requestedPost = post;
@@ -54,8 +52,5 @@ public class MainController {
             model.addAttribute("Post", requestedPost);
             return "view_post";
         }
-
     }
-
-    
 }

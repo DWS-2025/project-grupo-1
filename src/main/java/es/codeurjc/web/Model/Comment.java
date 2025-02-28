@@ -1,39 +1,35 @@
 package es.codeurjc.web.Model;
 
 public class Comment {
-    
-    private long id;
+
+    private long commentId;
     private String commentContent;
     private User owner;
-    private String commentOwnerName;
     private Post post;
     private int likes, dislikes;
-    
-    private float postRate;
+    private String commentOwnerName;
+    private int rating;
 
-    //Constructor for the initial comments
-    public Comment(){
-        
+    //Constructor for the comments made by the user
+    public Comment(String commentContent, int rating) {
+        this.commentContent = commentContent;
+        this.likes = 0;
+        this.dislikes = 0;
+        this.rating = rating;
     }
 
-    public Comment(String commentContent, User owner, Post post, float rate) {
+    //Constructor for the initial comments
+    public Comment() {
+
+    }
+
+    public Comment(String commentContent, User owner, Post post, int rating) {
         this.commentContent = commentContent;
         this.owner = owner;
         this.post = post;
         this.likes = 0;
-        this.commentOwnerName = owner.getName();
         this.dislikes = 0;
-        this.postRate = rate;
-    }
-    
-    //Constructor for the comments made by the user
-    public Comment(String commentContent, User owner, float rate) {
-        this.commentContent = commentContent;
-        this.owner = owner;
-        this.likes = 0;
-        this.dislikes = 0;
-        this.postRate = rate;
-        this.commentOwnerName = owner.getName();
+        this.rating = rating;
     }
 
     public void like() {
@@ -43,13 +39,17 @@ public class Comment {
     public void dislike() {
         this.dislikes++;
     }
-    
+
+    public void setCommentOwnerName(String commentOwnerName) {
+        this.commentOwnerName = commentOwnerName;
+    }
+
     public long getId() {
-        return this.id;
+        return this.commentId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.commentId = id;
     }
 
     public String getCommentContent() {
@@ -75,7 +75,7 @@ public class Comment {
     public int getLikes() {
         return this.likes;
     }
-    
+
     public int getDislikes() {
         return this.dislikes;
     }
@@ -84,23 +84,23 @@ public class Comment {
         return this.likes - this.dislikes;
     }
 
-    public float getRate() {
-        return this.postRate;
-    }
-    public void setRate(float rate) {
-        this.postRate = rate;
+    public int getRate() {
+        return this.rating;
     }
 
-    public void updateComment(String content, float rate) {
-        if(!content.equals(this.commentContent))
-        this.setCommentContent(content);
-        if(rate != this.postRate)
-        this.setRate(rate);
+    public void setRate(int rate) {
+        this.rating = rate;
     }
 
-    // Rate a post
-    public void ratePost(Post post, float rating) {
-        
+    public void updateComment(String content, int rating) {
+        if (!content.equals(this.commentContent)) {
+            this.setCommentContent(content);
+        }
+        if (rating != this.rating) {
+            this.setRate(rating);
+        }
     }
+
+   
 
 }

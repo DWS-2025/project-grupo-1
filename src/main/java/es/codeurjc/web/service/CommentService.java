@@ -22,11 +22,12 @@ public class CommentService {
 
 
     public void saveCommentInPost (Post postToComment, Comment comment){
-        User currentUser = userService.getUserById(0);
+        User currentUser = userService.getUserById(2);
         comment.setOwner(currentUser);
+        comment.setCommentOwnerName(currentUser.getName());
         postToComment.getComments().add(comment);
 		currentUser.getComments().add(comment);
-		commentRepository.saveInRepository(comment); 
+		commentRepository.save(comment); 
     }
 
     public void deleteCommentFromPost (Post commentedPost, Long commentId){
@@ -38,19 +39,13 @@ public class CommentService {
     }
     public void updateComment (Long commentId, Comment updatedComment){
         if (commentRepository.findById(commentId).isPresent()) {
-             commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRate());
+            commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRate());
         } else {
             // not found
         }    
-  
     }
-     public Optional<Comment> findCommentById(long id) {
+
+    public Optional<Comment> findCommentById(long id) {
         return commentRepository.findById(id);
     }
-
- 
-    
-
-
-
 }

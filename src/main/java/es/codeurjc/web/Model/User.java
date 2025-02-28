@@ -26,42 +26,15 @@ public class User {
         this.posts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.followings = new ArrayList<>();
+        this.followedSections = new ArrayList<>();
+        this.comments = new ArrayList<>();
         this.userRate = 0;
         this.userPostRate = 0;
-    }
-
-    /* Constructor for the user with all the information
-    public User(String userName, String password, String description, String userImage, String email) {
-        this.userName = userName;
-        this.password = password;
-        this.description = description;
-        this.userImage = userImage;
-        this.email = email;
-        this.followers = new ArrayList<>();
-        this.followings = new ArrayList<>();
-        this.followedSections = new ArrayList<>();
-        this.posts = new ArrayList<>();
-        this.userRate = 0;
-    }*/
-
-    // Create a new post
-    public Post createPost(String title, String content, String postImage) {
-        return new Post(title, content, postImage, this);
-    }
-
-    // Add the post to the user's posts
-    public void addPost(Post post) {
-        posts.add(post);
     }
 
     // Delete the post from the user's posts if it exists
     public void deletePost(Post post) {
         posts.remove(post);
-    }
-
-    // Comment on a post 
-    public void comment(Post post, String content) {
-        post.addComment(new Comment(content, this, post, userPostRate));
     }
 
     // Follow a user
@@ -154,7 +127,6 @@ public class User {
         this.followedSections.add(section);
     }
 
-      
 
     public void calculateUserRate() {  
         List<Post> posts = getPosts();
