@@ -14,12 +14,7 @@ public class UserRepository {
     
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
-
-    public UserRepository() { // default user
-        User defaultUser = new User("defaultUser", "defaultPassword", "default@example.com");
-        save(defaultUser);
-    }
-
+    
     public List<User> findAll() {
         return users.values().stream().toList();
     }

@@ -1,4 +1,5 @@
 package es.codeurjc.web.Controller;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,10 @@ import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
 
 @Controller
 public class SectionController {
@@ -34,27 +34,28 @@ public class SectionController {
 
         return "section";
     }
-    
+
     @GetMapping("/section/new")
-    public String createSection (Model model){
+    public String createSection(Model model) {
         return "create_section";
     }
 
     @PostMapping("/section/new")
-    public String createSection(Section section){
+    public String createSection(Section section) {
         sectionService.saveSection(section);
 
         return "redirect:/section";
-    } 
-    
-    @PostMapping("/section/{id}/delete")
-    public String deleteSection(Model model, @RequestParam long id) {
-        Section section = sectionService.findById(id);
-
-        sectionService.deleteSection(section);
-        return "delete_section";
     }
-    
 
+    @PostMapping("/section/{id}/delete")
+    public String deleteSection(Model model, @PathVariable long id) {
+        Section section = sectionService.findById(id);
+        sectionService.deleteSection(section);
+
+        return "redirect:/section";
+    }
+
+   
+    
 
 }
