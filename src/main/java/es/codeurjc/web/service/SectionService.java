@@ -25,6 +25,10 @@ public class SectionService {
         return sectionRepository.findAll();
     }
 
+    public Optional<Section> findById(long id) {
+        return sectionRepository.findById(id);
+    }
+
     public void saveSection(Section section){
         sectionRepository.save(section);
     }
@@ -44,9 +48,7 @@ public class SectionService {
 
     }
 
-    public Optional<Section> findById(long id) {
-        return sectionRepository.findById(id);
-    }
+    
 
 
 
