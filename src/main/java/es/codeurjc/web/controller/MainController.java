@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.User;
-import es.codeurjc.web.service.CommentService;
-import es.codeurjc.web.service.Manager;
 import es.codeurjc.web.service.PostService;
 //import es.codeurjc.web.RankingManager;
 import es.codeurjc.web.service.UserService;
