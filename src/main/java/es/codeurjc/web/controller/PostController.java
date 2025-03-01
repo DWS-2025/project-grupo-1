@@ -126,7 +126,7 @@ public class PostController {
         Optional<Comment> opComment = commentService.findCommentById(commentId);
         if (op.isPresent() && opComment.isPresent()) {
             model.addAttribute("post", op.get());
-            model.addAttribute("Comment", opComment.get());
+            model.addAttribute("comment", opComment.get());
             model.addAttribute("isEditing", true);
             return "comment_form";
         } else {

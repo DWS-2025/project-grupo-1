@@ -7,20 +7,20 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="page-content header-text">
-                                {{#post}}
-                                <h2>Comentario en el Post: {{title}}</h2>
+    
+                                <h2>Comentario en el Post: {{post.title}}</h2>
                                 <!-- Form to create or edit a comment -->
                                 {{#isEditing}}
-                                <form action="/post/{{id}}/comment/{{id}}/edit" method="post">
+                                <form action="/post/{{post.id}}/comment/{{comment.id}}/edit" method="post">
                                     {{/isEditing}}
                                     {{^isEditing}}
-                                    <form action="/post/{{id}}/comment/new" method="post">
+                                    <form action="/post/{{post.id}}/comment/new" method="post">
                                         {{/isEditing}}
-                                        {{/post}}
+                                       
                                         <div class="form-group">
-                                            <label for="content">Contenido:</label>
-                                            <textarea class="form-control" id="content" name="commentContent" rows="10"
-                                                required>{{#isEditing}}{{#Comment}}{{commentContent}}{{/Comment}}{{/isEditing}}</textarea>
+                                            <ladbel for="content">Contenido:</ladbel>
+                                            <textarea class="form-control" id="content" name="content" rows="10"
+                                                required>{{#isEditing}}{{comment.content}}{{/isEditing}}</textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="rating">Valoración</label>

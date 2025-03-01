@@ -2,17 +2,11 @@ package es.codeurjc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.PostService;
-//import es.codeurjc.web.RankingManager;
 import es.codeurjc.web.service.UserService;
 
 @Controller
@@ -33,23 +27,4 @@ public class MainController {
         return "redirect:/profile";
     }
 
-    @GetMapping("/view_post/{id}")
-    public String showUserPost(Model model, @PathVariable String postTitle) {
-        Post requestedPost = new Post();
-        for (Post post : postService.findAllPosts()) {
-            if (post.getTitle().equals(postTitle)) {
-                model.addAttribute("post", post);
-                requestedPost = post;
-            }
-        }
-        // We check if the post exists, if it doesn't we show an error page explaining
-        // the problem.
-        if (requestedPost.getTitle() == null) {
-            model.addAttribute("errorType", "No se ha encontrado ningun post con el titulo :" + postTitle);
-            return "error";
-        } else {
-            model.addAttribute("Post", requestedPost);
-            return "view_post";
-        }
-    }
 }
