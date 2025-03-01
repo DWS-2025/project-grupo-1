@@ -5,7 +5,7 @@ import java.util.List;
 public class Post {
 
     private long id = 0;
-    private String title, content, postImage;
+    private String title, content;
     private User owner;
     private String ownerName;
     private float  averageRating = 0; // [0.00, 5.00]
@@ -17,7 +17,7 @@ public class Post {
     public Post(String title, String content, String postImage){
         this.title = title;
         this.content = content;
-        this.postImage = postImage;
+        // this.postImage = postImage;
     }
 
     public void addComment(Comment comment) {
@@ -52,13 +52,13 @@ public class Post {
         this.content = content;
     }
 
-    public String getPostImage() {
-        return this.postImage;
-    }
+    // public String getPostImage() {
+    //     return this.postImage;
+    // }
 
-    public void setPostImage(String postImage) {
-        this.postImage = postImage;
-    }
+    // public void setPostImage(String postImage) {
+    //     this.postImage = postImage;
+    // }
 
     public void setOwner(User owner) {
         this.owner = owner;
