@@ -39,7 +39,7 @@ public class CommentService {
     }
     public void updateComment (Long commentId, Comment updatedComment){
         if (commentRepository.findById(commentId).isPresent()) {
-            commentRepository.findById(commentId).get().updateComment(updatedComment.getCommentContent(), updatedComment.getRating());
+            commentRepository.findById(commentId).get().updateComment(updatedComment.getContent(), updatedComment.getRating());
         } else {
             // not found
         }    

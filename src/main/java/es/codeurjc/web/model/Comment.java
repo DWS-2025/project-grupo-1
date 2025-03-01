@@ -3,7 +3,7 @@ package es.codeurjc.web.model;
 public class Comment {
 
     private long id;
-    private String commentContent;
+    private String content;
     private User owner;
     private Post post;
     private int likes, dislikes;
@@ -11,8 +11,8 @@ public class Comment {
     private int rating;
 
     //Constructor for the comments made by the user
-    public Comment(String commentContent, int rating) {
-        this.commentContent = commentContent;
+    public Comment(String content, int rating) {
+        this.content = content;
         this.likes = 0;
         this.dislikes = 0;
         this.rating = rating;
@@ -23,8 +23,8 @@ public class Comment {
 
     }
 
-    public Comment(String commentContent, User owner, Post post, int rating) {
-        this.commentContent = commentContent;
+    public Comment(String content, User owner, Post post, int rating) {
+        this.content = content;
         this.owner = owner;
         this.post = post;
         this.likes = 0;
@@ -52,12 +52,12 @@ public class Comment {
         this.id = id;
     }
 
-    public String getCommentContent() {
-        return this.commentContent;
+    public String getContent() {
+        return this.content;
     }
 
-    public void setCommentContent(String commentContent) {
-        this.commentContent = commentContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public User getOwner() {
@@ -93,8 +93,8 @@ public class Comment {
     }
 
     public void updateComment(String content, int rating) {
-        if (!content.equals(this.commentContent)) {
-            this.setCommentContent(content);
+        if (!content.equals(this.content)) {
+            this.setContent(content);
         }
         if (rating != this.rating) {
             this.setRating(rating);
