@@ -2,6 +2,10 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
@@ -44,11 +50,16 @@ public class PostController {
     @GetMapping("/post/new")
     public String createPost(Model model) {
         model.addAttribute("sections", sectionService.findAll());
-        return "post-form";
+        model.addAttribute("isEditing", false);
+        return "post_form";
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage) throws IOException {
+    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {
+        for (long sectionId : sectionIds) {
+            post.addSection(sectionService.findById(sectionId).get());
+            sectionService.findById(sectionId).get().addPost(post);
+        }
         postService.save(post);
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         return "view_post";
@@ -77,9 +88,32 @@ public class PostController {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
             Post post = op.get();
+
+            List<Section> allSections = sectionService.findAll();
+            List<Section> postSections = post.getSections();
+
+            // Crear una lista de secciones con la propiedad "selected"
+            List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
+            for (Section section : allSections) {
+                Map<String, Object> sectionData = new HashMap<>();
+                sectionData.put("id", section.getId());
+                sectionData.put("title", section.getTitle());
+                
+                // Verificar si la sección está en el post usando el ID
+                boolean isSelected = postSections.stream()
+                    .anyMatch(s -> s.getId() == section.getId());
+                
+                sectionData.put("selected", isSelected);
+                sectionsWithSelection.add(sectionData);
+            }
+
+            model.addAttribute("sections", sectionsWithSelection);
+
             model.addAttribute("post", post);
             model.addAttribute("title", post.getTitle());
             model.addAttribute("content", post.getContent());
+            // model.addAttribute("sections", sectionService.findAll());
+            // model.addAttribute("postSectionIds", post.getSections().stream().map(Section::getId).toArray());
             model.addAttribute("isEditing", true);
             return "post_form";
         } else {
@@ -88,9 +122,16 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/edit")
-    public String editPost(Model model, @PathVariable long id, Post updatedPost, @RequestAttribute MultipartFile postImage) throws IOException {
+    public String editPost(Model model, @PathVariable long id, Post updatedPost, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
+            Post post = op.get();
+            post.getSections().clear();
+            for (long sectionId : sectionIds) {
+                post.addSection(sectionService.findById(sectionId).get());
+                sectionService.findById(sectionId).get().addPost(post);
+            }
+
             postService.updatePost(op.get(), updatedPost, postImage);
             return "redirect:/post/" + id;
         } else {

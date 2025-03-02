@@ -27,7 +27,7 @@
                     </div>
                     <div class="row">
                       <div class="post-img">
-                        <img src="/post/{{post.id}}/image"></img>
+                        <img src="/post/{{post.id}}/image" alt=""></img>
                       </div>
                     </div>
                     <div class="col-lg-12">
@@ -46,7 +46,7 @@
                       </div>
                     </div>
                     <div class="col-lg-12">
-                      <div class="main-button">
+                      <div class="secondary-button">
                         <a href="/post">Go back</a>
                       </div>
                     </div>
@@ -71,7 +71,7 @@
               <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
               <!--Poner la imagen de perfil del usuario-->
               <li>
-                <h4>Nombre de usuario</h4><span style="color: white;">{{commentOwnerName}}</span>
+                <h4>Nombre de usuario</h4><span style="color: white;">{{owner.name}}</span>
               </li>
               <li>
                 <h4>Valoración</h4><span><i class="fa fa-star" style="color: yellow;"></i>{{rating}}</span>
@@ -80,7 +80,7 @@
                 <h4>Contenido</h4><span style="color: white;">{{content}}</span>
               </li>
               <li>
-                <div class="main-border-button border-no-active"><a href="#">Ver perfil</a></div>
+                <div class="main-border-button border-no-active"><a href="/profile/{{owner.id}}">Ver perfil</a></div>
               </li>
               <li>
                 <div class="main-border-button border-active"><a href="/post/{{post.id}}/comment/{{id}}/edit">Editar
