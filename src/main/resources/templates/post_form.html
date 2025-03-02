@@ -1,86 +1,80 @@
-{{>header}}
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="page-content">
-        <div class="container" style="color: white">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="page-content header-text">
+{{>Common/header}}
+{{>Common/top_container}}
 
-                <h2>Crear un nuevo Post</h2>
-                <!-- Form to create a new post-->
-                <form action="/createPost" method="post" enctype="multipart/form-data">
+{{#isEditing}}
+<h2>Edit post</h2>
+<!-- Form to edit a post-->
+<form action="/post/{{post.id}}/edit" method="post" enctype="multipart/form-data">
+{{/isEditing}}
+{{^isEditing}}
+<h2>Create post</h2>
+<!-- Form to create a new post-->
+<form action="/post/new" method="post" enctype="multipart/form-data">
+  {{/isEditing}}
 
-                  <div class="form-group">
-                    <label for="title">Título:</label>
-                    <input type="text" class="form-control" id="title" name="title" required />
-                  </div>
+  <div class="form-group">
+    <label for="title">Título:</label>
+    <input type="text" class="form-control" id="title" name="title" value="{{#isEditing}}{{post.title}}{{/isEditing}}"
+      required />
+  </div>
 
-                  <div class="form-group">
-                    <label for="content">Contenido:</label>
-                    <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
-                  </div>
+  <div class="form-group">
+    <label for="content">Contenido:</label>
+    <textarea class="form-control" id="content" name="content" rows="10"
+      required>{{#isEditing}}{{post.content}}{{/isEditing}}</textarea>
+  </div>
 
-                  <div class="form-group">
-                    <label for="contributors">Colaboradores:</label>
-                    <br />
-                    <em>Nota: Escriba el nombre de usuario de los colaboradores
-                      separados por comas</em>
-                    <input type="text" class="form-control" id="contributors" name="contributors" />
-                  </div>
+  <div class="form-group">
+    <label for="contributors">Colaboradores:</label>
+    <br />
+    <em>Nota: Escriba el nombre de usuario de los colaboradores
+      separados por comas</em>
+    <input type="text" class="form-control" id="contributors" name="contributors" />
+  </div>
 
-                  <div class="form-group">
-                    <label for="postImage">Imagen para la carátula:</label>
-                    <input type="file" class="form-control file-input-small" id="postImage" name="postImage" />
-                  </div>
-                  
-                  <p class="checkbox-select">Selecciona categorías</p>
-                  
-                  <div class="form-group">
+  <div class="form-group">
+    <label for="postImage">Imagen para la carátula:</label>
+    <input type="file" class="form-control file-input-small" id="postImage" name="postImage" />
+  </div>
 
-                    <div class="options-container" id="optionsContainer">
+  <p class="checkbox-select">Selecciona categorías</p>
 
-                      <div class="option">
-                        <label><input type="checkbox" name="categories" value="1" /> Hacking
-                          Web</label>
-                      </div>
+  <div class="form-group">
 
-                      <div class="option">
-                        <label><input type="checkbox" value="2" /> Reversing</label>
-                      </div>
+    <div class="options-container" id="optionsContainer">
 
-                      <div class="option">
-                        <label><input type="checkbox" value="3" /> Explotación
-                          Linux</label>
-                      </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="4" /> Explotación
-                          Windows</label>
-                      </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="5" /> Hardware
-                          Hacking</label>
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                  <button type="submit" class="btn btn-primary">
-                    Publicar
-                  </button>
-
-                </form>
-              
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="option">
+        <label><input type="checkbox" name="categories" value="1" /> Hacking
+          Web</label>
       </div>
+
+      <div class="option">
+        <label><input type="checkbox" value="2" /> Reversing</label>
+      </div>
+
+      <div class="option">
+        <label><input type="checkbox" value="3" /> Explotación
+          Linux</label>
+      </div>
+
+      <div class="option">
+        <label><input type="checkbox" value="4" /> Explotación
+          Windows</label>
+      </div>
+
+      <div class="option">
+        <label><input type="checkbox" value="5" /> Hardware
+          Hacking</label>
+      </div>
+
     </div>
   </div>
-</div>
-{{>footer}}
+
+  <br>
+  <button type="submit" class="btn btn-primary">
+    Publicar
+  </button>
+
+</form>
+{{>Common/bottom_container}}
+{{>Common/footer}}
