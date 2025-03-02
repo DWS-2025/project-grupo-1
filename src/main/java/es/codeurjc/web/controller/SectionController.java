@@ -56,10 +56,17 @@ public class SectionController {
     }
 
     @PostMapping("/section/new")
-    public String createSection(Model model, Section section, @RequestParam MultipartFile sectionImage) throws IOException {
+    public String createSection(@RequestParam String title, @RequestParam String description, @RequestParam MultipartFile sectionImage) throws IOException {
+
+        Section section = new Section(title, description, null);
+        sectionService.saveSection(section);
+
+        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
+        String imageName = sectionImage.getOriginalFilename();
+        section.setSectionImage(imageName);
+
 
         sectionService.saveSection(section);
-        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
 
         return "redirect:/section";
     }
