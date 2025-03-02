@@ -5,7 +5,7 @@ public class Comment {
     private long id;
     private String content;
     private User owner;
-    private Post post;
+    private Post commentedPost;
     private int likes, dislikes;
     private String commentOwnerName;
     private int rating;
@@ -27,7 +27,7 @@ public class Comment {
         this.content = content;
         this.owner = owner;
         this.commentOwnerName = owner.getName();
-        this.post = post;
+        this.commentedPost = post;
         this.likes = 0;
         this.dislikes = 0;
         this.rating = rating;
@@ -69,8 +69,8 @@ public class Comment {
         this.owner = owner;
     }
 
-    public Post getPost() {
-        return this.post;
+    public Post getCommentedPost() {
+        return this.commentedPost;
     }
 
     public int getLikes() {

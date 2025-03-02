@@ -11,8 +11,10 @@
           <div class="col-lg-12">
             <div class="main-profile ">
               <div class="row">
+                <div class="col-lg-4">
+                </div>
                 <div class="col-lg-4 align-self-center">
-                  <h1>{{post.title}}</h1>
+                  <h1>{{post.title}} by {{post.ownerName}}</h1>
                 </div>
               </div>
               <div class="row">
@@ -69,21 +71,25 @@
               <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
               <!--Poner la imagen de perfil del usuario-->
               <li>
-                <h4>Nombre de usuario</h4><span>{{owner.name}}</span>
+                <h4>Nombre de usuario</h4><span style="color: white;">{{owner.name}}</span>
               </li>
               <li>
-                <h4>Valoración</h4><span><i class="fa fa-star"></i>{{rating}}</span>
+                <h4>Valoración</h4><span><i class="fa fa-star" style="color: yellow;"></i>{{rating}}</span>
               </li>
               <li>
-                <h4>Contenido</h4><span>{{content}}</span>
+                <h4>Contenido</h4><span style="color: white;">{{content}}</span>
               </li>
               <li>
                 <div class="main-border-button border-no-active"><a href="/profile/{{owner.id}}">Ver perfil</a></div>
               </li>
               <li>
-                <div class="main-border-button border-active">
-                  <a href="/post/{{postId}}/comment/{{id}}/edit">Editar</a>
-                </div>
+                <div class="main-border-button border-active"><a href="/post/{{post.id}}/comment/{{id}}/edit">Editar
+                  </a></div>
+                  <div class="main-border-button border-radius">
+                    <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
+                      <input type='submit' value='Delete post'/>
+                    </form>
+                    </div>
               </li>
               <li>
                 

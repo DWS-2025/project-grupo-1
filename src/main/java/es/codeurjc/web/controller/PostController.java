@@ -26,7 +26,6 @@ import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
-import jakarta.servlet.ServletRequest;
 
 @Controller
 public class PostController {
@@ -54,7 +53,7 @@ public class PostController {
         model.addAttribute("isEditing", false);
         return "post_form";
     }
-    
+
     @PostMapping("/post/new")
     public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {
         for (long sectionId : sectionIds) {
@@ -66,24 +65,23 @@ public class PostController {
         return "view_post";
     }
 
-
     @GetMapping("/post/{id}")
     public String viewPost(Model model, @PathVariable long id) {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
-            
+
             model.addAttribute("post", op.get());
-            
+
             return "view_post";
         } else {
             return "post_not_found";
         }
     }
 
-    @GetMapping("/post/{id}/image")	
-	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
-		return imageService.createResponseFromImage(POSTS_FOLDER, id);		
-	}
+    @GetMapping("/post/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
+        return imageService.createResponseFromImage(POSTS_FOLDER, id);
+    }
 
     @GetMapping("/post/{id}/edit")
     public String editPost(Model model, @PathVariable long id) {
@@ -157,25 +155,32 @@ public class PostController {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
-      
             return "comment_form";
+        } else {
+            model.addAttribute("message", "No se ha encontrado un post con ese nombre");
+            return "error";
+        }
+    }
+
+    @PostMapping("/post/{postId}/comment/new")
+    public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
+        Optional<Post> op = postService.findPostById(postId);
+        if (op.isPresent()) {
+            commentService.saveCommentInPost(op.get(), newComment);
+            return "redirect:/post/" + postId;
+        } else if (newComment.getContent().isEmpty()) {
+            model.addAttribute("message", "El comentario no puede estar vacio");
+            return "error";
+        } else if (newComment.getRating() > 5 || newComment.getRating() < 0) {
+            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+            return "error";
+
         } else {
             model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
             return "error";
         }
     }
 
-    @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, Comment newComment, ServletRequest request) {
-        Optional<Post> op = postService.findPostById(postId);
-        if (op.isPresent()) {
-            commentService.saveCommentInPost(op.get(), newComment);
-            return "redirect:/post/" + postId; 
-        } else {
-            model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
-            return "error";
-        }
-    }
     // this should work, but the user can delete a comment from a post that is not on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
@@ -187,20 +192,28 @@ public class PostController {
             model.addAttribute("isEditing", true);
             return "comment_form";
         } else {
-            model.addAttribute("message", "No se ha encontrado un post o comentario con ese nombre");
+            model.addAttribute("message", "No se ha encontrado el post o comentario especificado");
             return "post";
-        }    
+        }
     }
+
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostCommentInfo(@PathVariable long postId, @PathVariable long commentId, Model model, Comment updatedComment) {
         Optional<Post> op = postService.findPostById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
         if (op.isPresent() && opComment.isPresent()) {
-            commentService.updateComment(commentId, updatedComment);
+            commentService.updateComment(commentId, updatedComment, op.get());
             return "redirect:/post/" + postId;
+        } else if (updatedComment.getContent().isEmpty()) {
+            model.addAttribute("message", "El comentario no puede estar vacio");
+            return "error";
+        } else if (updatedComment.getRating() > 5 || updatedComment.getRating() < 0) {
+            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+            return "error";
+
         } else {
             return "post_not_found";
-        }    
+        }
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
@@ -210,10 +223,10 @@ public class PostController {
         if (op.isPresent() && opComment.isPresent()) {
             commentService.deleteCommentFromPost(op.get(), commentId);
             model.addAttribute("post", op.get());
-            model.addAttribute("Comments", op.get().getComments());         
+            model.addAttribute("Comments", op.get().getComments());
             return "redirect:/post/" + postId;
         } else {
-            return "post_not_found";
+            return "No se ha encontrado el comentario a borrar o el post especificado";
         }
     }
 
