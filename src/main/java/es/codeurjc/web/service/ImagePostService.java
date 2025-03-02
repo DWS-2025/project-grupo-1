@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class ImageService {
+public class ImagePostService {
     
     private static final Path IMAGES_FOLDER = Paths.get(System.getProperty("user.dir"), "images");
 

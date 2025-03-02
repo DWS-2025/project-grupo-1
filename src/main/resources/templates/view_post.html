@@ -24,12 +24,30 @@
                       <div class="col-lg-12">
                         <p>{{post.content}}</p>
                       </div>
-
-
+                    </div>
+                    <div class="row">
+                      <div class="post-img">
+                        <img src="/post/{{post.id}}/image"></img>
+                      </div>
                     </div>
                     <div class="col-lg-12">
                       <div class="main-button">
-                        <a href="/post/{{post.id}}/comment/new">Comentar</a>
+                        <a href="/post/{{post.id}}/comment/new">Comment</a>
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="main-button">
+                        <a href="/post/{{post.id}}/edit">Edit</a>
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="main-button">
+                        <a href="/post/{{post.id}}/delete">Delete</a>
+                      </div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="main-button">
+                        <a href="/post">Go back</a>
                       </div>
                     </div>
                   </div>

@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.service.CommentService;
-import es.codeurjc.web.service.ImageService;
+import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import jakarta.servlet.ServletRequest;
@@ -32,14 +32,14 @@ public class PostController {
     @Autowired
     private CommentService commentService;
     @Autowired
-    private ImageService imageService;
+    private ImagePostService imageService;
     @Autowired
     private SectionService sectionService;
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
         model.addAttribute("posts", postService.findAllPosts());
-        return "posts";
+        return "post_list";
     }
 
     @GetMapping("/post/new")
@@ -71,7 +71,6 @@ public class PostController {
 
     @GetMapping("/post/{id}/image")	
 	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
-
 		return imageService.createResponseFromImage(POSTS_FOLDER, id);		
 	}
 
@@ -83,18 +82,30 @@ public class PostController {
             model.addAttribute("post", post);
             model.addAttribute("title", post.getTitle());
             model.addAttribute("content", post.getContent());
-            return "post-form";
+            model.addAttribute("isEditing", true);
+            return "post_form";
         } else {
             return "post_not_found";
         }
     }
 
-    @PostMapping("/post/{id}/delete")
+    @PostMapping("/post/{id}/edit")
+    public String editPost(Model model, @PathVariable long id, Post updatedPost, @RequestAttribute MultipartFile postImage) throws IOException {
+        Optional<Post> op = postService.findPostById(id);
+        if (op.isPresent()) {
+            postService.updatePost(op.get(), updatedPost, postImage);
+            return "redirect:/post/" + id;
+        } else {
+            return "post_not_found";
+        }
+    }
+
+    @GetMapping("/post/{id}/delete")
     public String deletePost(@PathVariable long id) {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
             postService.deletePost(op.get());
-            return "posts";
+            return "redirect:/post";
         } else {
             return "post_not_found";
         }
