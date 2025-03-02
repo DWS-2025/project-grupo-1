@@ -4,14 +4,20 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-content">
+                
                 {{#section}}
 
-                <div class="main-banner">
+                <div class="item">
                     <div class="row">
-                        <div class="col-lg-7">
+                        <div class="col-lg-6">
                             <div class="header-text">
-                                <h4><em>{{title}}</em></h4>
-                                <h6>{{description}}</h6>
+                                <h1 style="text-align: center;"><em>{{title}}</em></h1> <br>
+                                <p style="text-align: justify;">{{description}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="contenedor">
+                                <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded">
                             </div>
                         </div>
                     </div>
@@ -24,22 +30,22 @@
                                 <h4><em>{{numberOfPublications}}</em> Publicaciones</h4>
                             </div>
                             <div class="row">
-                                {{#posts}}
+                                {{#section.posts}}
                                 <div class="col-lg-12">
                                     <div class="item">
-                                        <img src="assets/images/popular-01.jpg" alt="">
-                                        <h4>{{title}}<br><span>{{owner}} </span></h4>
-                                        <p>
+                                        <img src="/post/{{id}}/image" alt="">
+                                        <h4>{{title}}<br><span>Publicado por: <a href="/profile/{{id}}">{{owner.userName}}</a></span></h4>
+                                        <span>Colaboradores: 
                                             {{#contributors}}
                                             <a href="/profile/{{id}}">{{userName}}</a>
                                             {{/contributors}}
-                                        </p>
+                                        </span>
                                         <ul>
                                             <li><i class="fa fa-star"></i> {{averageRating}}</li>
                                         </ul>
                                     </div>
                                 </div>
-                                {{/posts}}
+                                {{/section.posts}}
                                 <div class="col-lg-12">
                                     <div class="main-button">
                                         <a href="/section">Volver</a>
