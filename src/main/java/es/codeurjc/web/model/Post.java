@@ -1,15 +1,16 @@
-package es.codeurjc.web.Model;
+package es.codeurjc.web.model;
 
 import java.util.ArrayList;
 import java.util.List;
 public class Post {
 
     private long id = 0;
-    private String title, content, postImage;
+    private String title, content;
     private User owner;
     private String ownerName;
     private float  averageRating = 0; // [0.00, 5.00]
     private List<Comment> comments = new ArrayList<>();
+    private List<Section> sections = new ArrayList<>();
     private List<User> contributors = new ArrayList<>();
 
     public Post() {}
@@ -17,11 +18,18 @@ public class Post {
     public Post(String title, String content, String postImage){
         this.title = title;
         this.content = content;
-        this.postImage = postImage;
     }
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
+    }
+
+    public Comment getComment(int index) {
+        return this.comments.get(index);
+    }
+
+    public void addSection(Section section) {
+        this.sections.add(section);
     }
 
     public void addContributor(User user) {
@@ -52,14 +60,6 @@ public class Post {
         this.content = content;
     }
 
-    public String getPostImage() {
-        return this.postImage;
-    }
-
-    public void setPostImage(String postImage) {
-        this.postImage = postImage;
-    }
-
     public void setOwner(User owner) {
         this.owner = owner;
     }
@@ -88,18 +88,19 @@ public class Post {
         return this.contributors;
     }
 
-    public Comment getComment(int index){
-        return this.comments.get(index);
+    public List<Section> getSections() {
+        return this.sections;
     }
 
     public void calculatePostAverageRating() { 
+        setAverageRating(0f);
         List<Comment> comments = getComments();
 
         for (Comment comment: comments) {
-            averageRating += comment.getRate();
+            averageRating += comment.getRating();
         }
         averageRating /= comments.size();
-        setAverageRating(averageRating); 
+        setAverageRating(Math.round( averageRating * 10) / 10.0f); 
     }
     public void setOwnerName(String name){
         

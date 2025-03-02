@@ -1,4 +1,4 @@
-package es.codeurjc.web.Model;
+package es.codeurjc.web.model;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -16,7 +16,6 @@ public class Section {
      public Section(String title, String description, String sectionImage) {
           this.title = title;
           this.description = description;
-          this.sectionImage = sectionImage;
           this.averageRating = 0;
           this.id = 0;
           this.numberOfPublications = 0;
@@ -25,6 +24,7 @@ public class Section {
 
      public void addPost (Post post) {
           this.posts.add(post);
+          numberOfPublications++;
      }
 
      public void deletePost(Post post) {
@@ -56,13 +56,13 @@ public class Section {
           this.description = description;
      }
     
-     public String getSectionImage() {
+    public String getSectionImage() {
           return this.sectionImage;
-     }
+     }  
 
-     public void setSectionImage(String sectionImage) {
+    public void setSectionImage(String sectionImage) {
           this.sectionImage = sectionImage;
-     }
+     } 
      
      public List<Post> getPosts() {
           return this.posts;
@@ -73,7 +73,7 @@ public class Section {
      }
 
      public int getNumberOfPosts() {
-          return this.posts.size();
+          return this.numberOfPublications;
      }  
     
 }

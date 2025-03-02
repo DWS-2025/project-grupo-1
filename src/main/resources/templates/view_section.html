@@ -1,0 +1,70 @@
+{{>Common/header}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                
+                {{#section}}
+
+                <div class="item">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="header-text">
+                                <h1 style="text-align: center;"><em>{{title}}</em></h1> <br>
+                                <p style="text-align: justify;">{{description}}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="contenedor">
+                                <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="most-popular">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="heading-section">
+                                <h4><em>{{numberOfPublications}}</em> Publicaciones</h4>
+                            </div>
+                            <div class="row">
+                                {{#section.posts}}
+                                <div class="col-lg-12">
+                                    <div class="item">
+                                        <img src="/post/{{id}}/image" alt="">
+                                        <h4>{{title}}<br><span>Publicado por: <a href="/profile/{{id}}">{{owner.userName}}</a></span></h4>
+                                        <span>Colaboradores: 
+                                            {{#contributors}}
+                                            <a href="/profile/{{id}}">{{userName}}</a>
+                                            {{/contributors}}
+                                        </span>
+                                        <ul>
+                                            <li><i class="fa fa-star"></i> {{averageRating}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {{/section.posts}}
+                                <div class="col-lg-12">
+                                    <div class="main-button">
+                                        <a href="/section">Volver</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{/section}}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{{>Common/footer}}

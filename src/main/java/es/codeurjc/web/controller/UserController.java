@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.Model.User;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class UserController {
-    // This is the manager that contains all the information of the application.
-    // With @Autowired we are telling Spring to inject the manager here, and it
-    // creates only one instance of the manager.
-/*   @Autowired
-    private RankingManager ranking;*/
+  
+    @Autowired
+    private RankingService rankingService;
 
     @Autowired
     private UserService userService;
@@ -45,18 +44,18 @@ public class UserController {
 
     @GetMapping("/following")
     public String following(Model model) {
-        model.addAttribute("Sections", userService.getLoggedUser().getFollowedSections());
-//        model.addAttribute("topUsers", ranking.topUsersFollowed(userService.getLoggedUser()));
-//        model.addAttribute("topPosts", ranking.topPostsFollowed(userService.getLoggedUser()));
+        model.addAttribute("sections", userService.getLoggedUser().getFollowedSections());
+        model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser()));
+        model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser()));
 
         return "following";
     }
 
     @GetMapping("/discover")
     public String discover(Model model) {
-        model.addAttribute("Sections", sectionService.findAll());
-//        model.addAttribute("topUsers", ranking.topUsersApp());
-//        model.addAttribute("topPosts", ranking.topPostsApp());
+        model.addAttribute("sections", sectionService.findAll());
+        model.addAttribute("topUsers", rankingService.topUsersApp());
+        model.addAttribute("topPosts", rankingService.topPostsApp());
 
         return "discover";
     }
@@ -86,6 +85,7 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowing().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("rate", user.getUserRate());
+            model.addAttribute("posts",user.getPosts());
             return "profile";
         } else {
             return "login";

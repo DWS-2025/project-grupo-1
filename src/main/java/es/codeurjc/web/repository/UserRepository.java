@@ -1,4 +1,4 @@
-package es.codeurjc.web.Repository;
+package es.codeurjc.web.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,19 +7,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
 
-import es.codeurjc.web.Model.User;
+import es.codeurjc.web.model.User;
 
 @Component
 public class UserRepository { 
     
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
-
-    public UserRepository() { // default user
-        User defaultUser = new User("defaultUser", "defaultPassword", "default@example.com");
-        save(defaultUser);
-    }
-
+    
     public List<User> findAll() {
         return users.values().stream().toList();
     }

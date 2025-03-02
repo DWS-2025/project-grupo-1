@@ -1,0 +1,24 @@
+{{> Common/header }}
+{{> Common/top_container }}
+	<h1>Posts list</h1>
+
+	<br>
+	{{#posts}}
+	<a href="/post/{{id}}">{{title}}</a>
+	<br>
+	{{/posts}}
+	
+	{{^posts}}
+	<p>No posts yet.</p>
+	{{/posts}}
+
+	<br>
+	<div class="main-button">
+		<a href="/post/new">New Post</a>
+	</div>
+	<br>
+	<div class="main-button">
+		<a href="/home">Go home</a>
+	</div>
+{{> Common/bottom_container }}
+{{> Common/footer }}

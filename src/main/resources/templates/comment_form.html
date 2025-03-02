@@ -7,41 +7,46 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="page-content header-text">
-                                {{#post}}                                
-                                <h2>Comentario en el Post: {{title}}</h2>
+    
+                                <h2>Comentario en el Post: {{post.title}}</h2>
                                 <!-- Form to create or edit a comment -->
                                 {{#isEditing}}
-                                <form action="/post/{{id}}/comment/{{id}}/edit" method="post">
-                                {{/isEditing}}
-                                {{^isEditing}}
-                                <form action="/post/{{id}}/comment/new" method="post">
-                                {{/isEditing}}
-                                {{/post}}
-                                    <div class="form-group">
-                                        <label for="content">Contenido:</label>
-                                        <textarea class="form-control" id="content" name="commentContent" rows="10" required>{{#isEditing}}{{#Comment}}{{commentContent}}{{/Comment}}{{/isEditing}}</textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="rating">Valoración</label>
-                                        <div class="star-rating">
-                                            <input type="radio" id="star5" name="rating" value="5" /><label for="star5"
-                                                title="5 stars"><i class="fa-star"></i></label>
-                                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4"
-                                                title="4 stars"><i class="fa-star"></i></label>
-                                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3"
-                                                title="3 stars"><i class="fa-star"></i></label>
-                                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2"
-                                                title="2 stars"><i class="fa-star"></i></label>
-                                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1"
-                                                title="1 star"><i class="fa-star"></i></label>
+                                <form action="/post/{{post.id}}/comment/{{comment.id}}/edit" method="post">
+                                    {{/isEditing}}
+                                    {{^isEditing}}
+                                    <form action="/post/{{post.id}}/comment/new" method="post">
+                                        {{/isEditing}}
+                                       
+                                        <div class="form-group">
+                                            <ladbel for="content">Contenido:</ladbel>
+                                            <textarea class="form-control" id="content" name="content" rows="10"
+                                                required>{{#isEditing}}{{comment.content}}{{/isEditing}}</textarea>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="rating">Valoración</label>
+                                            <div class="star-rating">
+                                                <input type="radio" id="star5" name="rating" value="5" /><label
+                                                    for="star5" title="5 stars"><i class="fa-star"></i></label>
+                                                <input type="radio" id="star4" name="rating" value="4" /><label
+                                                    for="star4" title="4 stars"><i class="fa-star"></i></label>
+                                                <input type="radio" id="star3" name="rating" value="3" /><label
+                                                    for="star3" title="3 stars"><i class="fa-star"></i></label>
+                                                <input type="radio" id="star2" name="rating" value="2" /><label
+                                                    for="star2" title="2 stars"><i class="fa-star"></i></label>
+                                                <input type="radio" id="star1" name="rating" value="1" /><label
+                                                    for="star1" title="1 star"><i class="fa-star"></i></label>
+                                            </div>
+                                        </div>
                             </div>
-                                        </div>
-                        <button type="submit" class="btn btn-primary">{{#isEditing}}Actualizar Comentario{{/isEditing}}{{^isEditing}}Comentar{{/isEditing}}  </button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{#isEditing}}Actualizar
+                            Comentario{{/isEditing}}{{^isEditing}}Comentar{{/isEditing}} </button>
                         </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            {{>Common/footer}}
+{{>Common/footer}}

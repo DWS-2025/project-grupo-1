@@ -1,18 +1,18 @@
-package es.codeurjc.web.Model;
+package es.codeurjc.web.model;
 
 public class Comment {
 
-    private long commentId;
-    private String commentContent;
+    private long id;
+    private String content;
     private User owner;
-    private Post post;
+    private Post commentedPost;
     private int likes, dislikes;
     private String commentOwnerName;
     private int rating;
 
     //Constructor for the comments made by the user
-    public Comment(String commentContent, int rating) {
-        this.commentContent = commentContent;
+    public Comment(String content, int rating) {
+        this.content = content;
         this.likes = 0;
         this.dislikes = 0;
         this.rating = rating;
@@ -23,10 +23,10 @@ public class Comment {
 
     }
 
-    public Comment(String commentContent, User owner, Post post, int rating) {
-        this.commentContent = commentContent;
+    public Comment(String content, User owner, Post post, int rating) {
+        this.content = content;
         this.owner = owner;
-        this.post = post;
+        this.commentedPost = post;
         this.likes = 0;
         this.dislikes = 0;
         this.rating = rating;
@@ -45,19 +45,19 @@ public class Comment {
     }
 
     public long getId() {
-        return this.commentId;
+        return this.id;
     }
 
     public void setId(long id) {
-        this.commentId = id;
+        this.id = id;
     }
 
-    public String getCommentContent() {
-        return this.commentContent;
+    public String getContent() {
+        return this.content;
     }
 
-    public void setCommentContent(String commentContent) {
-        this.commentContent = commentContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public User getOwner() {
@@ -68,8 +68,8 @@ public class Comment {
         this.owner = owner;
     }
 
-    public Post getPost() {
-        return this.post;
+    public Post getCommentedPost() {
+        return this.commentedPost;
     }
 
     public int getLikes() {
@@ -84,20 +84,20 @@ public class Comment {
         return this.likes - this.dislikes;
     }
 
-    public int getRate() {
+    public int getRating() {
         return this.rating;
     }
 
-    public void setRate(int rate) {
-        this.rating = rate;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public void updateComment(String content, int rating) {
-        if (!content.equals(this.commentContent)) {
-            this.setCommentContent(content);
+        if (!content.equals(this.content)) {
+            this.setContent(content);
         }
         if (rating != this.rating) {
-            this.setRate(rating);
+            this.setRating(rating);
         }
     }
 

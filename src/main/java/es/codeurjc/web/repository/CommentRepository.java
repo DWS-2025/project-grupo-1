@@ -1,4 +1,4 @@
-package es.codeurjc.web.Repository;
+package es.codeurjc.web.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
 
-import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.model.Comment;
 
 @Component
 public class CommentRepository {

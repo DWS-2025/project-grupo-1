@@ -1,15 +1,17 @@
 package es.codeurjc.web.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.Model.Comment;
-import es.codeurjc.web.Model.Post;
-import es.codeurjc.web.Model.User;
-import es.codeurjc.web.Repository.PostRepository;
+import es.codeurjc.web.model.Comment;
+import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.PostRepository;
 
 @Service
 public class PostService {
@@ -22,6 +24,9 @@ public class PostService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImagePostService imageService;
 
     public List<Post> findAllPosts() {
         return postRepository.findAll();
@@ -52,10 +57,12 @@ public class PostService {
         post.getComments().clear();
     }
 
-    public void updatePost(Post post, Post updatedPost) {
+    public void updatePost(Post post, Post updatedPost, MultipartFile postImage) throws IOException {
         post.setTitle(updatedPost.getTitle());
         post.setContent(updatedPost.getContent());
-        post.setPostImage(updatedPost.getPostImage());
+        imageService.deleteImage("posts", post.getId());
+        imageService.saveImage("posts", post.getId(), postImage);
+        // post.setPostImage(updatedPost.getPostImage());
         postRepository.save(post);
     }
     public CommentService getCommentService() {

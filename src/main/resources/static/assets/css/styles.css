@@ -1,0 +1,18 @@
+
+.section-image {
+    width: 356px;
+    height: 212.6px;
+    object-fit: cover; /* Asegura que la imagen se ajuste al contenedor sin distorsionarse */
+}
+
+.contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .contenedor img {
+    width: 100%;  /* Asegura que la imagen ocupe todo el espacio */
+    height: auto; /* Mantiene la proporción */
+    object-fit: cover; /* Ajusta la imagen sin deformarla */
+  }
