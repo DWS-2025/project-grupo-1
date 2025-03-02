@@ -1,24 +1,49 @@
 {{> Common/header }}
 {{> Common/top_container }}
-	<h1>Posts list</h1>
+<div class="most-popular">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="heading-section">
+				<h4><em>Todos los</em> Posts</h4>
+			</div>
+			{{#posts}}
+			<div class="col-lg-12">
+				<div class="item">
+					<h4>
+						<a href="/post/{{id}}">{{title}}</a>
+						<br>
+						<span>Publicado por: <a href="/profile/{{owner.id}}">{{owner.userName}}</a></span>
+					</h4>
+					<span>Colaboradores:
+						{{#contributors}}
+						<a href="/profile/{{id}}">{{userName}}</a>
+						{{/contributors}}
+					</span>
+					<ul>
+						<li><i class="fa fa-star"></i> {{averageRating}}</li>
+					</ul>
+				</div>
+			</div>
+			{{/posts}}
+			
+			{{^posts}}
+			<p>No hay posts. Animaté y sé el primero :)</p>
+			{{/posts}}
 
-	<br>
-	{{#posts}}
-	<a href="/post/{{id}}">{{title}}</a>
-	<br>
-	{{/posts}}
-	
-	{{^posts}}
-	<p>No posts yet.</p>
-	{{/posts}}
+			<br>
+			<div class="col-lg-12">
+				<div class="main-button">
+					<a href="/post/new">New Post</a>
+				</div>
+			</div>
 
-	<br>
-	<div class="main-button">
-		<a href="/post/new">New Post</a>
+			<div class="col-lg-12">
+				<div class="secondary-button">
+					<a href="/home">Go home</a>
+				</div>
+			</div>
+		</div>
 	</div>
-	<br>
-	<div class="main-button">
-		<a href="/home">Go home</a>
-	</div>
+</div>
 {{> Common/bottom_container }}
 {{> Common/footer }}

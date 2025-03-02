@@ -26,6 +26,7 @@ public class Comment {
     public Comment(String content, User owner, Post post, int rating) {
         this.content = content;
         this.owner = owner;
+        this.commentOwnerName = owner.getName();
         this.post = post;
         this.likes = 0;
         this.dislikes = 0;
@@ -78,6 +79,10 @@ public class Comment {
 
     public int getDislikes() {
         return this.dislikes;
+    }
+
+    public String getOwnerName() {
+        return this.commentOwnerName;
     }
 
     public int getTotalLikes() {

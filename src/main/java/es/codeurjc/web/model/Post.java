@@ -32,6 +32,14 @@ public class Post {
         this.sections.add(section);
     }
 
+    public List<Long> getSectionsIds() {
+        List<Long> sectionsIds = new ArrayList<>();
+        for (Section section : sections) {
+            sectionsIds.add(section.getId());
+        }
+        return sectionsIds;
+    }
+
     public void addContributor(User user) {
         this.contributors.add(user);
     }
@@ -101,13 +109,10 @@ public class Post {
         averageRating /= comments.size();
         setAverageRating(averageRating); 
     }
+
     public void setOwnerName(String name){
-        
         this.ownerName = name;
-
-
     }
-
 
     @Override
     public boolean equals(Object obj) {
