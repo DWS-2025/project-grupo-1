@@ -49,11 +49,11 @@ public class Manager {
 	
 
 		//Create new sections
-        Section defaultSection1 = new Section("Reversing","Análisis y descompilación de binarios para entender su funcionamiento.", "reversing.png");
-        Section defaultSection2 = new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.","hacking_web.png");
-        Section defaultSection3 = new Section("Escalada de Privilegios","Métodos para obtener acceso administrativo en Windows.", "escalada_windows.jpeg");
-        Section defaultSection4 = new Section("Hardware Hacking","Explotación de vulnerabilidades a nivel de hardware.", "hardware.jpeg");
-        Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.","wifi.jpg");
+        Section defaultSection1 = new Section("Reversing","Análisis y descompilación de binarios para entender su funcionamiento.", "image-1.jpeg");
+        Section defaultSection2 = new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.","image-2.jpeg");
+        Section defaultSection3 = new Section("Escalada de Privilegios","Métodos para obtener acceso administrativo en Windows.", "image-3.jpeg");
+        Section defaultSection4 = new Section("Hardware Hacking","Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
+        Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.","image-5.jpeg");
 
 		userService.save(mainUser);
 		userService.save(user1);
@@ -72,11 +72,11 @@ public class Manager {
 		postService.saveOtherUsersPost(post7, user4);
 		postService.saveOtherUsersPost(post8, user4);
 		
-		sectionService.saveSection(defaultSection5);
 		sectionService.saveSection(defaultSection1);
-		sectionService.saveSection(defaultSection3);
 		sectionService.saveSection(defaultSection2);
+		sectionService.saveSection(defaultSection3);
 		sectionService.saveSection(defaultSection4);
+		sectionService.saveSection(defaultSection5);
 
 		defaultSection1.addPost(post1);
 		defaultSection1.addPost(post2);

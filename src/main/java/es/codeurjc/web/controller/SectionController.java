@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import es.codeurjc.web.model.Section;
+import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -65,7 +66,6 @@ public class SectionController {
         String imageName = sectionImage.getOriginalFilename();
         section.setSectionImage(imageName);
 
-
         sectionService.saveSection(section);
 
         return "redirect:/section";
@@ -89,7 +89,6 @@ public class SectionController {
         Optional<Section> section = sectionService.findById(id);
 
         if (section.isPresent()) {
-            model.addAttribute("posts", section.get().getPosts());
             model.addAttribute("section", section.get());
         }
 
