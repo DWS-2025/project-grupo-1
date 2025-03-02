@@ -4,3 +4,33 @@
     height: 212.6px;
     object-fit: cover; /* Asegura que la imagen se ajuste al contenedor sin distorsionarse */
 }
+
+.section-images {
+    width: 100%; /* Ajusta el ancho al 100% del contenedor */
+    max-width: 500px; /* Tamaño máximo de la imagen */
+    height: auto;
+    object-fit: cover; /* Asegura que la imagen se ajuste al contenedor sin distorsionarse */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+.section-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    justify-content: space-between; /* Espacio entre texto e imagen */
+    width: 100%;
+    padding: 20px;
+}
+
+.text-container {
+    width: 50%;
+    color: white; /* Ajusta el color según tu diseño */
+    padding-right: 20px;
+}
+
+.image-container {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end; /* Alinea la imagen a la derecha */
+}
+
