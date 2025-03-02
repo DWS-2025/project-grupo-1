@@ -1,4 +1,4 @@
-package es.codeurjc.web.controller;
+package es.codeurjc.web.Controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import es.codeurjc.web.model.Section;
-import es.codeurjc.web.model.User;
+import es.codeurjc.web.Model.Section;
+import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -78,7 +78,7 @@ public class SectionController {
 
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
-        es.codeurjc.web.model.Section section = sectionService.findById(id).get();
+        Section section = sectionService.findById(id).get();
         sectionService.deleteSection(section);
 
         return "delete_section";

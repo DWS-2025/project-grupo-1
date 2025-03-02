@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.model.Comment;
-import es.codeurjc.web.model.Post;
-import es.codeurjc.web.model.User;
+import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.User;
 
 @Service
 public class RankingService {

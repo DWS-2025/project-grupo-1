@@ -1,4 +1,4 @@
-package es.codeurjc.web.repository;
+package es.codeurjc.web.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
 
-import es.codeurjc.web.model.Post; 
+import es.codeurjc.web.Model.Post; 
 
 @Component
 public class PostRepository {

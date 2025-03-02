@@ -1,4 +1,4 @@
-package es.codeurjc.web.controller;
+package es.codeurjc.web.Controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.model.Comment;
-import es.codeurjc.web.model.Post;
-import es.codeurjc.web.model.Section;
+import es.codeurjc.web.Model.Comment;
+import es.codeurjc.web.Model.Post;
+import es.codeurjc.web.Model.Section;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
