@@ -99,8 +99,7 @@ public class PostController {
     public String newPostCommentForm(Model model, @PathVariable long postId) {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
-            model.addAttribute("post", op.get());
-      
+            model.addAttribute("post", op.get());      
             return "comment_form";
         } else {
             model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
@@ -139,7 +138,7 @@ public class PostController {
         Optional<Post> op = postService.findPostById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
         if (op.isPresent() && opComment.isPresent()) {
-            commentService.updateComment(commentId, updatedComment);
+            commentService.updateComment(commentId, updatedComment, op.get());
             return "redirect:/post/" + postId;
         } else {
             return "post_not_found";

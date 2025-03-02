@@ -31,17 +31,18 @@
             </div>
           </div>
 
-          <!-- Top 10 users -->
+          <!-- Top 5 users -->
           <div class="col-lg-4 ">
             <div class="top-users">
               <div class="featured-games header-text">
                 <div class="heading-section">
-                  <h4><em>Top 10</em> Usuarios</h4>
+                  <h4><em>Top 5</em> Usuarios</h4>
                 </div>
                 {{#topUsers}}
 
                 <ol>
                   <li>
+                    <br>
                     <h2> {{-index}}º</h2>
                   </li>
                   <li>
@@ -49,13 +50,11 @@
                       <img src="assets/images/avatar-01.jpg" alt=""
                         style="max-width: 46px; border-radius: 50%; float: left;">
                     </div>
-                    
-                    <h5> {{userName}}</h5>
-                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
 
-                    <div class="main-border-button">
-                      <a href="/profile/{{userName}}">Ver perfil</a>
-                    </div>
+                    <a href="/profile/{{id}}">{{userName}}</a> 
+                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
+                    
+
                   </li>
                   {{/topUsers}}
                 </ol>
@@ -74,42 +73,33 @@
               <h4><em>Top 10</em> publicaciones</h4>
             </div>
           </div>
-
           <div class="row">
+            {{#topPosts}}
             <div class="col-lg-3 col-sm-6">
-              {{#topPosts}}
               <div class="item">
                 <div class="thumb">
-                  <img src="{{postImage}}" alt="">
-                  <div class="hover-effect">
-                    <div class="content">
-                      <div class="live">
-                        <a href="/profile"> Ver perfil</a>
-                      </div>
-                      <ul>
-                        <li><a><i class="fa fa-star"></i> {{averageRating}}</a></li>
-                      </ul>
-                    </div>
-                  </div>
-
+                  <img src="/assets/images/clip-01.jpg" alt="" style="border-radius: 23px;">
                 </div>
                 <div class="down-content">
-                  <div class="avatar">
-                    <img src="assets/images/avatar-01.jpg" alt=""
-                      style="max-width: 46px; border-radius: 50%; float: left;">
-                  </div>
-                  <span><i class="fa fa-check"></i> {{ownerName}}</span>
-                  <h4> {{title}}</h4>
-
+                  <ul>
+                    <li>
+                      <h6> <a href="/post/{{id}}">{{title}}</a></h6>
+                    </li>
+                  </ul>
+                  <span><i class="fa fa-star" style="color: yellow;"></i> {{averageRating}}</span>
                 </div>
               </div>
-              {{/topPosts}}
             </div>
+            {{/topPosts}}
           </div>
         </div>
       </div>
     </div>
+
   </div>
+</div>
+</div>
+</div>
 </div>
 
 {{>Common/footer}}

@@ -12,7 +12,7 @@ public class User {
 
     private long id;
     private String userName, password, description, userImage, email;
-    private float userRate, userPostRate;
+    private float userRate;
     private List<Post> posts;
     private List<User> followers, followings;
     private List<Section> followedSections; 
@@ -29,7 +29,6 @@ public class User {
         this.followedSections = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.userRate = 0;
-        this.userPostRate = 0;
     }
 
     // Delete the post from the user's posts if it exists
@@ -39,7 +38,7 @@ public class User {
 
     // Follow a user
     public void follow(User user) {
-        followings.add(user);
+        this.followings.add(user);
         user.followers.add(this);
     }
 
@@ -130,11 +129,20 @@ public class User {
 
     public void calculateUserRate() {  
         List<Post> posts = getPosts();
+        //Index for counting the posts with comments
+        int index=0;
+        setUserRate(0);
+        
 
         for(Post post : posts){
+            if(!post.getComments().isEmpty()){
             userRate += post.getAverageRating();
-        }
-        setUserRate(userRate /= posts.size());
+            index++;
+            }
+        }   
+        if(index!=0)
+        setUserRate(userRate /= index);
+      
     }
 
 
