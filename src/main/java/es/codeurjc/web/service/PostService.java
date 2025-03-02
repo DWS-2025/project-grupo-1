@@ -28,7 +28,7 @@ public class PostService {
     private UserService userService;
 
     @Autowired
-    private ImageService imageService;
+    private ImagePostService imageService;
 
     public List<Post> findAllPosts() {
         return postRepository.findAll();
@@ -62,8 +62,8 @@ public class PostService {
     public void updatePost(Post post, Post updatedPost, MultipartFile postImage) throws IOException {
         post.setTitle(updatedPost.getTitle());
         post.setContent(updatedPost.getContent());
-        imageService.deleteImage("images", post.getId());
-        imageService.saveImage("images", post.getId(), postImage);
+        imageService.deleteImage("posts", post.getId());
+        imageService.saveImage("posts", post.getId(), postImage);
         // post.setPostImage(updatedPost.getPostImage());
         postRepository.save(post);
     }

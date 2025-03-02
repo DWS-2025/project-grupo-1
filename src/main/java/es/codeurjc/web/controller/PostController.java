@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.service.CommentService;
-import es.codeurjc.web.service.ImageService;
+import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import jakarta.servlet.ServletRequest;
 
@@ -31,7 +31,7 @@ public class PostController {
     @Autowired
     private CommentService commentService;
     @Autowired
-    private ImageService imageService;
+    private ImagePostService imageService;
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
