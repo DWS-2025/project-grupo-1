@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.web.Model.User;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class UserController {
@@ -115,4 +117,13 @@ public class UserController {
         }
         return "redirect:/profile/" + user.getId();
     }
+    º
+
+    @PostMapping("/")
+    public String postMethodName(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
 }
