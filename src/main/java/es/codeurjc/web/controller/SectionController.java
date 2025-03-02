@@ -65,7 +65,6 @@ public class SectionController {
         String imageName = sectionImage.getOriginalFilename();
         section.setSectionImage(imageName);
 
-
         sectionService.saveSection(section);
 
         return "redirect:/section";
