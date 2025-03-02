@@ -51,6 +51,7 @@ public class PostController {
         return "view_post";
     }
 
+
     @GetMapping("/post/{id}")
     public String viewPost(Model model, @PathVariable long id) {
         Optional<Post> op = postService.findPostById(id);

@@ -8,7 +8,6 @@ public class Section {
      private long id;
      private String title;
      private String description;
-     private String sectionImage;
      private List <Post> posts;
      private float averageRating;
      private int numberOfPublications;
@@ -16,7 +15,6 @@ public class Section {
      public Section(String title, String description, String sectionImage) {
           this.title = title;
           this.description = description;
-          this.sectionImage = sectionImage;
           this.averageRating = 0;
           this.id = 0;
           this.numberOfPublications = 0;
@@ -57,13 +55,13 @@ public class Section {
           this.description = description;
      }
     
-     public String getSectionImage() {
+    /*public String getSectionImage() {
           return this.sectionImage;
-     }
+     } */ 
 
-     public void setSectionImage(String sectionImage) {
+    /* public void setSectionImage(String sectionImage) {
           this.sectionImage = sectionImage;
-     }
+     } */ 
      
      public List<Post> getPosts() {
           return this.posts;
