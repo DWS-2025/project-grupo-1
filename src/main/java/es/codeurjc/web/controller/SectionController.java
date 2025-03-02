@@ -1,6 +1,7 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,16 +10,19 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import es.codeurjc.web.model.Section;
+import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +34,10 @@ public class SectionController {
     @Autowired
     private UserService userService;
 
-    private static String IMAGE_FOLDER = "src/main/resources/static/images/";
+    @Autowired
+    private ImageSectionService imageSectionService;
+
+    private static final String SECTIONS_FOLDER = "sections";
 
     @GetMapping("/section")
     public String showSections(Model model) {
@@ -49,26 +56,24 @@ public class SectionController {
     }
 
     @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description,
-            @RequestParam MultipartFile sectionImage) {
+    public String createSection(@RequestParam String title, @RequestParam String description, @RequestParam MultipartFile sectionImage) throws IOException {
 
-        try {
-            Files.createDirectories(Paths.get(IMAGE_FOLDER)); // Create the directory if it doesn't exist
+        Section section = new Section(title, description, null);
+        sectionService.saveSection(section);
 
-            String imageName = UUID.randomUUID().toString() + "_" + sectionImage.getOriginalFilename();
-            Path filePath = Paths.get(IMAGE_FOLDER + imageName); 
+        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
+        String imageName = sectionImage.getOriginalFilename();
+        section.setSectionImage(imageName);
 
-            Files.write(filePath, sectionImage.getBytes()); // Save the image in the folder
-            Section section = new Section(title, description, imageName);
-            sectionService.saveSection(section);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-       
+        sectionService.saveSection(section);
 
         return "redirect:/section";
+    }
+
+    @GetMapping("/section/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
+        return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
     }
 
     @PostMapping("/section/{id}/delete")
