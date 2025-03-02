@@ -19,6 +19,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImageService;
 import es.codeurjc.web.service.PostService;
+import es.codeurjc.web.service.SectionService;
 import jakarta.servlet.ServletRequest;
 
 @Controller
@@ -32,6 +33,8 @@ public class PostController {
     private CommentService commentService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private SectionService sectionService;
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
@@ -41,6 +44,7 @@ public class PostController {
 
     @GetMapping("/post/new")
     public String createPost(Model model) {
+        model.addAttribute("sections", sectionService.findAll());
         return "post-form";
     }
     

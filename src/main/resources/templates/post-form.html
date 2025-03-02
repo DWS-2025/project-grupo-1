@@ -41,29 +41,11 @@
 
                     <div class="options-container" id="optionsContainer">
 
+                      {{#sections}}
                       <div class="option">
-                        <label><input type="checkbox" name="categories" value="1" /> Hacking
-                          Web</label>
+                        <label><input type="checkbox" value="{{id}}" />{{title}}</label>
                       </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="2" /> Reversing</label>
-                      </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="3" /> Explotación
-                          Linux</label>
-                      </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="4" /> Explotación
-                          Windows</label>
-                      </div>
-
-                      <div class="option">
-                        <label><input type="checkbox" value="5" /> Hardware
-                          Hacking</label>
-                      </div>
+                      {{/sections}}
 
                     </div>
 
