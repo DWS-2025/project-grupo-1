@@ -2,30 +2,23 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import es.codeurjc.web.model.Section;
-import es.codeurjc.web.model.User;
-import es.codeurjc.web.service.ImageSectionService;
-import es.codeurjc.web.service.SectionService;
-import es.codeurjc.web.service.UserService;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import es.codeurjc.web.model.Section;
+import es.codeurjc.web.service.ImageSectionService;
+import es.codeurjc.web.service.SectionService;
+import es.codeurjc.web.service.UserService;
 
 @Controller
 public class SectionController {
@@ -90,9 +83,14 @@ public class SectionController {
 
         if (section.isPresent()) {
             model.addAttribute("section", section.get());
+            return "view_section";
+        }
+        else{
+            model.addAttribute("message", "No se ha encontrado la sección especificada");
+            return "error";
         }
 
-        return "view_section";
+        
     }
 
 }
