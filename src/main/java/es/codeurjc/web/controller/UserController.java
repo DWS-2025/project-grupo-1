@@ -1,6 +1,10 @@
 package es.codeurjc.web.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.User;
+import es.codeurjc.web.service.ImageSectionService;
+import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -26,6 +32,12 @@ public class UserController {
 
     @Autowired
     private SectionService sectionService;
+
+    
+    @Autowired
+    private ImageUserService imageUserService;
+
+    private static final String USERS_FOLDER = "users";
 
 
     @GetMapping({ "/home", "/" })
@@ -80,8 +92,6 @@ public class UserController {
             }
             if(userService.getLoggedUser().getFollowings().contains(user))
                 model.addAttribute("followed", true);
-    
-
 
             return "profile";
         } else {
@@ -98,9 +108,12 @@ public class UserController {
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage) {
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage) throws IOException {
+        
         User user = userService.getUserById(userId);
+
         if (user == null) {
+            model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
 
@@ -111,9 +124,39 @@ public class UserController {
         if (description != null && !description.isEmpty()) {
             user.setDescription(description);
         }
+
+        if (userImage != null && !userImage.isEmpty()) {
+            imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
+            String imageName = userImage.getOriginalFilename();
+            user.setUserImage(imageName);
+        }
+        userService.save(user);
+
         return "redirect:/profile/" + user.getId();
     }
     
+     @GetMapping("/user/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
+        return imageUserService.createResponseFromImage(USERS_FOLDER, id);
+    }
+
+
+    /*
+    @PostMapping("/section/new")
+    public String createSection(@RequestParam String title, @RequestParam String description,
+            @RequestParam MultipartFile sectionImage) throws IOException {
+
+        Section section = new Section(title, description, null);
+        sectionService.saveSection(section);
+
+        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
+        String imageName = sectionImage.getOriginalFilename();
+        section.setSectionImage(imageName);
+
+        sectionService.saveSection(section);
+
+        return "redirect:/section";
+    } */
 
     @GetMapping("/deleteUser/{userId}")
     public String postMethodName(Model model, @PathVariable long userId) {
