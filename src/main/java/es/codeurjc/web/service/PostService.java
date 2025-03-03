@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
 
@@ -40,8 +41,12 @@ public class PostService {
         User currentUser = userService.getLoggedUser();
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
+        for (Section section : post.getSections()) {
+            section.addPost(post);
+        }
         postRepository.save(post);
     }
+
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
         post.setOwnerName(user.getName());
@@ -53,6 +58,11 @@ public class PostService {
         for (Comment comment : post.getComments()) {
             commentService.deleteCommentFromPost(post, comment.getId());
         }
+        
+        for (Section section : post.getSections()) {
+            section.deletePost(post);
+        }
+        
         postRepository.deleteById(post.getId());
         post.getComments().clear();
     }
@@ -60,6 +70,21 @@ public class PostService {
     public void updatePost(Post post, Post updatedPost, MultipartFile postImage) throws IOException {
         post.setTitle(updatedPost.getTitle());
         post.setContent(updatedPost.getContent());
+        
+        for (Section section : updatedPost.getSections()) {
+            if (!post.getSections().contains(section)) {
+                post.addSection(section);
+                section.addPost(post);
+            }
+        }
+
+        for (Section section : post.getSections()) {
+            if (!updatedPost.getSections().contains(section)) {
+                post.deleteSection(section);
+                section.deletePost(post);
+            }
+        }
+        
         imageService.deleteImage("posts", post.getId());
         imageService.saveImage("posts", post.getId(), postImage);
         // post.setPostImage(updatedPost.getPostImage());

@@ -57,12 +57,10 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {
+    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {  
         for (long sectionId : sectionIds) {
             post.addSection(sectionService.findById(sectionId).get());
-            sectionService.findById(sectionId).get().addPost(post);
         }
-        
         postService.save(post);
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         return "view_post";
@@ -95,14 +93,14 @@ public class PostController {
             List<Section> allSections = sectionService.findAll();
             List<Section> postSections = post.getSections();
 
-            // Crear una lista de secciones con la propiedad "selected"
+            // Create a List<Section> with "selected" property
             List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
             for (Section section : allSections) {
                 Map<String, Object> sectionData = new HashMap<>();
                 sectionData.put("id", section.getId());
                 sectionData.put("title", section.getTitle());
                 
-                // Verificar si la sección está en el post usando el ID
+                // Verify if the section is in the post using its id
                 boolean isSelected = postSections.stream()
                     .anyMatch(s -> s.getId() == section.getId());
                 
@@ -111,12 +109,9 @@ public class PostController {
             }
 
             model.addAttribute("sections", sectionsWithSelection);
-
             model.addAttribute("post", post);
             model.addAttribute("title", post.getTitle());
             model.addAttribute("content", post.getContent());
-            // model.addAttribute("sections", sectionService.findAll());
-            // model.addAttribute("postSectionIds", post.getSections().stream().map(Section::getId).toArray());
             model.addAttribute("isEditing", true);
             return "post_form";
         } else {
@@ -128,11 +123,8 @@ public class PostController {
     public String editPost(Model model, @PathVariable long id, Post updatedPost, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {
-            Post post = op.get();
-            post.getSections().clear();
             for (long sectionId : sectionIds) {
-                post.addSection(sectionService.findById(sectionId).get());
-                sectionService.findById(sectionId).get().addPost(post);
+                updatedPost.addSection(sectionService.findById(sectionId).get());
             }
 
             postService.updatePost(op.get(), updatedPost, postImage);
