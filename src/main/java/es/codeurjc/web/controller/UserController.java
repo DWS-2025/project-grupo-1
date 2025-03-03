@@ -1,16 +1,6 @@
 package es.codeurjc.web.controller;
 
-<<<<<<< HEAD
 import java.util.List;
-=======
-
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.stream.Collectors;
-
->>>>>>> 63f4042b9322604d50406a364039098e30448d95
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
