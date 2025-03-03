@@ -1,5 +1,6 @@
 package es.codeurjc.web.controller;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,8 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller
@@ -65,6 +68,41 @@ public class UserController {
     public String login(Model model) {
         return "login";
     }
+
+    @PostMapping("/login")
+    public String login(Model model, @RequestParam String userName, @RequestParam String password ) {
+        User logingUser = userService.findByUserName(userName);
+        if(logingUser == null || !logingUser.getPassword().equals(password)){
+            model.addAttribute("Error", "usuario o contraseña no válidos")
+            return "redirect:/login";
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String postMethodName(Model model, @RequestParam String userName,@RequestParam String email,
+    @RequestParam String password, @RequestParam String confirmedPassword) {
+        List<User> users = userService.findAllUsers();
+        for (User user : users) {
+            if(user.getEmail().equals(email) || user.getName().equals(userName)){
+                model.addAttribute("Error", "Usuario existente o correo utilizado");
+                return "redirect:/register";
+            }
+        }
+        if(!password.equals(confirmedPassword)){
+            model.addAttribute("PassError", "Las contraseñas no coinciden");
+            return "redirect:/register";
+        }
+        User newUser = new User(userName, password,email);
+        userService.save(newUser);
+        return "redirect:/";
+    }
+
 
     @GetMapping("/profile/{userId}")
     public String showProfile(Model model, @PathVariable Long userId) {

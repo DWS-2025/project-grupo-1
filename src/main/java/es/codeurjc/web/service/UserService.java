@@ -46,12 +46,23 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public User findByUserName(String userName){
+        List<User> users = userRepository.findAll();
+        User requestUser = null;
+        for (User user : users) {
+            if (user.getName().equals(userName)) {
+                requestUser = user;
+            }
+        }
+        return requestUser;
+    }
+
 
     public Boolean isLogged(User user){
         return userRepository.findAll().get(0).equals(user);
     }
 
-   public void deleteUser(User userToDelete){
+    public void deleteUser(User userToDelete){
         long id = userToDelete.getId();
         if(id!=1){
         List<Comment> comments = userToDelete.getComments();
@@ -65,6 +76,7 @@ public class UserService {
             postService.deletePost(post);
         }
         posts.clear();
+
         userToDelete.getCollaboratedPosts().clear();
         userRepository.deleteById(id);
 
@@ -82,6 +94,5 @@ public class UserService {
         userToDelete.getFollowings().clear();
         
     }
-        
 }
 }

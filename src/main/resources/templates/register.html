@@ -1,0 +1,27 @@
+{{>Common/header}}
+<div class="container d-flex justify-content-center align-items-center header-text" style="min-height: 100vh;">
+    <div class="auth-box">
+            <form action="/register" method="post">
+                <div class="form-group mb-3">
+                    <label for="name" class="text-light">Nombre de Usuario</label>
+                    <input type="text" class="form-control auth-input" id="name" name="name" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="name" class="text-light">Correo electrónico</label>
+                    <input type="text" class="form-control auth-input" id="email" name="email" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="passwordRegister" class="text-light">Contraseña</label>
+                    <input type="password" class="form-control auth-input" id="passwordRegister" name="password" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="confirmPassword" class="text-light">Confirmar Contraseña</label>
+                    <input type="password" class="form-control auth-input" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="auth-button">Registrarse</button>
+                <p>¿Ya tienes cuenta?<a href="/login" class="logo">inicia sesión</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+{{>Common/footer}}
