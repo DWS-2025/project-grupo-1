@@ -4,8 +4,6 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="page-content">
-
-        <!-- ***** Featured Games Start ***** -->
         <div class="row">
           <div class="col-lg-8">
             <div class="featured-games header-text">
@@ -38,12 +36,9 @@
 
                     <a href="/profile/{{id}}">{{userName}}</a>
                     <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
-
                   </li>
                   {{/topUsers}}
                 </ol>
-
-
               </div>
             </div>
           </div>
@@ -60,7 +55,7 @@
             <div class="col-lg-3 col-sm-6">
               <div class="item">
                 <div class="thumb">
-                  <img src="/assets/images/clip-01.jpg" alt="" style="border-radius: 23px;">
+                  <img src="/post/{{id}}/image" alt="" style="border-radius: 23px;">
                 </div>
                 <div class="down-content">
                   <ul>
@@ -77,9 +72,7 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
-</div>
-</div>
+
 {{>Common/footer}}

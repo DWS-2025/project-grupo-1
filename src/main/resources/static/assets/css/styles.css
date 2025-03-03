@@ -2,7 +2,7 @@
 .section-image {
     width: 356px;
     height: 212.6px;
-    object-fit: cover; /* Asegura que la imagen se ajuste al contenedor sin distorsionarse */
+    object-fit: cover; 
 }
 
 .contenedor {
@@ -12,9 +12,9 @@
   }
   
   .contenedor img {
-    width: 100%;  /* Asegura que la imagen ocupe todo el espacio */
-    height: auto; /* Mantiene la proporción */
-    object-fit: cover; /* Ajusta la imagen sin deformarla */
+    width: 100%; 
+    height: auto; 
+    object-fit: cover; 
   }
 
   .profile-image {
@@ -22,4 +22,12 @@
     height: 300px;
     border-radius: 50%;
     object-fit: cover;
+  }
+
+  .centered-image {
+    display: block;
+    margin: 20px auto; 
+    border-radius: 60px;
+    max-width: 50%; 
+    height: auto; 
 }

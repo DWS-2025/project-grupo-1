@@ -175,7 +175,7 @@ public class UserController {
             imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
             String imageName = userImage.getOriginalFilename();
             user.setUserImage(imageName);
-        }
+        }   
         userService.save(user);
 
         return "redirect:/profile/" + user.getId();
