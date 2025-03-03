@@ -4,8 +4,6 @@
   <div class="row header-text">
     <div class="col-lg-12">
       <div class="page-content">
-       
-
         <!-- ***** Post Start ***** -->
         <div class="row">
           <div class="col-lg-12">
@@ -24,7 +22,7 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="post-img">
+                      <div class="centered-image">
                         <img src="/post/{{post.id}}/image" alt=""></img>
                       </div>
                     </div>
@@ -66,8 +64,7 @@
           {{#post.comments}}
           <div class="item">
             <ul>
-              <li><img src="assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
-              <!--Poner la imagen de perfil del usuario-->
+              <li><img src="/user/{{owner.id}}/image" alt="" class="templatemo-item"></li>
               <li>
                 <h4>Nombre de usuario</h4><span style="color: white;">{{owner.name}}</span>
               </li>
@@ -83,24 +80,20 @@
               <li>
                 <div class="main-border-button border-active"><a href="/post/{{post.id}}/comment/{{id}}/edit">Editar
                   </a></div>
-                  <div class="main-border-button border-active">
-                    <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
-                      <input type='submit' value='Eliminar comentario'/>
-                    </form>
-                    </div>
-              </li>
-              <li>
-                
+                <div class="main-border-button border-active">
+                  <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
+                    <input type='submit' value='Eliminar comentario' />
+                  </form>
+                </div>
               </li>
             </ul>
           </div>
           {{/post.comments}}
         </div>
       </div>
-      <!-- ***** Gaming Library End ***** -->
     </div>
   </div>
 </div>
-</div>
+
 
 {{>Common/footer}}

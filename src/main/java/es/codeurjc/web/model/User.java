@@ -50,8 +50,11 @@ public class User {
 
     // Unfollow a user
     public void unfollow(User user) {
-        followings.remove(user);
+        this.followings.remove(user);
         user.followers.remove(this);
+    }
+    public void unfollowSection(Section section){
+        this.followedSections.remove(section);
     }
 
     public long getId() {
@@ -110,7 +113,7 @@ public class User {
         return this.followers;
     }
 
-    public List<User> getFollowing() {
+    public List<User> getFollowings() {
         return this.followings;
     }
 

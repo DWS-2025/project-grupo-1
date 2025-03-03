@@ -15,7 +15,8 @@
                                 <form action="/editProfile/{{id}}" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="userName">Nombre:</label>
-                                        <input type="text" class="form-control" id="newUserName" name="newUserName" value="{{userName}}" required>
+                                        <input type="text" class="form-control" id="newUserName" name="newUserName"
+                                            value="{{userName}}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="description">Descripción:</label>
@@ -35,12 +36,16 @@
                                     </div>
                             </div>
                             <div class="d-flex justify-content-center">
-                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                                <button type="submit" class="btn btn-primary">Confirmar</button>
                             </div>
                             </form>
                             {{/User}}
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{>Common/footer}}

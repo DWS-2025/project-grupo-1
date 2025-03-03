@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="page-content header-text">
-    
+
                                 <h2>Comentario en el Post: {{post.title}}</h2>
                                 <!-- Form to create or edit a comment -->
                                 {{#isEditing}}
@@ -16,7 +16,7 @@
                                     {{^isEditing}}
                                     <form action="/post/{{post.id}}/comment/new" method="post">
                                         {{/isEditing}}
-                                       
+
                                         <div class="form-group">
                                             <ladbel for="content">Contenido:</ladbel>
                                             <textarea class="form-control" id="content" name="content" rows="10"
