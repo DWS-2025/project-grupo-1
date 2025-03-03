@@ -70,24 +70,16 @@ public class UserController {
     public String showProfile(Model model, @PathVariable Long userId) {
         User user = userService.getUserById(userId);
         if (user != null) {
-            model.addAttribute("userId", user.getId());
-            model.addAttribute("userName", user.getName());
-            model.addAttribute("userImage", user.getUserImage());
-            if (user.getDescription() == null) {
-                model.addAttribute("userDescription", "No description");
-                
-            }else{
-                model.addAttribute("userDescription", user.getDescription());
-            }
             model.addAttribute("numberOfPublications", user.getPosts().size());
             model.addAttribute("numberOfFollowers", user.getFollowers().size());
             model.addAttribute("numberOfFollowing", user.getFollowing().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
-            model.addAttribute("rate", user.getUserRate());
-            model.addAttribute("posts",user.getPosts());
+            model.addAttribute("user", user);
+    
             return "profile";
         } else {
-            return "login";
+            model.addAttribute("message", "No se ha encontrado ese usuario");
+            return "error";
         }
     }
 

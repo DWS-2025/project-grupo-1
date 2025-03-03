@@ -18,19 +18,19 @@
 
                       <div class="col-lg-12">
                         <div class="main-button">
-                          <a href="/editProfile/{{userId}}">Editar</a>
+                          <a href="/editProfile/{{user.id}}">Editar</a>
                         </div>
                       </div>
 
                       <div class="col-lg-12">
                         <div class="delete-button">
-                          <a href="/deleteUser/{{userId}}">Eliminar</a>
+                          <a href="/deleteUser/{{user.id}}">Eliminar</a>
                         </div>
                       </div>
 
 
-                      <h4>{{userName}}</h4>
-                      <p>{{userDescription}}</p>
+                      <h4>{{user.userName}}</h4>
+                      <p>{{#user.description}}{{user.description}}{{/user.description}} {{^user.description}}No hay descripción{{/user.description}}</p>
                       <div class="main-border-button">
                         <a href="/post">Nueva publicación</a>
                       </div>
@@ -42,7 +42,7 @@
                       <li>Seguidores <span>{{numberOfFollowers}}</span></li>
                       <li>Siguiendo <span>{{numberOfFollowing}}</span></li>
                       <li>Temas seguidos <span>{{numberOfFollowedSections}}</span></li>
-                      <li>Valoración de usuario <span>{{rate}}</span></li>
+                      <li>Valoración de usuario <span>{{user.userRate}}</span></li>
                     </ul>
                   </div>
                 </div>
@@ -55,7 +55,7 @@
                             <h4><em>Tus publicaciones</em></h4>
                           </div>
                         </div>
-                        {{#posts}}
+                        {{#user.posts}}
                         <div class="col-lg-3 col-sm-6">
                           <div class="item">
                             <div class="thumb">
@@ -72,7 +72,41 @@
                             </div>
                           </div>
                         </div>
-                        {{/posts}}
+                        {{/user.posts}}
+                        </div>
+                        <div class="col-lg-12">
+                          <div class="main-button">
+                            <a href="#">Load More Clips</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="heading-section">
+                            <h4><em>Publicaciones en la que ha colaborado;</em></h4>
+                          </div>
+                        </div>
+                        {{#user.collaboratedPosts}}
+                        <div class="col-lg-3 col-sm-6">
+                          <div class="item">
+                            <div class="thumb">
+                              <img src="/assets/images/clip-01.jpg" alt="" style="border-radius: 23px;">
+                              <a href="https://www.youtube.com/watch?v=r1b03uKWk_M" target="_blank"><i class="fa fa-play"></i></a>
+                            </div>
+                            <div class="down-content">
+                              <ul>
+                                <li>
+                                  <h6> <a href="/post/{{id}}">{{title}}</a></h6>
+                                </li>
+                              </ul>
+                              <span><i class="fa fa-eye"></i> {{averageRating}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {{/user.collaboratedPosts}}
+                        {{^user.collaboratedPosts}}
+                        <h5>Todavía no ha colaborado en ningún post</h5><br>
+                        {{/user.collaboratedPosts}}
                         </div>
                         <div class="col-lg-12">
                           <div class="main-button">
@@ -86,47 +120,6 @@
               </div>
             </div>
           </div>
-          <!-- ***** Banner End ***** -->
-
-          <!-- ***** Gaming Library Start *****
-          <div class="gaming-library profile-library">
-            <div class="col-lg-12">
-              <div class="heading-section">
-                <h4><em>Publicaciones</em> en favoritos</h4>
-              </div>
-              <div class="item">
-                <ul>
-                  <li><img src="/assets/images/game-01.jpg" alt="" class="templatemo-item"></li>
-                  <li><h4>Dota 2</h4><span>Sandbox</span></li>
-                  <li><h4>Date Added</h4><span>24/08/2036</span></li>
-                  <li><h4>Hours Played</h4><span>634 H 22 Mins</span></li>
-                  <li><h4>Currently</h4><span>Downloaded</span></li>
-                  <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
-                </ul>
-              </div>
-              <div class="item">
-                <ul>
-                  <li><img src="/assets/images/game-02.jpg" alt="" class="templatemo-item"></li>
-                  <li><h4>Fortnite</h4><span>Sandbox</span></li>
-                  <li><h4>Date Added</h4><span>22/06/2036</span></li>
-                  <li><h4>Hours Played</h4><span>745 H 22 Mins</span></li>
-                  <li><h4>Currently</h4><span>Downloaded</span></li>
-                  <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
-                </ul>
-              </div>
-              <div class="item last-item">
-                <ul>
-                  <li><img src="/assets/images/game-03.jpg" alt="" class="templatemo-item"></li>
-                  <li><h4>CS-GO</h4><span>Sandbox</span></li>
-                  <li><h4>Date Added</h4><span>21/04/2022</span></li>
-                  <li><h4>Hours Played</h4><span>632 H 46 Mins</span></li>
-                  <li><h4>Currently</h4><span>Downloaded</span></li>
-                  <li><div class="main-border-button border-no-active"><a href="#">Donwloaded</a></div></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-           ***** Gaming Library End ***** -->
         </div>
       </div>
     </div>

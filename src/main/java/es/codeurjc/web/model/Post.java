@@ -46,6 +46,7 @@ public class Post {
 
     public void addContributor(User user) {
         this.contributors.add(user);
+        user.addCollaboratedPosts(this);
     }
 
     public long getId() {

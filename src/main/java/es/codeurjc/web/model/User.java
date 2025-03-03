@@ -15,8 +15,9 @@ public class User {
     private float userRate;
     private List<Post> posts;
     private List<User> followers, followings;
-    private List<Section> followedSections; 
+    private List<Section> followedSections;
     private List<Comment> comments;
+    private List<Post> collaboratedPosts;
 
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {
@@ -24,6 +25,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.posts = new ArrayList<>();
+        this.collaboratedPosts = new ArrayList<>();
         this.followers = new ArrayList<>();
         this.followings = new ArrayList<>();
         this.followedSections = new ArrayList<>();
@@ -67,7 +69,7 @@ public class User {
     public void setName(String userName) {
         this.userName = userName;
     }
-    
+
     public String getPassword() {
         return this.password;
     }
@@ -112,48 +114,20 @@ public class User {
         return this.followings;
     }
 
-
     public void setUserRate(float userRate) {
         this.userRate = userRate;
     }
 
-    public float getUserRate(){
+    public float getUserRate() {
         return this.userRate;
     }
-    
- 
+
     public List<Section> getFollowedSections() {
         return this.followedSections;
     }
 
     public void followSection(Section section) {
         this.followedSections.add(section);
-    }
-
-
-    public void calculateUserRate() {  
-        List<Post> posts = getPosts();
-        //Index for counting the posts with comments
-        int index=0;
-        setUserRate(0);
-        
-
-        for(Post post : posts){
-            if(!post.getComments().isEmpty()){
-            userRate += post.getAverageRating();
-            index++;
-            }
-        }   
-        if(index!=0)
-        setUserRate(userRate /= index);
-      
-    }
-
-
-
-    @Override
-    public boolean equals(Object obj) {
-        return this.userName.equals(((User)obj).getName());
     }
 
     public List<Comment> getComments() {
@@ -163,6 +137,37 @@ public class User {
     public void addCommentToUser(Comment comment) {
         comments.add(comment);
     }
+    public List<Post> getCollaboratedPosts(){
+        return this.collaboratedPosts;
+
+    }
     
+    public void addCollaboratedPosts(Post collaboratedPost){
+        this.collaboratedPosts.add(collaboratedPost);
+    }
+    
+
+    public void calculateUserRate() {
+        List<Post> posts = getPosts();
+        //Index for counting the posts with comments
+        int index = 0;
+        setUserRate(0);
+
+        for (Post post : posts) {
+            if (!post.getComments().isEmpty()) {
+                userRate += post.getAverageRating();
+                index++;
+            }
+        }
+        if (index != 0) {
+            setUserRate(userRate /= index);
+        }
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.userName.equals(((User) obj).getName());
+    }
 
 }
