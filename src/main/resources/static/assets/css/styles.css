@@ -30,4 +30,11 @@
     border-radius: 60px;
     max-width: 50%; 
     height: auto; 
+  }
+
+  .card-img {
+    width: 100%;
+    height: 150px; /* Mantiene el tamaño uniforme */
+    object-fit: cover; /* Asegura que la imagen se recorte correctamente */
+    border-radius: 10px; /* Redondea bordes de la imagen */
 }
