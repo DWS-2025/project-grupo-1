@@ -1,9 +1,14 @@
 package es.codeurjc.web.controller;
 
+
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
+import es.codeurjc.web.service.ImageSectionService;
+import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -30,7 +37,12 @@ public class UserController {
     @Autowired
     private SectionService sectionService;
 
-    @GetMapping({"/home", "/"})
+    @Autowired
+    private ImageUserService imageUserService;
+
+    private static final String USERS_FOLDER = "users";
+
+    @GetMapping({ "/home", "/" })
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -84,18 +96,20 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
+        
             if (user != userService.getLoggedUser()) {
-                model.addAttribute("notSameUser", true);
+            model.addAttribute("notSameUser", true);
             }
             if (userService.getLoggedUser().getFollowings().contains(user)) {
-                model.addAttribute("followed", true);
+            model.addAttribute("followed", true);
             }
-
             return "profile";
+
         } else {
             model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
+
     }
 
     @GetMapping("/editProfile/{userId}")
@@ -106,9 +120,13 @@ public class UserController {
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage) {
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage)
+            throws IOException {
+
         User user = userService.getUserById(userId);
+
         if (user == null) {
+            model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
 
@@ -119,7 +137,20 @@ public class UserController {
         if (description != null && !description.isEmpty()) {
             user.setDescription(description);
         }
+
+        if (userImage != null && !userImage.isEmpty()) {
+            imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
+            String imageName = userImage.getOriginalFilename();
+            user.setUserImage(imageName);
+        }
+        userService.save(user);
+
         return "redirect:/profile/" + user.getId();
+    }
+
+    @GetMapping("/user/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
+        return imageUserService.createResponseFromImage(USERS_FOLDER, id);
     }
 
     @GetMapping("/deleteUser/{userId}")
