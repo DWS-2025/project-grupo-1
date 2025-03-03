@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.annotation.ApplicationScope;
-import org.springframework.web.context.request.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.UserRepository;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
@@ -42,6 +42,8 @@ public class PostController {
     private ImagePostService imageService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
@@ -57,10 +59,22 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds) throws IOException {  
+    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, String contributors, @RequestParam("sections") List<Long> sectionIds) throws IOException {  
         for (long sectionId : sectionIds) {
             post.addSection(sectionService.findById(sectionId).get());
         }
+        
+        List<String> contributorsList = List.of(contributors.split(","));
+        for (String colaborator : contributorsList) {
+            Optional<User> op = userRepository.findByName(colaborator);
+            if (op.isPresent()) {
+                User user = op.get();
+                post.addContributor(user);
+                user.addCollaboratedPosts(post);
+            }
+            
+        }
+
         postService.save(post);
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         return "view_post";
@@ -108,10 +122,16 @@ public class PostController {
                 sectionsWithSelection.add(sectionData);
             }
 
+            String contributors = "";
+            for (User user : post.getContributors()) {
+                contributors += user.getName() + ",";
+            }
+
             model.addAttribute("sections", sectionsWithSelection);
             model.addAttribute("post", post);
             model.addAttribute("title", post.getTitle());
             model.addAttribute("content", post.getContent());
+            model.addAttribute("contributors", contributors);
             model.addAttribute("isEditing", true);
             return "post_form";
         } else {
