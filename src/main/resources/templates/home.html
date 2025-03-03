@@ -10,11 +10,11 @@
           <div class="row">
             <div class="col-lg-7">
               <div class="header-text">
-                <h6>Bienvenido a HackersAnónimos.com <em>{{userName}}</em></h6>
+                <h6>Bienvenido a HackersAnónimos.com <em>{{user.userName}}</em></h6>
                 <h4><em>Empieza</em> a formar parte de la <em>comunidad</em></h4>
                 <div class="main-button">
                   <!-- Temporary Comment, If loged -> go to profile, if not logged ->  go to /login-->
-                  <a href="/following">¡Publica ahora!</a>
+                  <a href="/post/new">¡Publica ahora!</a>
                 </div>
               </div>
             </div>
@@ -60,7 +60,7 @@
               </div>
               <div class="col-lg-12">
                 <div class="main-button">
-                  <a href="/profile/1">Ir a tu perfil</a>
+                  <a href="/profile/{{user.id}}">Ir a tu perfil</a>
                 </div>
               </div>
             </div>

@@ -34,9 +34,11 @@ public class UserController {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
         if (userService.getLoggedUser() != null) {
-            model.addAttribute("userName", userService.getLoggedUser().getName());
+            model.addAttribute("user", userService.getLoggedUser());
         } else {
-            model.addAttribute("userName", "Invitado");
+            User user = new User();
+            user.setName("Invitado");
+            model.addAttribute("user", user);
         }
 
         return "home";
