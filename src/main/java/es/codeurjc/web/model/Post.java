@@ -32,6 +32,10 @@ public class Post {
         this.sections.add(section);
     }
 
+    public void deleteSection(Section section) {
+        this.sections.remove(section);
+    }
+
     public List<Long> getSectionsIds() {
         List<Long> sectionsIds = new ArrayList<>();
         for (Section section : sections) {

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.SectionRepository;
@@ -47,10 +48,12 @@ public class SectionService {
 
     }
 
-    
+    public void addPost(Section section, Post post) {
+        section.addPost(post);
+    }
 
-
-
-
+    public void deletePost(Section section, Post post) {
+        section.deletePost(post);
+    }
 
 }
