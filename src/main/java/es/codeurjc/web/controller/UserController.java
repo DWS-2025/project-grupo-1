@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.Model.User;
+import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;

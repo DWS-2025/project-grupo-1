@@ -1,4 +1,4 @@
-package es.codeurjc.web.Model;
+package es.codeurjc.web.model;
 
 import java.util.List;
 import java.util.ArrayList;

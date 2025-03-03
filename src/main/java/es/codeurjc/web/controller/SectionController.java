@@ -1,4 +1,4 @@
-package es.codeurjc.web.Controller;
+package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import es.codeurjc.web.Model.Section;
-import es.codeurjc.web.Model.User;
+import es.codeurjc.web.model.Section;
+import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
