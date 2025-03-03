@@ -31,6 +31,10 @@ public class User {
         this.userRate = 0;
     }
 
+    public User() {
+        //TODO Auto-generated constructor stub
+    }
+
     // Delete the post from the user's posts if it exists
     public void deletePost(Post post) {
         posts.remove(post);

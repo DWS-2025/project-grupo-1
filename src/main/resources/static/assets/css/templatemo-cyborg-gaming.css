@@ -1378,7 +1378,7 @@ Live Stream Style
   margin-top: 8px;
   font-size: 20px;
   font-weight: 700;
-  margin-left: 61px;
+  /* margin-left: 61px; */
 }
 
 .live-stream .main-button {
