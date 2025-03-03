@@ -1,7 +1,11 @@
 package es.codeurjc.web.controller;
 
+
+
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
-
 
 @Controller
 public class UserController {
@@ -33,12 +37,10 @@ public class UserController {
     @Autowired
     private SectionService sectionService;
 
-    
     @Autowired
     private ImageUserService imageUserService;
 
     private static final String USERS_FOLDER = "users";
-
 
     @GetMapping({ "/home", "/" })
     public String index(Model model) {
@@ -58,6 +60,7 @@ public class UserController {
     @GetMapping("/following")
     public String following(Model model) {
         model.addAttribute("sections", userService.getLoggedUser().getFollowedSections());
+        model.addAttribute("followed", true);
         model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser()));
         model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser()));
 
@@ -66,7 +69,13 @@ public class UserController {
 
     @GetMapping("/discover")
     public String discover(Model model) {
-        model.addAttribute("sections", sectionService.findAll());
+        List<Section> allSections = sectionService.findAll();
+        List<Section> followedSections = userService.getLoggedUser().getFollowedSections();
+        // Filter only the sections that are NOT in the list of followed sections
+        List<Section> notFollowedSections = allSections.stream()
+                .filter(section -> !followedSections.contains(section))
+                .collect(Collectors.toList());
+        model.addAttribute("sections", notFollowedSections);
         model.addAttribute("topUsers", rankingService.topUsersApp());
         model.addAttribute("topPosts", rankingService.topPostsApp());
 
@@ -87,17 +96,20 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
-            if(user!=userService.getLoggedUser()){
-                model.addAttribute("notSameUser", true);
+        
+            if (user != userService.getLoggedUser()) {
+            model.addAttribute("notSameUser", true);
             }
-            if(userService.getLoggedUser().getFollowings().contains(user))
-                model.addAttribute("followed", true);
-
+            if (userService.getLoggedUser().getFollowings().contains(user)) {
+            model.addAttribute("followed", true);
+            }
             return "profile";
+
         } else {
             model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
+
     }
 
     @GetMapping("/editProfile/{userId}")
@@ -108,8 +120,9 @@ public class UserController {
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage) throws IOException {
-        
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage)
+            throws IOException {
+
         User user = userService.getUserById(userId);
 
         if (user == null) {
@@ -134,29 +147,11 @@ public class UserController {
 
         return "redirect:/profile/" + user.getId();
     }
-    
-     @GetMapping("/user/{id}/image")
+
+    @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
         return imageUserService.createResponseFromImage(USERS_FOLDER, id);
     }
-
-
-    /*
-    @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description,
-            @RequestParam MultipartFile sectionImage) throws IOException {
-
-        Section section = new Section(title, description, null);
-        sectionService.saveSection(section);
-
-        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
-        String imageName = sectionImage.getOriginalFilename();
-        section.setSectionImage(imageName);
-
-        sectionService.saveSection(section);
-
-        return "redirect:/section";
-    } */
 
     @GetMapping("/deleteUser/{userId}")
     public String postMethodName(Model model, @PathVariable long userId) {
@@ -172,6 +167,7 @@ public class UserController {
         userService.getLoggedUser().unfollow(userToUnfollow);
         return "redirect:/profile/" + userId;
     }
+
     @GetMapping("/user/{userId}/follow")
     public String followUser(Model model, @PathVariable long userId) {
         User userToUnfollow = userService.getUserById(userId);
