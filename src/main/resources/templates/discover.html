@@ -11,23 +11,8 @@
               <div class="heading-section">
                 <h4><em>Todas las</em> categorías</h4>
               </div>
-              <div class="owl-features owl-carousel">
-                {{#sections}}
-                <div class="item">
-                  <div class="thumb">
-                    <img src="/section/{{id}}/image" class="section-image img-fluid rounded" alt="">
-                    <div class="hover-effect">
-                      <h6>{{description}}</h6>
-                    </div>
-                  </div>
-                  <h4><a href="/section/{{id}}">{{title}}</a><br><span>Publicaciones: </span></h4>
-                  <ul>
-                    <li><i class="fa fa-star"></i> {{averageRating}}</li>
-                    <li><i class="fa fa-eye"></i> {{numberOfPublications}}</li>
-                  </ul>
-                </div>
-                {{/sections}}
-              </div>
+              <!-- Carousel with sections that the user follows -->
+              {{>Common/sectionCarrousel}}
             </div>
           </div>
 
@@ -51,9 +36,9 @@
                         style="max-width: 46px; border-radius: 50%; float: left;">
                     </div>
 
-                    <a href="/profile/{{id}}">{{userName}}</a> 
+                    <a href="/profile/{{id}}">{{userName}}</a>
                     <h6><i class="fa fa-star" style="color: yellow;"></i> {{userRate}}</h6>
-                    
+
 
                   </li>
                   {{/topUsers}}

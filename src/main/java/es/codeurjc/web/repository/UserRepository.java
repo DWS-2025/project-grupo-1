@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import es.codeurjc.web.model.User;
 
 @Component
-public class UserRepository { 
-    
+public class UserRepository {
+
     private AtomicLong nextId = new AtomicLong(1L);
-	private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
-    
+    private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
+
     public List<User> findAll() {
         return users.values().stream().toList();
     }
@@ -35,9 +35,9 @@ public class UserRepository {
     public void deleteById(long id) {
         users.remove(id);
     }
-    
+
     public User getUserById(long id) {
         return users.get(id);
     }
-    
+
 }
