@@ -72,7 +72,7 @@ public class UserController {
         if (user != null) {
             model.addAttribute("numberOfPublications", user.getPosts().size());
             model.addAttribute("numberOfFollowers", user.getFollowers().size());
-            model.addAttribute("numberOfFollowing", user.getFollowing().size());
+            model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
     
@@ -111,7 +111,7 @@ public class UserController {
     @GetMapping("/deleteUser/{userId}")
     public String postMethodName(Model model, @PathVariable long userId) {
         User deletedUser = userService.getUserById(userId);
-        //userService.deleteUser(deletedUser);
+        userService.deleteUser(deletedUser);
         model.addAttribute("name", deletedUser.getName());
         return "user_delete";
     }

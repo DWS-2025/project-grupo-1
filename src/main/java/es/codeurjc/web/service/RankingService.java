@@ -26,7 +26,7 @@ public class RankingService {
     }
 
     public List<User> topUsersFollowed(User user) {
-        List<User> rankingUsers = new ArrayList<>(user.getFollowing()); 
+        List<User> rankingUsers = new ArrayList<>(user.getFollowings()); 
         rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed());
         return rankingUsers.subList(0, Math.min(rankingUsers.size(), 5));
     }
@@ -41,7 +41,7 @@ public class RankingService {
         List<Post> allFollowedPosts = new ArrayList<>();
 
       
-        for (User followedUser : user.getFollowing()) {
+        for (User followedUser : user.getFollowings()) {
             allFollowedPosts.addAll(followedUser.getPosts()); 
         }
       

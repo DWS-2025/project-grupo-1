@@ -110,7 +110,7 @@ public class User {
         return this.followers;
     }
 
-    public List<User> getFollowing() {
+    public List<User> getFollowings() {
         return this.followings;
     }
 
