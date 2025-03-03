@@ -60,7 +60,7 @@ public class UserService {
         posts.clear();
         userToDelete.getCollaboratedPosts().clear();
         userRepository.deleteById(id);
-        
+
         for(User user: userRepository.findAll())
         {
             if(user.getFollowers().contains(userToDelete))
@@ -70,6 +70,9 @@ public class UserService {
             user.getFollowings().remove(userToDelete);
 
         }
+        userToDelete.getFollowedSections().clear();
+        userToDelete.getFollowers().clear();
+        userToDelete.getFollowings().clear();
         
     }
         
