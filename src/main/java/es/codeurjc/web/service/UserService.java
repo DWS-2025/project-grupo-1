@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.model.Comment;
-import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 
@@ -15,12 +13,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+   
 
-    @Autowired
-    private PostService postService;
-
-    @Autowired
-    private CommentService commentService;
 
     public User getLoggedUser(){
         return userRepository.getUserById(1);
@@ -42,7 +36,7 @@ public class UserService {
         return userRepository.findAll().get(0).equals(user);
     }
 
-    public void deleteUser(User user){
+  /*  public void deleteUser(User user){
         long id = user.getId();
         List<Comment> comments = user.getComments();
         for (Comment comment : comments) {
@@ -58,4 +52,5 @@ public class UserService {
 
         userRepository.deleteById(id);
     }
+        */ 
 }

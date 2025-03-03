@@ -13,7 +13,6 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -120,7 +119,7 @@ public class UserController {
     @GetMapping("/deleteUser/{userId}")
     public String postMethodName(Model model, @PathVariable long userId) {
         User deletedUser = userService.getUserById(userId);
-        userService.deleteUser(deletedUser);
+        //userService.deleteUser(deletedUser);
         model.addAttribute("name", deletedUser.getName());
         return "user_delete";
     }

@@ -81,7 +81,7 @@ public class Comment {
         return this.dislikes;
     }
 
-    public String getOwnerName() {
+    public String getCommentOwnerName() {
         return this.commentOwnerName;
     }
 
