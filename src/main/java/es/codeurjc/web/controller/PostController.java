@@ -75,7 +75,8 @@ public class PostController {
 
             return "view_post";
         } else {
-            return "post_not_found";
+            model.addAttribute("message", "No se ha encontrado un post con ese nombre");
+            return "error";
         }
     }
 
@@ -115,7 +116,8 @@ public class PostController {
             model.addAttribute("isEditing", true);
             return "post_form";
         } else {
-            return "post_not_found";
+            model.addAttribute("message", "No se ha encontrado un post con ese nombre");
+            return "error";
         }
     }
 
@@ -130,7 +132,8 @@ public class PostController {
             postService.updatePost(op.get(), updatedPost, postImage);
             return "redirect:/post/" + id;
         } else {
-            return "post_not_found";
+            model.addAttribute("message", "No se ha encontrado un post con ese nombre");
+            return "error";
         }
     }
 
@@ -188,7 +191,7 @@ public class PostController {
             return "comment_form";
         } else {
             model.addAttribute("message", "No se ha encontrado el post o comentario especificado");
-            return "post";
+            return "error";
         }
     }
 
@@ -207,7 +210,8 @@ public class PostController {
             return "error";
 
         } else {
-            return "post_not_found";
+            model.addAttribute("message", "No se han encontrado el post o comentario especificados");
+            return "error";
         }
     }
 
@@ -221,7 +225,8 @@ public class PostController {
             model.addAttribute("Comments", op.get().getComments());
             return "redirect:/post/" + postId;
         } else {
-            return "No se ha encontrado el comentario a borrar o el post especificado";
+            model.addAttribute("message", "No se ha encontrado el post o comentario especificado");
+            return "error";
         }
     }
 

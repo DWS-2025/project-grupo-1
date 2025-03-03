@@ -50,7 +50,8 @@ public class SectionController {
     }
 
     @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description, @RequestParam MultipartFile sectionImage) throws IOException {
+    public String createSection(@RequestParam String title, @RequestParam String description,
+            @RequestParam MultipartFile sectionImage) throws IOException {
 
         Section section = new Section(title, description, null);
         sectionService.saveSection(section);
@@ -71,10 +72,17 @@ public class SectionController {
 
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
-        Section section = sectionService.findById(id).get();
-        sectionService.deleteSection(section);
+        Optional<Section> section = sectionService.findById(id);
+        
+        if (section.isPresent()) {
+            sectionService.deleteSection(section.get());
+            return "delete_section";
 
-        return "delete_section";
+        } else {
+            model.addAttribute("message", "No se puede borrar una sección inexsistente");
+            return "error";
+        }
+
     }
 
     @GetMapping("/section/{id}")
@@ -84,12 +92,10 @@ public class SectionController {
         if (section.isPresent()) {
             model.addAttribute("section", section.get());
             return "view_section";
-        }
-        else{
-            return "error_section";
-        }
+        } else {
+            model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
+            return "error";        }
 
-        
     }
 
 }

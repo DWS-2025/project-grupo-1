@@ -4,21 +4,17 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-content">
-
                 {{#section}}
-
                 <div class="item">
-                    <div class="row">
+                    <div class="row align-items-center">  
                         <div class="col-lg-6">
                             <div class="header-text">
                                 <h1 style="text-align: center;"><em>{{title}}</em></h1> <br>
                                 <p style="text-align: justify;">{{description}}</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="contenedor">
-                                <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded">
-                            </div>
+                        <div class="col-lg-6 text-center"> 
+                            <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded" style="max-width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -65,10 +61,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 
 {{>Common/footer}}
