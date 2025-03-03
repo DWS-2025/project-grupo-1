@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class UserController {
-  
+
     @Autowired
     private RankingService rankingService;
 
@@ -68,8 +68,6 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public String showProfile(Model model, @PathVariable Long userId) {
         User user = userService.getUserById(userId);
-        // We check if the user is logged in, if it is we show the user information, if
-        // not we show the main user information.
         if (user != null) {
             model.addAttribute("userId", user.getId());
             model.addAttribute("userName", user.getName());
@@ -89,9 +87,7 @@ public class UserController {
             return "profile";
         } else {
             return "login";
-
         }
-
     }
 
     @GetMapping("/editProfile/{userId}")
@@ -119,11 +115,12 @@ public class UserController {
     }
     
 
-    @PostMapping("/")
-    public String postMethodName(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return entity;
+    @GetMapping("/deleteUser/{userId}")
+    public String postMethodName(Model model, @PathVariable long userId) {
+        User deletedUser = userService.getUserById(userId);
+        userService.deleteUser(deletedUser);
+        model.addAttribute("name", deletedUser.getName());
+        return "user_delete";
     }
     
 }
