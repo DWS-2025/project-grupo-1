@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
-import es.codeurjc.web.service.ImageSectionService;
 import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
@@ -178,11 +177,13 @@ public class UserController {
     public String followedUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
         model.addAttribute("followedUsers", user.getFollowings());
+        model.addAttribute("message", "seguidos");
         return "view_followers";
     }
     @GetMapping("/user/{id}/followings")
     public String followingsUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
+        model.addAttribute("message", "que le siguen");
         model.addAttribute("followedUsers", user.getFollowers());
         return "view_followers";
     }
