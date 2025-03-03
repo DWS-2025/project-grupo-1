@@ -112,5 +112,31 @@ public class SectionController {
         }
 
     }
+    @GetMapping("/section/{id}/unfollow")
+    public String unfollowSection(Model model, @PathVariable long id) {
+        Optional<Section> section = sectionService.findById(id);
+
+        if (section.isPresent()) {
+            userService.getLoggedUser().unfollowSection(section.get());
+            return "redirect:/following";
+        } else {
+            model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
+            return "error";
+        }
+
+    }
+    @GetMapping("/section/{id}/follow")
+    public String followSection(Model model, @PathVariable long id) {
+        Optional<Section> section = sectionService.findById(id);
+
+        if (section.isPresent()) {
+            userService.getLoggedUser().followSection(section.get());
+            return "redirect:/discover";
+        } else {
+            model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
+            return "error";
+        }
+
+    }
 
 }
