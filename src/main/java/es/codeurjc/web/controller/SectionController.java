@@ -73,7 +73,7 @@ public class SectionController {
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
-        
+
         if (section.isPresent()) {
             sectionService.deleteSection(section.get());
             return "delete_section";
@@ -94,7 +94,8 @@ public class SectionController {
             return "view_section";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
-            return "error";        }
+            return "error";
+        }
 
     }
 
