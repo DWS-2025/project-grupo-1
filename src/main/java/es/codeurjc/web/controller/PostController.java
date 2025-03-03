@@ -62,8 +62,8 @@ public class PostController {
             post.addSection(sectionService.findById(sectionId).get());
         }
 
-        postService.save(post);
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
+        postService.save(post);
         return "view_post";
     }
 
