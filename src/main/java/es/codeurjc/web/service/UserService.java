@@ -44,22 +44,32 @@ public class UserService {
         return userRepository.findAll().get(0).equals(user);
     }
 
-   public void deleteUser(User user){
-        long id = user.getId();
+   public void deleteUser(User userToDelete){
+        long id = userToDelete.getId();
         if(id!=1){
-        List<Comment> comments = user.getComments();
+        List<Comment> comments = userToDelete.getComments();
         for (Comment comment : comments) {
             commentService.deleteCommentFromPost(comment.getCommentedPost(), comment.getId());
         }
         comments.clear();
 
-        List<Post> posts = user.getPosts();
+        List<Post> posts = userToDelete.getPosts();
         for (Post post : posts) {
             postService.deletePost(post);
         }
         posts.clear();
-        user.getCollaboratedPosts().clear();
+        userToDelete.getCollaboratedPosts().clear();
         userRepository.deleteById(id);
+        
+        for(User user: userRepository.findAll())
+        {
+            if(user.getFollowers().contains(userToDelete))
+            user.getFollowers().remove(userToDelete);
+
+            if(user.getFollowings().contains(userToDelete))
+            user.getFollowings().remove(userToDelete);
+
+        }
         
     }
         
