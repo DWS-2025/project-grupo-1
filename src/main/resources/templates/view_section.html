@@ -6,15 +6,16 @@
             <div class="page-content">
                 {{#section}}
                 <div class="item">
-                    <div class="row align-items-center">  
+                    <div class="row align-items-center">
                         <div class="col-lg-6">
                             <div class="header-text">
                                 <h1 style="text-align: center;"><em>{{title}}</em></h1> <br>
                                 <p style="text-align: center;">{{description}}</p>
                             </div>
                         </div>
-                        <div class="col-lg-6 text-center"> 
-                            <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded" style="max-width: 100%;">
+                        <div class="col-lg-6 text-center">
+                            <img src="/section/{{id}}/image" alt="" class="section-image img-fluid rounded"
+                                style="max-width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -33,7 +34,8 @@
                                         <h4>
                                             <a href="/post/{{id}}">{{title}}</a>
                                             <br>
-                                            <span>Publicado por: <a href="/profile/{{owner.id}}">{{owner.userName}}</a></span>
+                                            <span>Publicado por: <a
+                                                    href="/profile/{{owner.id}}">{{owner.userName}}</a></span>
                                         </h4>
                                         <span>Colaboradores:
                                             {{#contributors}}
@@ -55,7 +57,6 @@
                         </div>
                     </div>
                 </div>
-
                 {{/section}}
             </div>
         </div>
