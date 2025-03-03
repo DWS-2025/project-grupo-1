@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.annotation.ApplicationScope;
-import org.springframework.web.context.request.SessionScope;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Comment;
@@ -221,7 +219,8 @@ public class PostController {
             model.addAttribute("Comments", op.get().getComments());
             return "redirect:/post/" + postId;
         } else {
-            return "No se ha encontrado el comentario a borrar o el post especificado";
+            model.addAttribute("message", "No se ha encontrado el comentario a borrar o el post especificado");
+            return "error";
         }
     }
 

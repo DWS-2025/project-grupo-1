@@ -75,7 +75,14 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
+            if(user!=userService.getLoggedUser()){
+                model.addAttribute("notSameUser", true);
+            }
+            if(userService.getLoggedUser().getFollowings().contains(user))
+                model.addAttribute("followed", true);
     
+
+
             return "profile";
         } else {
             model.addAttribute("message", "No se ha encontrado ese usuario");
@@ -115,5 +122,17 @@ public class UserController {
         model.addAttribute("name", deletedUser.getName());
         return "user_delete";
     }
-    
+
+    @GetMapping("/user/{userId}/unfollow")
+    public String unfollowUser(Model model, @PathVariable long userId) {
+        User userToUnfollow = userService.getUserById(userId);
+        userService.getLoggedUser().unfollow(userToUnfollow);
+        return "redirect:/profile/" + userId;
+    }
+    @GetMapping("/user/{userId}/follow")
+    public String followUser(Model model, @PathVariable long userId) {
+        User userToUnfollow = userService.getUserById(userId);
+        userService.getLoggedUser().follow(userToUnfollow);
+        return "redirect:/profile/" + userId;
+    }
 }

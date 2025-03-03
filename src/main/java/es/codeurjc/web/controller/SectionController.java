@@ -71,10 +71,17 @@ public class SectionController {
 
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
-        Section section = sectionService.findById(id).get();
-        sectionService.deleteSection(section);
+        Optional<Section> section = sectionService.findById(id);
 
-        return "delete_section";
+        if (section.isPresent()) {
+            sectionService.deleteSection(section.get());
+            return "redirect:/section";
+
+        } else {
+            model.addAttribute("message", "No se puede borrar una sección inexsistente");
+            return "error";
+        }
+
     }
 
     @GetMapping("/section/{id}")
