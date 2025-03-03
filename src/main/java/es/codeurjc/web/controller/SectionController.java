@@ -86,8 +86,7 @@ public class SectionController {
             return "view_section";
         }
         else{
-            model.addAttribute("message", "No se ha encontrado la sección especificada");
-            return "error";
+            return "error_section";
         }
 
         
