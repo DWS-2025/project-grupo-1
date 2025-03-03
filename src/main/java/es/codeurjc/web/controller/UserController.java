@@ -90,7 +90,7 @@ public class UserController {
     public String login(Model model, @RequestParam String userName, @RequestParam String password ) {
         User logingUser = userService.findByUserName(userName);
         if(logingUser == null || !logingUser.getPassword().equals(password)){
-            model.addAttribute("Error", "usuario o contraseña no válidos")
+            model.addAttribute("Error", "usuario o contraseña no válidos");
             return "redirect:/login";
         }
         return "redirect:/";
