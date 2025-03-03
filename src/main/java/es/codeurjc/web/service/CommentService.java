@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.CommentRepository;
 
@@ -25,8 +26,15 @@ public class CommentService {
         comment.setCommentOwnerName(currentUser.getName());
         postToComment.getComments().add(comment);
 
+        // Calculates the rating of the post
         postToComment.calculatePostAverageRating();
+        //Calculates the rating of the owner
         postToComment.getOwner().calculateUserRate();
+        //Calculates the rating of the section
+        for (Section section : postToComment.getSections()) {
+            section.calculateAverageRating();
+        }
+
         currentUser.getComments().add(comment);
 
         commentRepository.save(comment);
@@ -37,9 +45,15 @@ public class CommentService {
         commentedPost.getComments().remove(commentToDelete);
         User owner = userService.getLoggedUser();
         owner.getComments().remove(commentToDelete);
-
+        // Calculates the rating of the post
         commentedPost.calculatePostAverageRating();
+        //Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
+        //Calculates the rating of the section
+
+        for (Section section : commentedPost.getSections()) {
+            section.calculateAverageRating();
+        }
         commentRepository.deleteComment(commentToDelete);
     }
 
@@ -49,6 +63,9 @@ public class CommentService {
 
             commentedPost.calculatePostAverageRating();
             commentedPost.getOwner().calculateUserRate();
+            for (Section section : commentedPost.getSections()) {
+                section.calculateAverageRating();
+            }
         } else {
             // not found
         }
