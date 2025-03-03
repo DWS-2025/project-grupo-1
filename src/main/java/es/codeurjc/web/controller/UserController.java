@@ -143,4 +143,16 @@ public class UserController {
         userService.getLoggedUser().follow(userToUnfollow);
         return "redirect:/profile/" + userId;
     }
+    @GetMapping("/user/{id}/followed")
+    public String followedUsers(Model model, @PathVariable long id) {
+        User user = userService.getUserById(id);
+        model.addAttribute("followedUsers", user.getFollowings());
+        return "view_followers";
+    }
+    @GetMapping("/user/{id}/followings")
+    public String followingsUsers(Model model, @PathVariable long id) {
+        User user = userService.getUserById(id);
+        model.addAttribute("followedUsers", user.getFollowers());
+        return "view_followers";
+    }
 }
