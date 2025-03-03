@@ -1,17 +1,29 @@
 <div class="owl-features owl-carousel">
-    {{#sections}}
-    <div class="item">
-      <div class="thumb">
-        <img src="/section/{{id}}/image" class="section-image img-fluid rounded" alt="">
-        <div class="hover-effect">
-          <h6>{{description}}</h6>
+  {{#sections}}
+  <div class="item">
+    <div class="thumb">
+      <img src="/section/{{id}}/image" class="section-image img-fluid rounded" alt="">
+      <div class="hover-effect">
+        <div class="col-lg-12">
+          {{#followed}}
+          <div class="delete-button">
+            <a href="/section/{{id}}/unfollow">Dejar de seguir</a>
+          </div>
+          {{/followed}}
+          {{^followed}}
+          <div class="main-button">
+            <a href="/section/{{id}}/follow">Seguir</a>
+          </div>
+          {{/followed}}
         </div>
+
       </div>
-      <h4><a href="/section/{{id}}">{{title}}</a><br><span>Publicaciones: </span></h4>
-      <ul>
-        <li><i class="fa fa-star"></i> {{averageRating}}</li>
-        <li><i class="fa fa-eye"></i> {{numberOfPublications}}</li>
-      </ul>
     </div>
-    {{/sections}}
+    <h4><a href="/section/{{id}}">{{title}}</a><br><span>Publicaciones: </span></h4>
+    <ul>
+      <li><i class="fa fa-star"></i> {{averageRating}}</li>
+      <li><i class="fa fa-eye"></i> {{numberOfPublications}}</li>
+    </ul>
   </div>
+  {{/sections}}
+</div>
