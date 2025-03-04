@@ -23,11 +23,11 @@ import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
-import es.codeurjc.web.repository.UserRepository;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
+import es.codeurjc.web.service.UserService;
 
 @Controller
 public class PostController {
@@ -43,7 +43,7 @@ public class PostController {
     @Autowired
     private SectionService sectionService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
@@ -59,24 +59,23 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, String contributors, @RequestParam("sections") List<Long> sectionIds) throws IOException {  
-        for (long sectionId : sectionIds) {
-            post.addSection(sectionService.findById(sectionId).get());
+    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, String contributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
+        if (sectionIds != null) {    
+            for (long sectionId : sectionIds) {
+                post.addSection(sectionService.findById(sectionId).get());
+            }
         }
         
-        List<String> contributorsList = List.of(contributors.split(","));
-        for (String colaborator : contributorsList) {
-            Optional<User> op = userRepository.findByName(colaborator);
-            if (op.isPresent()) {
-                User user = op.get();
-                post.addContributor(user);
-                user.addCollaboratedPosts(post);
+        String[] contributorsArray = contributors.split(",");
+        for (String colaborator : contributorsArray) {
+            if (userService.findByUserName(colaborator) != null) {
+                post.addContributor(userService.findByUserName(colaborator));
             }
-            
         }
 
-        postService.save(post);
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
+        postService.save(post);
+        //imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         return "view_post";
     }
 
@@ -143,14 +142,22 @@ public class PostController {
 
     @PostMapping("/post/{id}/edit")
     public String editPost(Model model, @PathVariable long id, Post updatedPost,
-            @RequestAttribute MultipartFile postImage, @RequestParam("sections") List<Long> sectionIds)
+            @RequestAttribute MultipartFile postImage, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam("contributors") List<String> contributors)
             throws IOException {
         Optional<Post> op = postService.findPostById(id);
 
         if (op.isPresent()) {
-            for (long sectionId : sectionIds) {
-                updatedPost.addSection(sectionService.findById(sectionId).get());
+            if (sectionIds != null) {
+                for (long sectionId : sectionIds) {
+                    updatedPost.addSection(sectionService.findById(sectionId).get());
+                }
             }
+            for (String colaborator : contributors) {
+                if (userService.findByUserName(colaborator) != null) {
+                    updatedPost.addContributor(userService.findByUserName(colaborator));
+                }
+            }
+
 
             postService.updatePost(op.get(), updatedPost, postImage);
             return "redirect:/post/" + id;
