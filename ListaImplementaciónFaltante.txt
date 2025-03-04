@@ -1,5 +1,0 @@
-
-Hay que poner el nombre de las carpetas en minuscula
-Poner todas las variables en minuscula
-**acceder a los modelos de las platillas como por ej : post.id**
-Eliminar plantillas que no sirvan
