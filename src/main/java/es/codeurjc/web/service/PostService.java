@@ -1,6 +1,7 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,9 +42,17 @@ public class PostService {
         User currentUser = userService.getLoggedUser();
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
-        for (Section section : post.getSections()) {
+        
+        List<Section> sections = post.getSections();
+        for (Section section : sections) {
             section.addPost(post);
         }
+        
+        List<User> contributors = post.getContributors();
+        for (User contributor : contributors) {
+            contributor.addCollaboratedPosts(post);
+        }
+        
         postRepository.save(post);
     }
 
@@ -82,6 +91,18 @@ public class PostService {
             if (!updatedPost.getSections().contains(section)) {
                 post.deleteSection(section);
                 section.deletePost(post);
+            }
+        }
+
+        for (User contributor : updatedPost.getContributors()) {
+            if (!post.getContributors().contains(contributor)) {
+                post.addContributor(contributor);
+            }
+        }
+
+        for (User contributor : post.getContributors()) {
+            if (!updatedPost.getContributors().contains(contributor)) {
+                post.getContributors().remove(contributor);
             }
         }
         
