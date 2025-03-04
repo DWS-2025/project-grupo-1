@@ -22,7 +22,6 @@ import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 
-
 @Controller
 public class UserController {
 
@@ -40,7 +39,7 @@ public class UserController {
 
     private static final String USERS_FOLDER = "users";
 
-    @GetMapping({ "/home", "/" })
+    @GetMapping({"/home", "/"})
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -86,9 +85,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(Model model, @RequestParam String userName, @RequestParam String password ) {
+    public String login(Model model, @RequestParam String userName, @RequestParam String password) {
         User logingUser = userService.findByUserName(userName);
-        if(logingUser == null || !logingUser.getPassword().equals(password)){
+        if (logingUser == null || !logingUser.getPassword().equals(password)) {
             model.addAttribute("Error", "usuario o contraseña no válidos");
             return "redirect:/login";
         }
@@ -101,24 +100,23 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String postMethodName(Model model, @RequestParam String userName,@RequestParam String email,
-    @RequestParam String password, @RequestParam String confirmedPassword) {
+    public String postMethodName(Model model, @RequestParam String userName, @RequestParam String email,
+            @RequestParam String password, @RequestParam String confirmedPassword) {
         List<User> users = userService.findAllUsers();
         for (User user : users) {
-            if(user.getEmail().equals(email) || user.getName().equals(userName)){
+            if (user.getEmail().equals(email) || user.getName().equals(userName)) {
                 model.addAttribute("Error", "Usuario existente o correo utilizado");
                 return "redirect:/register";
             }
         }
-        if(!password.equals(confirmedPassword)){
+        if (!password.equals(confirmedPassword)) {
             model.addAttribute("PassError", "Las contraseñas no coinciden");
             return "redirect:/register";
         }
-        User newUser = new User(userName, password,email);
+        User newUser = new User(userName, password, email);
         userService.save(newUser);
         return "redirect:/";
     }
-
 
     @GetMapping("/profile/{userId}")
     public String showProfile(Model model, @PathVariable Long userId) {
@@ -129,13 +127,17 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
-        
+
             if (user != userService.getLoggedUser()) {
-            model.addAttribute("notSameUser", true);
+                model.addAttribute("notSameUser", true);
             }
             if (userService.getLoggedUser().getFollowings().contains(user)) {
-            model.addAttribute("followed", true);
+                model.addAttribute("followed", true);
             }
+            if (user.equals(userService.getLoggedUser())) {
+                model.addAttribute("hideDeleteButton", true);
+            }
+
             return "profile";
 
         } else {
@@ -175,7 +177,7 @@ public class UserController {
             imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
             String imageName = userImage.getOriginalFilename();
             user.setUserImage(imageName);
-        }   
+        }
         userService.save(user);
 
         return "redirect:/profile/" + user.getId();
@@ -186,12 +188,29 @@ public class UserController {
         return imageUserService.createResponseFromImage(USERS_FOLDER, id);
     }
 
+    @PostMapping("/deleteUser/{userId}")
+    public String postDeleteUser(Model model, @PathVariable long userId) {
+        if (userService.findById(userId).isPresent()) {
+            User deletedUser = userService.getUserById(userId);
+            userService.deleteUser(deletedUser);
+            model.addAttribute("name", deletedUser.getName());
+            model.addAttribute("byPost", true);
+            return "user_delete";
+        } else {
+            model.addAttribute("message", "No se ha encontrado ese usuario");
+            return "error";
+        }
+    }
+
     @GetMapping("/deleteUser/{userId}")
-    public String postMethodName(Model model, @PathVariable long userId) {
-        User deletedUser = userService.getUserById(userId);
-        userService.deleteUser(deletedUser);
-        model.addAttribute("name", deletedUser.getName());
-        return "user_delete";
+    public String DeleteUser(Model model, @PathVariable long userId) {
+        if (userService.findById(userId).isPresent()) {
+            return "user_delete";
+        } else {
+            model.addAttribute("message", "no se ha encontrado ese usuario");
+            return "error";
+        }
+
     }
 
     @GetMapping("/user/{userId}/unfollow")
@@ -207,6 +226,7 @@ public class UserController {
         userService.getLoggedUser().follow(userToUnfollow);
         return "redirect:/profile/" + userId;
     }
+
     @GetMapping("/user/{id}/followed")
     public String followedUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
@@ -214,6 +234,7 @@ public class UserController {
         model.addAttribute("message", "seguidos");
         return "view_followers";
     }
+
     @GetMapping("/user/{id}/followings")
     public String followingsUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
