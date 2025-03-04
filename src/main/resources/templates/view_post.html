@@ -38,7 +38,9 @@
                     </div>
                     <div class="col-lg-12">
                       <div class="main-button">
-                        <a href="/post/{{post.id}}/delete">Borrar</a>
+                        <form action="/post/{{post.id}}/delete" method="post">
+                          <input type='submit' value='Eliminar comentario' />
+                        </form>
                       </div>
                     </div>
                     <div class="col-lg-12">
