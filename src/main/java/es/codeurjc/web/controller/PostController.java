@@ -75,7 +75,6 @@ public class PostController {
 
         imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         postService.save(post);
-        //imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
         return "view_post";
     }
 

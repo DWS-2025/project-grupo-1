@@ -21,7 +21,6 @@ import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
