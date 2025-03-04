@@ -76,12 +76,13 @@ public class SectionController {
 
         if (section.isPresent()) {
             sectionService.deleteSection(section.get());
+            model.addAttribute("byPost", true);
+            
             return "delete_section";
 
         } else {
             return "redirect:/section";
         }
-
     }
     @GetMapping("/section/{id}/delete")
     public String deleteSectionG(Model model, @PathVariable long id) {

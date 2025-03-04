@@ -167,7 +167,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/post/{id}/delete")
+    @PostMapping("/post/{id}/delete")
     public String deletePost(@PathVariable long id, Model model) {
         Optional<Post> op = postService.findPostById(id);
         if (op.isPresent()) {

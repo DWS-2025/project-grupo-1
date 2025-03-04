@@ -4,10 +4,18 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-content">
+                {{#byPost}}
                 <h2>Sección borrada</h2> <br>
                 <p>La sección ha sido borrada correctamente.</p>
                 <br>
                 <a href="/section" class="main-button">Volver</a>
+                {{/byPost}}
+                {{^byPost}}
+                <h2>No se ha podido borrar la sección</h2> <br>
+                <p>Para borrar la sección, dirijase a las secciones y pulse en borrar sección</p>
+                <br>
+                <a href="/section" class="main-button">Volver</a>
+                {{/byPost}}
             </div>
         </div>
     </div>
