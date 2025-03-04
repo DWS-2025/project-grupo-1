@@ -34,9 +34,7 @@ public class User {
         this.userImage = "imagen-1.jpeg";
     }
 
-    public User() {
-        //TODO Auto-generated constructor stub
-    }
+    public User(){}
 
     // Delete the post from the user's posts if it exists
     public void deletePost(Post post) {

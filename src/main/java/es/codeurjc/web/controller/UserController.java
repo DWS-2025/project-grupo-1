@@ -88,15 +88,9 @@ public class UserController {
     @PostMapping("/login")
     public String login(Model model, @RequestParam String userName, @RequestParam String password) {
         User logingUser = userService.findByUserName(userName);
-<<<<<<< HEAD
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
             return "/login";
-=======
-        if (logingUser == null || !logingUser.getPassword().equals(password)) {
-            model.addAttribute("Error", "usuario o contraseña no válidos");
-            return "redirect:/login";
->>>>>>> ae59f82e404dd678f4e5592280ffbdf48060b701
         }
         return "redirect:/";
     }

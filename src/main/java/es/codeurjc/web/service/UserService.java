@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
-import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 
