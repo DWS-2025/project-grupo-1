@@ -3,8 +3,12 @@
     <div class="auth-box">
             <form action="/register" method="post">
                 <div class="form-group mb-3">
+                    {{#Error}}{{/Error}}
+                    {{^Error}}<p class="text-light" style="background-color: red;">Usuario o email ya existentes</p>{{/Error}}
+                    {{#PassError}}{{/PassError}}
+                    {{^PassError}}<p class="text-light" style="background-color: red;">Las contraseñas no coinciden</p>{{/PassError}}
                     <label for="name" class="text-light">Nombre de Usuario</label>
-                    <input type="text" class="form-control auth-input" id="name" name="name" required>
+                    <input type="text" class="form-control auth-input" id="name" name="userName" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="name" class="text-light">Correo electrónico</label>
@@ -16,7 +20,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="confirmPassword" class="text-light">Confirmar Contraseña</label>
-                    <input type="password" class="form-control auth-input" id="confirmPassword" name="confirmPassword" required>
+                    <input type="password" class="form-control auth-input" id="confirmPassword" name="confirmedPassword" required>
                 </div>
                 <button type="submit" class="auth-button">Registrarse</button>
                 <p>¿Ya tienes cuenta?<a href="/login" class="logo">inicia sesión</a></p>

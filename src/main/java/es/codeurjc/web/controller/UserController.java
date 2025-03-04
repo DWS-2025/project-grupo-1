@@ -82,21 +82,24 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(Model model) {
+        model.addAttribute("Error", true);
         return "login";
     }
 
     @PostMapping("/login")
     public String login(Model model, @RequestParam String userName, @RequestParam String password ) {
         User logingUser = userService.findByUserName(userName);
-        if(logingUser == null || !logingUser.getPassword().equals(password)){
-            model.addAttribute("Error", "usuario o contraseña no válidos");
-            return "redirect:/login";
+        if(logingUser == null || !(logingUser.getPassword().equals(password))){
+            model.addAttribute("Error", false);
+            return "/login";
         }
         return "redirect:/";
     }
 
     @GetMapping("/register")
     public String register(Model model) {
+        model.addAttribute("Error", true);
+        model.addAttribute("PassError", true);
         return "register";
     }
 
@@ -106,13 +109,13 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         for (User user : users) {
             if(user.getEmail().equals(email) || user.getName().equals(userName)){
-                model.addAttribute("Error", "Usuario existente o correo utilizado");
-                return "redirect:/register";
+                model.addAttribute("Error",false);
+                return "/register";
             }
         }
         if(!password.equals(confirmedPassword)){
-            model.addAttribute("PassError", "Las contraseñas no coinciden");
-            return "redirect:/register";
+            model.addAttribute("PassError", false);
+            return "/register";
         }
         User newUser = new User(userName, password,email);
         userService.save(newUser);
