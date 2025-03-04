@@ -23,6 +23,10 @@ public class UserRepository {
         return Optional.ofNullable(users.get(id));
     }
 
+    public Optional<User> findByName(String name) {
+        return users.values().stream().filter(user -> user.getName().equals(name)).findFirst();
+    }
+
     public void save(User user) {
         long id = user.getId();
         if (id == 0) {

@@ -14,14 +14,14 @@
 
   <div class="form-group">
     <label for="title">Título:</label>
-    <input type="text" class="form-control" id="title" name="title" value="{{#isEditing}}{{post.title}}{{/isEditing}}"
+    <input type="text" class="form-control" id="title" name="title" value="{{#isEditing}}{{title}}{{/isEditing}}"
       required />
   </div>
 
   <div class="form-group">
     <label for="content">Contenido:</label>
     <textarea class="form-control" id="content" name="content" rows="10"
-      required>{{#isEditing}}{{post.content}}{{/isEditing}}</textarea>
+      required>{{#isEditing}}{{content}}{{/isEditing}}</textarea>
   </div>
 
   <div class="form-group">
@@ -29,7 +29,7 @@
     <br />
     <em>Nota: Escriba el nombre de usuario de los colaboradores
       separados por comas</em>
-    <input type="text" class="form-control" id="contributors" name="contributors" />
+    <input type="text" class="form-control" id="contributors" name="contributors" value="{{#isEditing}}{{contributors}}{{/isEditing}}" />
   </div>
 
   <!-- <div class="form-group">
@@ -45,7 +45,7 @@
     <input type="file" class="form-control file-input-small" id="postImage" name="postImage" />
   </div>
 
-  <p class="checkbox-select" required>Selecciona categorías</p>
+  <p class="checkbox-select">Selecciona categorías</p>
 
   <div class="form-group">
 
