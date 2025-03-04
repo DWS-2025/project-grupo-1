@@ -113,7 +113,6 @@ public class UserController {
             @RequestParam String password, @RequestParam String confirmedPassword) {
         List<User> users = userService.findAllUsers();
         for (User user : users) {
-<<<<<<< HEAD
             if(user.getEmail().equals(email) || user.getName().equals(userName)){
                 model.addAttribute("Error",false);
                 return "/register";
@@ -122,16 +121,6 @@ public class UserController {
         if(!password.equals(confirmedPassword)){
             model.addAttribute("PassError", false);
             return "/register";
-=======
-            if (user.getEmail().equals(email) || user.getName().equals(userName)) {
-                model.addAttribute("Error", "Usuario existente o correo utilizado");
-                return "redirect:/register";
-            }
-        }
-        if (!password.equals(confirmedPassword)) {
-            model.addAttribute("PassError", "Las contraseñas no coinciden");
-            return "redirect:/register";
->>>>>>> ae59f82e404dd678f4e5592280ffbdf48060b701
         }
         User newUser = new User(userName, password, email);
         userService.save(newUser);
