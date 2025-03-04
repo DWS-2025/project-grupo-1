@@ -24,7 +24,7 @@ public class Section {
 
     public void addPost(Post post) {
         this.posts.add(post);
-        //post.addSection(this);
+        post.addSection(this);
         numberOfPublications++;
     }
 
@@ -93,7 +93,7 @@ public class Section {
             }
         }
         if (index != 0) {
-            setAverageRating(averageRating /= index);
+            setAverageRating(averageRating / index);
         }
      }
 

@@ -91,6 +91,7 @@ public class Manager {
         defaultSection3.addPost(post5);
         defaultSection3.addPost(post6);
         defaultSection4.addPost(post7);
+        defaultSection5.addPost(post8);
 
         post1.addContributor(user6);
         post1.addContributor(user2);
