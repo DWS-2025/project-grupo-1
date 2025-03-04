@@ -219,30 +219,50 @@ public class UserController {
     @GetMapping("/user/{userId}/unfollow")
     public String unfollowUser(Model model, @PathVariable long userId) {
         User userToUnfollow = userService.getUserById(userId);
+        if(userToUnfollow != null){
         userService.getLoggedUser().unfollow(userToUnfollow);
         return "redirect:/profile/" + userId;
+        } else {
+            model.addAttribute("message", "no se ha encontrado ese usuario");
+            return "error";
+        }
     }
 
     @GetMapping("/user/{userId}/follow")
     public String followUser(Model model, @PathVariable long userId) {
-        User userToUnfollow = userService.getUserById(userId);
-        userService.getLoggedUser().follow(userToUnfollow);
+        User userTofollow = userService.getUserById(userId);
+        if(userTofollow != null){
+        userService.getLoggedUser().follow(userTofollow);
         return "redirect:/profile/" + userId;
+        } else {
+            model.addAttribute("message", "no se ha encontrado ese usuario");
+            return "error";
+        }
     }
 
     @GetMapping("/user/{id}/followed")
     public String followedUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
+        if(user != null){
         model.addAttribute("followedUsers", user.getFollowings());
         model.addAttribute("message", "seguidos");
         return "view_followers";
+        } else {
+            model.addAttribute("message", "no se ha encontrado ese usuario");
+            return "error";
+        }
     }
 
     @GetMapping("/user/{id}/followings")
     public String followingsUsers(Model model, @PathVariable long id) {
         User user = userService.getUserById(id);
+        if (user != null){
         model.addAttribute("message", "que le siguen");
         model.addAttribute("followedUsers", user.getFollowers());
         return "view_followers";
+        } else{
+            model.addAttribute("message", "no se ha encontrado ese usuario");
+            return "error";
+        }
     }
 }
