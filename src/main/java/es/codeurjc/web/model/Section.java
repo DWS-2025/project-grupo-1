@@ -24,8 +24,10 @@ public class Section {
 
     public void addPost(Post post) {
         this.posts.add(post);
-        post.addSection(this);
         numberOfPublications++;
+    }
+    public void addPostToSection(Post post){
+        post.addSection(this);
     }
 
     public void deletePost(Post post) {
