@@ -195,17 +195,19 @@ public class PostController {
     public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
         Optional<Post> op = postService.findPostById(postId);
         if (op.isPresent()) {
+            if (newComment.getContent().isEmpty()) {
+                model.addAttribute("message", "El comentario no puede estar vacio");
+                return "error";
+
+            } else if (newComment.getRating() > 5 || newComment.getRating() < 0) {
+                model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+                return "error";
+            }
             commentService.saveCommentInPost(op.get(), newComment);
             return "redirect:/post/" + postId;
-        } else if (newComment.getContent().isEmpty()) {
-            model.addAttribute("message", "El comentario no puede estar vacio");
-            return "error";
-        } else if (newComment.getRating() > 5 || newComment.getRating() < 0) {
-            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
-            return "error";
 
         } else {
-            model.addAttribute("errorType", "No se ha encontrado un post con ese nombre");
+            model.addAttribute("message", "No se han encontrado el post o comentario especificados");
             return "error";
         }
 
@@ -237,16 +239,16 @@ public class PostController {
         Optional<Comment> opComment = commentService.findCommentById(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
+            if (updatedComment.getContent().isEmpty()) {
+                model.addAttribute("message", "El comentario no puede estar vacio");
+                return "error";
+
+            } else if (updatedComment.getRating() > 5 || updatedComment.getRating() < 0) {
+                model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+                return "error";
+            }
             commentService.updateComment(commentId, updatedComment, op.get());
             return "redirect:/post/" + postId;
-
-        } else if (updatedComment.getContent().isEmpty()) {
-            model.addAttribute("message", "El comentario no puede estar vacio");
-            return "error";
-
-        } else if (updatedComment.getRating() > 5 || updatedComment.getRating() < 0) {
-            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
-            return "error";
 
         } else {
             model.addAttribute("message", "No se han encontrado el post o comentario especificados");
