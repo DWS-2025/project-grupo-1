@@ -97,8 +97,8 @@ public class UserController {
 
     @GetMapping("/register")
     public String register(Model model) {
-        model.addAttribute("Error", true);
-        model.addAttribute("PassError", true);
+        model.addAttribute("Error", false);
+        model.addAttribute("PassError", false);
         return "register";
     }
 
@@ -108,12 +108,20 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         for (User user : users) {
             if(user.getEmail().equals(email) || user.getName().equals(userName)){
-                model.addAttribute("Error",false);
-                return "/register";
+                if(!password.equals(confirmedPassword)){
+                    model.addAttribute("Error",true);
+                    model.addAttribute("PassError", true);
+                    return "/register";
+                } else {
+                    model.addAttribute("Error", true);
+                    model.addAttribute("PassError", false);
+                    return "/register";
+                }
             }
         }
         if(!password.equals(confirmedPassword)){
-            model.addAttribute("PassError", false);
+            model.addAttribute("Error", false);
+            model.addAttribute("PassError", true);
             return "/register";
         }
         User newUser = new User(userName, password, email);
