@@ -3,10 +3,14 @@ package es.codeurjc.web.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Post {
@@ -15,16 +19,24 @@ public class Post {
     private long id;
 
     private String title, content;
+
+    @ManyToOne
     private User owner;
     private String ownerName;
     private float  averageRating = 0; // [0.00, 5.00]
+    
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+    
+    @ManyToMany
     private List<Section> sections = new ArrayList<>();
+    
+    @ManyToMany
     private List<User> contributors = new ArrayList<>();
 
     public Post() {}
 
-    public Post(String title, String content, String postImage){
+    public Post(String title, String content, String postImage) {
         this.title = title;
         this.content = content;
     }
