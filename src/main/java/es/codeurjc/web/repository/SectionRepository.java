@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import es.codeurjc.web.model.Section;
 
 @Component
-public class SectionRepository {
+public interface SectionRepository extends JpaRepository<Section, Long> {
+
+    /* 
 
     private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, Section> sections = new ConcurrentHashMap<>();
@@ -36,4 +38,5 @@ public class SectionRepository {
         sections.remove(section.getId());
     }
 
+    */
 }

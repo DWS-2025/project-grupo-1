@@ -44,7 +44,7 @@ public class SectionService {
                 user.getFollowedSections().remove(section);
             }
         }
-        sectionRepository.deleteSectionById(sectionToDelete);
+        sectionRepository.delete(sectionToDelete);
 
     }
 

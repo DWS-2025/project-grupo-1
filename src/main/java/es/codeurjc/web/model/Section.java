@@ -20,6 +20,9 @@ public class Section {
     private float averageRating;
     private int numberOfPublications;
 
+    public Section() {
+    }
+
     public Section(String title, String description, String sectionImage) {
         this.title = title;
         this.description = description;

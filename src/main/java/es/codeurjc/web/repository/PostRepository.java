@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import es.codeurjc.web.model.Post; 
 
 @Component
-public class PostRepository {
-    
+public interface PostRepository extends JpaRepository<Post, Long> {
+    /* 
     private AtomicLong nextId = new AtomicLong(1L);
 	private ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
@@ -35,5 +35,6 @@ public class PostRepository {
     public void deleteById(long id) {
         posts.remove(id);
     }
+        */
 
 }

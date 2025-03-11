@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import es.codeurjc.web.model.Comment;
 
 @Component
-public class CommentRepository {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+    /* 
     private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, Comment> comments = new ConcurrentHashMap<>();
 
@@ -34,7 +35,7 @@ public class CommentRepository {
 
     public void deleteComment(Comment comment){
         comments.remove(comment.getId());
-    }
+    } */
 }
 
 

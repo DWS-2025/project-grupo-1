@@ -54,7 +54,7 @@ public class CommentService {
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
-        commentRepository.deleteComment(commentToDelete);
+        commentRepository.delete(commentToDelete);
     }
 
     public void updateComment(Long commentId, Comment updatedComment, Post commentedPost) {
