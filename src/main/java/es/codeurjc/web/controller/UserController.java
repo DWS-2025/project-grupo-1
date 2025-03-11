@@ -48,10 +48,13 @@ public class UserController {
         // problem with the user name we show "Invitado" as a default value.
         if (userService.getLoggedUser() != null) {
             model.addAttribute("user", userService.getLoggedUser());
+            model.addAttribute("session", true);
+            model.addAttribute("id", userService.getLoggedUser().getId());
         } else {
             User user = new User();
             user.setName("Invitado");
             model.addAttribute("user", user);
+            model.addAttribute("session", false);
         }
 
         return "home";

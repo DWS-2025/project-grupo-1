@@ -67,7 +67,13 @@ https://templatemo.com/tm-579-cyborg-gaming
                         <li><a href="/post">Publicaciones</a></li>
                         <li><a href="/section">Secciones</a></li>
                         <!-- if not loged -> show "login" and redirect to /login, else show profile button-->
-                        <li><a href="/profile/1">Perfil</a></li>
+                        {{#session}}
+                        <li><a href="/profile/{{id}}">Perfil</a></li>
+                        {{/session}}
+                        {{^session}}
+                        <li><a href="/login">Iniciar Sesión</a></li>
+                        <li><a href="/register">Registrarse</a></li>
+                        {{/session}}
                     </ul>   
                     <a class='menu-trigger'>
                         <span>Menu</span>
