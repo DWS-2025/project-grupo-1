@@ -3,10 +3,13 @@ package es.codeurjc.web.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -15,10 +18,16 @@ public class User {
     private long id;
     private String userName, password, description, userImage, email;
     private float userRate;
+    @OneToMany(mappedBy="owner", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Post> posts;
+    @ManyToMany
     private List<User> followers, followings;
+    @ManyToMany
     private List<Section> followedSections;
+    
+    @OneToMany(mappedBy="owner", cascade=CascadeType.ALL, orphanRemoval=true)
     private List<Comment> comments;
+    @ManyToMany(mappedBy="contributors")
     private List<Post> collaboratedPosts;
 
     // Constructor with the information that the user provides when registering

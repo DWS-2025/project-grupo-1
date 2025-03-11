@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Component;
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import es.codeurjc.web.model.Post; 
 
 @Component
