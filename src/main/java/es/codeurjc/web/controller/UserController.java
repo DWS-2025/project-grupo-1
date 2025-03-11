@@ -91,11 +91,11 @@ public class UserController {
     @PostMapping("/login")
     public String login(Model model, @RequestParam String userName, @RequestParam String password, HttpSession session) {
         User logingUser = userService.findByUserName(userName);
-        session.setAttribute("User", logingUser);
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
             return "/login";
         }
+        session.setAttribute("User", logingUser);
         return "redirect:/";
     }
 
