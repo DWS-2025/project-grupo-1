@@ -3,6 +3,7 @@ package es.codeurjc.web.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,15 @@ public class UserService {
 
     @Autowired
     PostService postService;
-   
 
+    private User loggedUser;
+
+    public void setLoggedUser(HttpSession session){
+        loggedUser = (User) session.getAttribute("User");
+    }
 
     public User getLoggedUser(){
-        return userRepository.getUserById(1);
+        return loggedUser;
     }
 
     public List<User> findAllUsers(){

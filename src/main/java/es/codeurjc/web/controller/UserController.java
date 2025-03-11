@@ -2,6 +2,7 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.*;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -65,7 +68,7 @@ public class UserController {
     }
 
     @GetMapping("/discover")
-    public String discover(Model model) {
+    public String discover(Model model, HttpSession session) {
         List<Section> allSections = sectionService.findAll();
         List<Section> followedSections = userService.getLoggedUser().getFollowedSections();
         // Filter only the sections that are NOT in the list of followed sections
@@ -86,8 +89,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(Model model, @RequestParam String userName, @RequestParam String password) {
+    public String login(Model model, @RequestParam String userName, @RequestParam String password, HttpSession session) {
         User logingUser = userService.findByUserName(userName);
+        session.setAttribute("User", logingUser);
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
             return "/login";
@@ -126,7 +130,7 @@ public class UserController {
         }
         User newUser = new User(userName, password, email);
         userService.save(newUser);
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/profile/{userId}")
@@ -200,7 +204,7 @@ public class UserController {
     }
 
     @PostMapping("/deleteUser/{userId}")
-    public String postDeleteUser(Model model, @PathVariable long userId) {
+    public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
         if (userService.findById(userId).isPresent()) {
             User deletedUser = userService.getUserById(userId);
             userService.deleteUser(deletedUser);
