@@ -1,5 +1,6 @@
 package es.codeurjc.web.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,11 +13,13 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(length = 2000) 
     private String content;
 
     @ManyToOne
     private User owner;
     // esto hay que quitarlo cuando tengamos BD 
+    @ManyToOne
     private Post commentedPost;
     private int likes, dislikes;
     private String commentOwnerName;

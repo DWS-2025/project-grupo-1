@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Section {
@@ -16,6 +17,7 @@ public class Section {
     private String title;
     private String description;
     private String sectionImage;
+    @ManyToMany
     private List<Post> posts;
     private float averageRating;
     private int numberOfPublications;

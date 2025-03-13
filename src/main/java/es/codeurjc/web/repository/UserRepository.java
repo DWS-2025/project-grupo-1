@@ -1,11 +1,10 @@
 package es.codeurjc.web.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 
 import es.codeurjc.web.model.User;
 
-@Component
+
 public interface UserRepository extends JpaRepository<User, Long>  {
 
     /* private AtomicLong nextId = new AtomicLong(1L);
