@@ -119,8 +119,8 @@ public class Manager {
         post6.addContributor(user3);
         post6.addContributor(user2);
 
-        this.followSectionAutomated();
-        this.followUsersAutomated();
+     //    this.followSectionAutomated();
+      //  this.followUsersAutomated();
 
     }
 

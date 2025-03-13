@@ -2,7 +2,6 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.*;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -24,6 +21,7 @@ import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
