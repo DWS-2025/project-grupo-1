@@ -1,18 +1,14 @@
 package es.codeurjc.web.repository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.stereotype.Component;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+
 import es.codeurjc.web.model.User;
 
 @Component
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long>  {
 
-    private AtomicLong nextId = new AtomicLong(1L);
+    /* private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
 
     public List<User> findAll() {
@@ -43,5 +39,6 @@ public class UserRepository {
     public User getUserById(long id) {
         return users.get(id);
     }
+        */
 
 }
