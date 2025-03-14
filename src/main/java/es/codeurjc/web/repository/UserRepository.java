@@ -1,12 +1,17 @@
 package es.codeurjc.web.repository;
 
+import java.security.PublicKey;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.codeurjc.web.model.User;
+import java.util.List;
+
 
 
 public interface UserRepository extends JpaRepository<User, Long>  {
 
+    User findByuserName(String userName);
     /* private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
 

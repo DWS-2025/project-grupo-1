@@ -27,7 +27,7 @@ public class Manager {
     public void init() {
 
         // Default user
-        User mainUser = new User("mainUser", "ContraseñaSegura", "mainUser@gmail.com");
+        User mainUser = new User("mainUser", "1234", "mainUser@gmail.com");
         // Other users
         User user1 = new User("user1", "Contraseña1", "user1@gmail.com");
         User user2 = new User("user2", "Contraseña2", "user2@gmail.com");
