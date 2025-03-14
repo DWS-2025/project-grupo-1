@@ -24,14 +24,19 @@ public class UserService {
     @Autowired
     PostService postService;
 
-    private User loggedUser;
+    /*private User loggedUser;  THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT 
 
-    public void setLoggedUser(HttpSession session){
-        loggedUser = (User) session.getAttribute("User");
+    public void setLoggedUser(HttpSession session, User user){
+        session.setAttribute("User", user);
+        loggedUser = user;
     }
 
     public User getLoggedUser(){
         return loggedUser;
+    }*/
+
+    public User getLoggedUser(){
+        return userRepository.findAll().get(0);
     }
 
     public List<User> findAllUsers(){

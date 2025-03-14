@@ -40,7 +40,7 @@ public class UserController {
 
     private static final String USERS_FOLDER = "users";
 
-    @GetMapping({"/home", "/"})
+    @GetMapping({"/home", "/"})    /*THIS METHOD WILL BE USED IN THE NEXT PHASE*/
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -96,7 +96,7 @@ public class UserController {
             model.addAttribute("Error", false);
             return "/login";
         }
-        session.setAttribute("User", logingUser);
+        /*userService.setLoggedUser(session, logingUser);*/
         return "redirect:/";
     }
 
