@@ -10,16 +10,23 @@ import org.springframework.stereotype.Service;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.CommentRepository;
 import es.codeurjc.web.repository.SectionRepository;
 import es.codeurjc.web.repository.UserRepository;
 
 @Service
 public class SectionService {
+
+    private final CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    SectionService(CommentRepository commentRepository) {
+        this.commentRepository = commentRepository;
+    }
 
     public List<Section> findAll(){
         return sectionRepository.findAll();
@@ -54,6 +61,13 @@ public class SectionService {
 
     public void deletePost(Section section, Post post) {
         section.deletePost(post);
+    }
+
+    public void update(Section oldSection, Section updatedSection){
+        oldSection.setTitle(updatedSection.getTitle());
+        oldSection.setDescription(updatedSection.getDescription());
+        oldSection.setSectionImage(updatedSection.getSectionImage());
+        sectionRepository.save(oldSection);
     }
 
 }

@@ -16,12 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Section;
-import es.codeurjc.web.service.ImageSectionService;
-import es.codeurjc.web.service.SectionService;
-import es.codeurjc.web.service.UserService;
+import es.codeurjc.web.repository.CommentRepository;
+import es.codeurjc.web.service.*;
 
 @Controller
 public class SectionController {
+
+    private final ImagePostService imagePostService;
+
+    private final CommentService commentService;
+
+    private final CommentRepository commentRepository;
     @Autowired
     private SectionService sectionService;
 
@@ -32,6 +37,13 @@ public class SectionController {
     private ImageSectionService imageSectionService;
 
     private static final String SECTIONS_FOLDER = "sections";
+
+    SectionController(CommentRepository commentRepository, CommentService commentService,
+            ImagePostService imagePostService) {
+        this.commentRepository = commentRepository;
+        this.commentService = commentService;
+        this.imagePostService = imagePostService;
+    }
 
     @GetMapping("/section")
     public String showSections(Model model) {
@@ -77,13 +89,14 @@ public class SectionController {
         if (section.isPresent()) {
             sectionService.deleteSection(section.get());
             model.addAttribute("byPost", true);
-            
+
             return "delete_section";
 
         } else {
             return "redirect:/section";
         }
     }
+
     @GetMapping("/section/{id}/delete")
     public String deleteSectionG(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
@@ -99,7 +112,6 @@ public class SectionController {
 
     }
 
-
     @GetMapping("/section/{id}")
     public String viewSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
@@ -113,6 +125,7 @@ public class SectionController {
         }
 
     }
+
     @GetMapping("/section/{id}/unfollow")
     public String unfollowSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
@@ -126,6 +139,7 @@ public class SectionController {
         }
 
     }
+
     @GetMapping("/section/{id}/follow")
     public String followSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
@@ -133,6 +147,35 @@ public class SectionController {
         if (section.isPresent()) {
             userService.getLoggedUser().followSection(section.get());
             return "redirect:/discover";
+        } else {
+            model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
+            return "error";
+        }
+
+    }
+
+    @GetMapping("/section/{id}/edit") //hacer la pagina
+    public String editSection(Model model, @PathVariable long id) {
+        Optional<Section> section = sectionService.findById(id);
+
+        if (section.isPresent()) {
+            model.addAttribute("section", section.get());
+            return "edit_section";
+        } else {
+            model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
+            return "error";
+        }
+
+    }
+
+    @PostMapping("/section/{id}/edit") 
+    public String updateSection(Model model, @PathVariable long id, Section updatedSection) {
+        Optional<Section> op = sectionService.findById(id);
+
+        if (op.isPresent()) {
+            Section oldSection = op.get();
+            sectionService.update(oldSection, updatedSection);
+            return "redirect:/section/" + id;
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
             return "error";

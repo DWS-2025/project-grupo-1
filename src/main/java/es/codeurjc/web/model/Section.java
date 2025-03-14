@@ -22,7 +22,7 @@ public class Section {
     private float averageRating;
     private int numberOfPublications;
 
-    public Section() {
+    protected Section() {
     }
 
     public Section(String title, String description, String sectionImage) {

@@ -18,16 +18,16 @@ public class User {
     private long id;
     private String userName, password, description, userImage, email;
     private float userRate;
-    @OneToMany(mappedBy="owner", cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
     @ManyToMany
     private List<User> followers, followings;
     @ManyToMany
     private List<Section> followedSections;
-    
-    @OneToMany(mappedBy="owner", cascade=CascadeType.ALL, orphanRemoval=true)
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    @ManyToMany(mappedBy="contributors")
+    @ManyToMany(mappedBy = "contributors")
     private List<Post> collaboratedPosts;
 
     // Constructor with the information that the user provides when registering
@@ -45,7 +45,8 @@ public class User {
         this.userImage = "imagen-1.jpeg";
     }
 
-    public User(){}
+    public User() {
+    }
 
     // Delete the post from the user's posts if it exists
     public void deletePost(Post post) {
@@ -63,7 +64,8 @@ public class User {
         this.followings.remove(user);
         user.followers.remove(this);
     }
-    public void unfollowSection(Section section){
+
+    public void unfollowSection(Section section) {
         this.followedSections.remove(section);
     }
 
@@ -150,19 +152,19 @@ public class User {
     public void addCommentToUser(Comment comment) {
         comments.add(comment);
     }
-    public List<Post> getCollaboratedPosts(){
+
+    public List<Post> getCollaboratedPosts() {
         return this.collaboratedPosts;
 
     }
-    
-    public void addCollaboratedPosts(Post collaboratedPost){
+
+    public void addCollaboratedPosts(Post collaboratedPost) {
         this.collaboratedPosts.add(collaboratedPost);
     }
-    
 
     public void calculateUserRate() {
         List<Post> posts = getPosts();
-        //Index for counting the posts with comments
+        // Index for counting the posts with comments
         int index = 0;
         setUserRate(0);
 
@@ -180,7 +182,17 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        return this.userName.equals(((User) obj).getName());
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        User other = (User) obj;
+        return this.userName.equals(other.getName());
     }
 
 }
