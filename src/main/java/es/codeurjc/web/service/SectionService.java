@@ -1,11 +1,14 @@
 package es.codeurjc.web.service;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -38,6 +41,13 @@ public class SectionService {
 
     public void saveSection(Section section){
         sectionRepository.save(section);
+    }
+
+    public void saveImageSection(Section section, MultipartFile imageFile) throws IOException{
+        if(!imageFile.isEmpty()){
+            section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+        this.saveSection(section);
     }
 
 

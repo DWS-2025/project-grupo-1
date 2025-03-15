@@ -2,11 +2,17 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +27,8 @@ import es.codeurjc.web.service.*;
 
 @Controller
 public class SectionController {
+
+    private final ImageUserService imageUserService;
 
     private final ImagePostService imagePostService;
 
@@ -39,10 +47,11 @@ public class SectionController {
     private static final String SECTIONS_FOLDER = "sections";
 
     SectionController(CommentRepository commentRepository, CommentService commentService,
-            ImagePostService imagePostService) {
+            ImagePostService imagePostService, ImageUserService imageUserService) {
         this.commentRepository = commentRepository;
         this.commentService = commentService;
         this.imagePostService = imagePostService;
+        this.imageUserService = imageUserService;
     }
 
     @GetMapping("/section")
@@ -61,7 +70,7 @@ public class SectionController {
         return "create_section";
     }
 
-    @PostMapping("/section/new")
+   /* @PostMapping("/section/new")
     public String createSection(@RequestParam String title, @RequestParam String description,
             @RequestParam MultipartFile sectionImage) throws IOException {
 
@@ -76,10 +85,44 @@ public class SectionController {
 
         return "redirect:/section";
     }
+    */
 
-    @GetMapping("/section/{id}/image")
+   /* @PostMapping("/section/new")
+    public String createSection(Model model, Section section, MultipartFile sectionImage) throws Exception{
+        sectionService.saveImageSection(section, sectionImage);
+        return "redirect:/section";
+    }*/ 
+
+
+    @PostMapping("/section/new")
+    public String createSection(@RequestParam String title, @RequestParam String description, @RequestParam MultipartFile sectionImage) {
+        try {
+            Section section = new Section(title, description, null);
+            sectionService.saveImageSection(section, sectionImage);
+            return "redirect:/section";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
+
+   /* @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
         return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
+    } */
+
+    @GetMapping("/section/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+        Optional<Section> op = sectionService.findById(id);
+
+        if(op.isPresent() && op.get().getSectionImage() != null){
+            Blob image = op.get().getSectionImage();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/section/{id}/delete")
