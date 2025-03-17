@@ -67,7 +67,9 @@ public class Post {
     }
 
     public void addContributor(User user) {
+        if(!contributors.contains(user))
         this.contributors.add(user);
+
     }
 
     public long getId() {

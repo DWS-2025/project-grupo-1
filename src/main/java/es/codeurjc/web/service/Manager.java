@@ -61,8 +61,7 @@ public class Manager {
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "image-5.jpeg");
 
-        this.followSectionAutomated();
-        this.followUsersAutomated();
+       
 
         userService.save(mainUser);
         userService.save(user1);
@@ -109,16 +108,36 @@ public class Manager {
         sectionService.saveSection(defaultSection4);
         sectionService.saveSection(defaultSection5);
 
+        // this.followSectionAutomated();
+       // this.followUsersAutomated();
+
 
         post1.addContributor(user6);
+        postService.saveForInit(post1);
+
         post1.addContributor(user2);
+        postService.saveForInit(post1);
+    
         post1.addContributor(user4);
+        postService.saveForInit(post1);
+
         post2.addContributor(user1);
+        postService.saveForInit(post2);
+
         post3.addContributor(user6);
+        postService.saveForInit(post3);
+
         post4.addContributor(user6);
+        postService.saveForInit(post4);
+
         post5.addContributor(user6);
+        postService.saveForInit(post5);
+
         post6.addContributor(user3);
+        postService.saveForInit(post6);
+
         post6.addContributor(user2);
+        postService.saveForInit(post6);
 
 
     }
@@ -135,8 +154,10 @@ public class Manager {
                     do {
                         sectionToFollow = sections.get(random.nextInt(sections.size()));
                     } while (followedSections.contains(sectionToFollow)); // Ensure a user does not follow the same section more than once
-                    userService.getUserById(i).followSection(sectionToFollow);
+                    userService.getUserById(i).followSection(sectionToFollow); // Esta linea es la que da problemas Relacion n:m unidireccional
+                    userService.save(userService.getUserById(i)); 
                     followedSections.add(sectionToFollow);
+                    
                 }
             }
         }
@@ -155,7 +176,9 @@ public class Manager {
                     userToFollow = users.get(random.nextInt(users.size()));
                 } while (followedUsers.contains(userToFollow) || userService.getUserById(i).equals(userToFollow)); // Evitar seguir al mismo usuario
 
-                userService.getUserById(i).follow(userToFollow);
+                 userService.getUserById(i).follow(userToFollow); // Esta es la linea que da problemas Relacion n:m reflexiva
+                 userService.save(userService.getUserById(i));
+                 userService.save(userToFollow);
                 followedUsers.add(userToFollow);
             }
         }

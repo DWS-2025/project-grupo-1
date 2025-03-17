@@ -143,6 +143,7 @@ public class User {
 
     public void followSection(Section section) {
         this.followedSections.add(section);
+        
     }
 
     public List<Comment> getComments() {
