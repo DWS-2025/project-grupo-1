@@ -61,6 +61,9 @@ public class Manager {
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "image-5.jpeg");
 
+        this.followSectionAutomated();
+        this.followUsersAutomated();
+
         userService.save(mainUser);
         userService.save(user1);
         userService.save(user2);
@@ -119,8 +122,6 @@ public class Manager {
         post6.addContributor(user3);
         post6.addContributor(user2);
 
-     //    this.followSectionAutomated();
-      //  this.followUsersAutomated();
 
     }
 
