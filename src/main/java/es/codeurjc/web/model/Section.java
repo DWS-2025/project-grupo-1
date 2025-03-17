@@ -44,6 +44,7 @@ public class Section {
     }
     public void addPostToSection(Post post){
         post.addSection(this);
+        
     }
 
     public void deletePost(Post post) {

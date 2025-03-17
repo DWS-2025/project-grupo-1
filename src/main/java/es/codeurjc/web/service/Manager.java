@@ -85,28 +85,26 @@ public class Manager {
         sectionService.saveSection(defaultSection5);
 
         defaultSection1.addPost(post1);
-        defaultSection1.addPostToSection(post1);
-
+    
         defaultSection1.addPost(post2);
-        defaultSection1.addPostToSection(post2);
 
         defaultSection2.addPost(post3);
-        defaultSection2.addPostToSection(post3);
 
         defaultSection2.addPost(post4);
-        defaultSection2.addPostToSection(post4);
-
+    
         defaultSection3.addPost(post5);
-        defaultSection3.addPostToSection(post5);
 
         defaultSection3.addPost(post6);
-        defaultSection3.addPostToSection(post6);
 
         defaultSection4.addPost(post7);
-        defaultSection4.addPostToSection(post7);
 
         defaultSection5.addPost(post8);
-        defaultSection5.addPostToSection(post8);
+
+        sectionService.saveSection(defaultSection1);
+        sectionService.saveSection(defaultSection2);
+        sectionService.saveSection(defaultSection3);
+        sectionService.saveSection(defaultSection4);
+        sectionService.saveSection(defaultSection5);
 
 
         post1.addContributor(user6);

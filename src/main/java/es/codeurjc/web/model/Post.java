@@ -29,7 +29,7 @@ public class Post {
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     
-    @ManyToMany
+    @ManyToMany(mappedBy="posts", cascade = CascadeType.ALL)
     private List<Section> sections = new ArrayList<>();
     
     @ManyToMany
@@ -68,7 +68,6 @@ public class Post {
 
     public void addContributor(User user) {
         this.contributors.add(user);
-        user.addCollaboratedPosts(this);
     }
 
     public long getId() {
