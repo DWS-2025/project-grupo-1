@@ -1,5 +1,6 @@
 package es.codeurjc.web.model;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 
 @Entity
@@ -16,13 +18,15 @@ public class Section {
     private long id;
     private String title;
     private String description;
-    private String sectionImage;
+    @Lob
+    private Blob sectionImage;
+    
     @ManyToMany
     private List<Post> posts;
     private float averageRating;
     private int numberOfPublications;
 
-    public Section() {
+    protected Section() {
     }
 
     public Section(String title, String description, String sectionImage) {
@@ -71,11 +75,19 @@ public class Section {
         this.description = description;
     }
 
-    public String getSectionImage() {
+   /* public String getSectionImage() {
         return this.sectionImage;
     }
 
     public void setSectionImage(String sectionImage) {
+        this.sectionImage = sectionImage;
+    }*/ 
+
+    public Blob getSectionImage(){
+        return this.sectionImage;
+    }
+
+    public void setSectionImage(Blob sectionImage){
         this.sectionImage = sectionImage;
     }
 
