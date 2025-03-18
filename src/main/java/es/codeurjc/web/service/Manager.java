@@ -109,7 +109,7 @@ public class Manager {
         sectionService.saveSection(defaultSection5);
 
         // this.followSectionAutomated();
-       // this.followUsersAutomated();
+        this.followUsersAutomated();
 
 
         post1.addContributor(user6);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,8 +21,10 @@ public class User {
     private float userRate;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
-    @ManyToMany
-    private List<User> followers, followings;
+    @ManyToMany(fetch=FetchType.EAGER)
+    private List<User> followers;
+    @ManyToMany(fetch=FetchType.EAGER)
+    private List<User> followings;
     @ManyToMany
     private List<Section> followedSections;
 
