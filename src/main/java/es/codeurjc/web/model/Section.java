@@ -21,8 +21,9 @@ public class Section {
     @Lob
     private Blob sectionImage;
     
-    @ManyToMany
+   @ManyToMany(mappedBy = "sections")
     private List<Post> posts;
+
     private float averageRating;
     private int numberOfPublications;
 

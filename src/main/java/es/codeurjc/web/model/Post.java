@@ -29,7 +29,7 @@ public class Post {
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     
-    @ManyToMany(mappedBy="posts", cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Section> sections = new ArrayList<>();
     
     @ManyToMany

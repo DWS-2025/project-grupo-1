@@ -203,7 +203,7 @@ public class SectionController {
 
         if (section.isPresent()) {
             model.addAttribute("section", section.get());
-            return "edit_section";
+            return "editSection";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
             return "error";
@@ -218,7 +218,7 @@ public class SectionController {
         if (op.isPresent()) {
             Section oldSection = op.get();
             sectionService.update(oldSection, updatedSection);
-            return "redirect:/section/" + id;
+            return "redirect:/section";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
             return "error";
