@@ -21,15 +21,12 @@ public class Comment {
     // esto hay que quitarlo cuando tengamos BD 
     @ManyToOne
     private Post commentedPost;
-    private int likes, dislikes;
     private String commentOwnerName;
     private int rating;
 
     //Constructor for the comments made by the user
     public Comment(String content, int rating) {
         this.content = content;
-        this.likes = 0;
-        this.dislikes = 0;
         this.rating = rating;
     }
 
@@ -43,17 +40,7 @@ public class Comment {
         this.owner = owner;
         this.commentOwnerName = owner.getName();
         this.commentedPost = post;
-        this.likes = 0;
-        this.dislikes = 0;
         this.rating = rating;
-    }
-
-    public void like() {
-        this.likes++;
-    }
-
-    public void dislike() {
-        this.dislikes++;
     }
 
     public void setCommentOwnerName(String commentOwnerName) {
@@ -88,21 +75,10 @@ public class Comment {
         return this.commentedPost;
     }
 
-    public int getLikes() {
-        return this.likes;
-    }
-
-    public int getDislikes() {
-        return this.dislikes;
-    }
-
     public String getCommentOwnerName() {
         return this.commentOwnerName;
     }
 
-    public int getTotalLikes() {
-        return this.likes - this.dislikes;
-    }
 
     public int getRating() {
         return this.rating;
@@ -110,6 +86,9 @@ public class Comment {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+    public void setCommentedPost(Post commentedPost) {
+        this.commentedPost = commentedPost;
     }
 
     public void updateComment(String content, int rating) {

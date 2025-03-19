@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.User;
 
@@ -50,9 +49,5 @@ public class RankingService {
         return allFollowedPosts.subList(0, Math.min(allFollowedPosts.size(), 5));
     }
 
-    public List<Comment> getCommentsRanking(Post post) {
-        List<Comment> comments = new ArrayList<>(post.getComments()); 
-        comments.sort(Comparator.comparing(Comment::getTotalLikes).reversed());
-        return comments;
-    }
+  
 }

@@ -18,13 +18,17 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Autowired
+    private PostService postService;	
+
+    @Autowired
     UserService userService;
 
     public void saveCommentInPost(Post postToComment, Comment comment) {
         User currentUser = userService.getLoggedUser();
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getName());
-        postToComment.getComments().add(comment);
+        comment.setCommentedPost(postToComment);
+        // postToComment.getComments().add(comment); creo que no haria falta ya que al comentario le estamos asignando directamente un post -> preguntar en clase
 
         // Calculates the rating of the post
         postToComment.calculatePostAverageRating();
@@ -35,16 +39,17 @@ public class CommentService {
             section.calculateAverageRating();
         }
 
-        currentUser.getComments().add(comment);
-
+        // currentUser.getComments().add(comment); creo que no haria falta ya que al comentario le estamos asignando directamente un usuario (owner) -> preguntar en clase
+        userService.save(currentUser);
+        postService.save(postToComment);
         commentRepository.save(comment);
     }
 
     public void deleteCommentFromPost(Post commentedPost, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
+        // Por que si  no estoy añadiendo al post explicitamente los comentarios, hay que borrarlos asi?
         commentedPost.getComments().remove(commentToDelete);
-        User owner = userService.getLoggedUser();
-        owner.getComments().remove(commentToDelete);
+        
         // Calculates the rating of the post
         commentedPost.calculatePostAverageRating();
         //Calculates the rating of the owner
@@ -54,6 +59,7 @@ public class CommentService {
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
+        postService.save(commentedPost);
         commentRepository.delete(commentToDelete);
     }
 
@@ -66,6 +72,8 @@ public class CommentService {
             for (Section section : commentedPost.getSections()) {
                 section.calculateAverageRating();
             }
+            commentRepository.save(commentRepository.findById(commentId).get());
+            postService.save(commentedPost);
         } else {
             // not found
         }
