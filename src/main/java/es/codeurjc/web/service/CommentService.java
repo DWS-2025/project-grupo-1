@@ -28,30 +28,35 @@ public class CommentService {
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getName());
         comment.setCommentedPost(postToComment);
-        // postToComment.getComments().add(comment); creo que no haria falta ya que al comentario le estamos asignando directamente un post -> preguntar en clase
+        //postToComment.getComments().add(comment); //creo que no haria falta ya que al comentario le estamos asignando directamente un post -> preguntar en clase
+        
+        commentRepository.save(comment);
 
-        // Calculates the rating of the post
-        postToComment.calculatePostAverageRating();
+        // Calculates the rating of the post 
+        postService.setAverageRatingPost(postToComment.getId());
         //Calculates the rating of the owner
         postToComment.getOwner().calculateUserRate();
         //Calculates the rating of the section
         for (Section section : postToComment.getSections()) {
             section.calculateAverageRating();
         }
+            
 
         // currentUser.getComments().add(comment); creo que no haria falta ya que al comentario le estamos asignando directamente un usuario (owner) -> preguntar en clase
+        userService.save(postToComment.getOwner());
         userService.save(currentUser);
-        postService.save(postToComment);
-        commentRepository.save(comment);
+        
+       
     }
 
     public void deleteCommentFromPost(Post commentedPost, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         // Por que si  no estoy añadiendo al post explicitamente los comentarios, hay que borrarlos asi?
         commentedPost.getComments().remove(commentToDelete);
-        
+
+        commentRepository.delete(commentToDelete);
         // Calculates the rating of the post
-        commentedPost.calculatePostAverageRating();
+        postService.setAverageRatingPost(commentedPost.getId());
         //Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
         //Calculates the rating of the section
@@ -59,21 +64,22 @@ public class CommentService {
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
-        postService.save(commentedPost);
         commentRepository.delete(commentToDelete);
     }
 
     public void updateComment(Long commentId, Comment updatedComment, Post commentedPost) {
         if (commentRepository.findById(commentId).isPresent()) {
             commentRepository.findById(commentId).get().updateComment(updatedComment.getContent(), updatedComment.getRating());
+            commentRepository.save(commentRepository.findById(commentId).get());
 
-            commentedPost.calculatePostAverageRating();
+            postService.setAverageRatingPost(commentedPost.getId());
             commentedPost.getOwner().calculateUserRate();
             for (Section section : commentedPost.getSections()) {
                 section.calculateAverageRating();
             }
-            commentRepository.save(commentRepository.findById(commentId).get());
-            postService.save(commentedPost);
+            userService.save(commentedPost.getOwner());
+            
+
         } else {
             // not found
         }

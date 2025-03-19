@@ -128,17 +128,6 @@ public class Post {
         return this.sections;
     }
 
-    public void calculatePostAverageRating() { 
-        setAverageRating(0f);
-        List<Comment> comments = getComments();
-
-        for (Comment comment: comments) {
-            averageRating += comment.getRating();
-        }
-        averageRating /= comments.size();
-        setAverageRating(Math.round( averageRating * 10) / 10.0f); 
-    }
-
     public void setOwnerName(String name){
         this.ownerName = name;
     }

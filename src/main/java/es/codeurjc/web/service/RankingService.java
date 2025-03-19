@@ -1,7 +1,5 @@
 package es.codeurjc.web.service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,44 +7,46 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.User;
+import es.codeurjc.web.repository.PostRepository;
+import es.codeurjc.web.repository.UserRepository;
 
 @Service
 public class RankingService {
+
+    private final PostRepository postRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
     private UserService userService;
     @Autowired
     private PostService postService;
 
+    RankingService(UserRepository userRepository, PostRepository postRepository) {
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+    }
+
+    public void calculatePostAverageRating(Long id){
+        
+    }
     public List<User> topUsersApp() {
-        List<User> rankingUsers = new ArrayList<>(userService.findAllUsers());
-        rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed());
-        return rankingUsers.subList(0, Math.min(rankingUsers.size(), 5));
+        return userRepository.findTop5ByOrderByUserRateDesc();
     }
 
     public List<User> topUsersFollowed(User user) {
-        List<User> rankingUsers = new ArrayList<>(user.getFollowings()); 
-        rankingUsers.sort(Comparator.comparing(User::getUserRate).reversed());
-        return rankingUsers.subList(0, Math.min(rankingUsers.size(), 5));
+        return userRepository.findTopFollowedUsers(user.getId());
+        
     }
 
     public List<Post> topPostsApp() {
-        List<Post> rankingPost = new ArrayList<>(postService.findAllPosts());
-        rankingPost.sort(Comparator.comparing(Post::getAverageRating).reversed());
-        return rankingPost.subList(0, Math.min(rankingPost.size(), 5));
+        return postRepository.findTop5ByOrderByAverageRatingDesc();
+      
     }
 
     public List<Post> topPostsFollowed(User user) {
-        List<Post> allFollowedPosts = new ArrayList<>();
-
+        return postRepository.findTopPostsFollowedByUser(user.getId());
       
-        for (User followedUser : user.getFollowings()) {
-            allFollowedPosts.addAll(followedUser.getPosts()); 
-        }
-      
-        allFollowedPosts.sort(Comparator.comparing(Post::getAverageRating).reversed());
-
-        return allFollowedPosts.subList(0, Math.min(allFollowedPosts.size(), 5));
     }
 
   
