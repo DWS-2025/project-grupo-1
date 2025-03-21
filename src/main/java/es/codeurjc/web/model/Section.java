@@ -18,6 +18,7 @@ public class Section {
     private long id;
     private String title;
     private String description;
+    //private User author;
     @Lob
     private Blob sectionImage;
     
@@ -27,7 +28,7 @@ public class Section {
     private float averageRating;
     private int numberOfPublications;
 
-    protected Section() {
+    public Section() {
     }
 
     public Section(String title, String description, String sectionImage) {
@@ -38,6 +39,8 @@ public class Section {
         this.numberOfPublications = 0;
         this.posts = new ArrayList<>();
     }
+
+    
 
     public void addPost(Post post) {
         this.posts.add(post);

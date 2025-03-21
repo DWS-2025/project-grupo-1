@@ -12,7 +12,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
-
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.repository.CommentRepository;
+import es.codeurjc.web.repository.PostRepository;
 import es.codeurjc.web.service.*;
 
 @Controller
 public class SectionController {
+
+    private final PostRepository postRepository;
+
+    private final PostController postController;
+
+    private final Manager manager;
 
     private final ImageUserService imageUserService;
 
@@ -47,11 +55,15 @@ public class SectionController {
     private static final String SECTIONS_FOLDER = "sections";
 
     SectionController(CommentRepository commentRepository, CommentService commentService,
-            ImagePostService imagePostService, ImageUserService imageUserService) {
+            ImagePostService imagePostService, ImageUserService imageUserService, Manager manager,
+            PostController postController, PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.commentService = commentService;
         this.imagePostService = imagePostService;
         this.imageUserService = imageUserService;
+        this.manager = manager;
+        this.postController = postController;
+        this.postRepository = postRepository;
     }
 
     @GetMapping("/section")
@@ -70,32 +82,39 @@ public class SectionController {
         return "create_section";
     }
 
-   /* @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description,
-            @RequestParam MultipartFile sectionImage) throws IOException {
+    /*
+     * @PostMapping("/section/new")
+     * public String createSection(@RequestParam String title, @RequestParam String
+     * description,
+     * 
+     * @RequestParam MultipartFile sectionImage) throws IOException {
+     * 
+     * Section section = new Section(title, description, null);
+     * sectionService.saveSection(section);
+     * 
+     * imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(),
+     * sectionImage);
+     * String imageName = sectionImage.getOriginalFilename();
+     * section.setSectionImage(imageName);
+     * 
+     * sectionService.saveSection(section);
+     * 
+     * return "redirect:/section";
+     * }
+     */
 
-        Section section = new Section(title, description, null);
-        sectionService.saveSection(section);
-
-        imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(), sectionImage);
-        String imageName = sectionImage.getOriginalFilename();
-        section.setSectionImage(imageName);
-
-        sectionService.saveSection(section);
-
-        return "redirect:/section";
-    }
-    */
-
-   /* @PostMapping("/section/new")
-    public String createSection(Model model, Section section, MultipartFile sectionImage) throws Exception{
-        sectionService.saveImageSection(section, sectionImage);
-        return "redirect:/section";
-    }*/ 
-
+    /*
+     * @PostMapping("/section/new")
+     * public String createSection(Model model, Section section, MultipartFile
+     * sectionImage) throws Exception{
+     * sectionService.saveImageSection(section, sectionImage);
+     * return "redirect:/section";
+     * }
+     */
 
     @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description, @RequestParam MultipartFile sectionImage) {
+    public String createSection(@RequestParam String title, @RequestParam String description,
+            @RequestParam MultipartFile sectionImage) {
         try {
             Section section = new Section(title, description, null);
             sectionService.saveImageSection(section, sectionImage);
@@ -106,20 +125,24 @@ public class SectionController {
         }
     }
 
-   /* @GetMapping("/section/{id}/image")
-    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
-        return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
-    } */
+    /*
+     * @GetMapping("/section/{id}/image")
+     * public ResponseEntity<Object> downloadImage(@PathVariable long id) throws
+     * MalformedURLException {
+     * return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
+     * }
+     */
 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         Optional<Section> op = sectionService.findById(id);
 
-        if(op.isPresent() && op.get().getSectionImage() != null){
+        if (op.isPresent() && op.get().getSectionImage() != null) {
             Blob image = op.get().getSectionImage();
             Resource file = new InputStreamResource(image.getBinaryStream());
 
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length())
+                    .body(file);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -197,7 +220,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("/section/{id}/edit") //hacer la pagina
+    @GetMapping("/section/{id}/edit") // hacer la pagina
     public String editSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
 
@@ -211,7 +234,7 @@ public class SectionController {
 
     }
 
-    @PostMapping("/section/{id}/edit") 
+    @PostMapping("/section/{id}/edit")
     public String updateSection(Model model, @PathVariable long id, Section updatedSection) {
         Optional<Section> op = sectionService.findById(id);
 
@@ -223,6 +246,24 @@ public class SectionController {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
             return "error";
         }
+
+    }
+
+    @GetMapping("/section/search")
+    public String searchSection(Model model, @RequestParam(required = false) String title) {
+        if (title != null) {
+            Section section = new Section();
+            section.setTitle(title);
+
+            ExampleMatcher matcher = ExampleMatcher.matching()
+                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase()
+                    .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
+            Example<Section> example = Example.of(section, matcher);
+            model.addAttribute("sections", sectionService.findAll(example));
+        } else {
+            model.addAttribute("sections", sectionService.findAll());
+        }
+        return "section";
 
     }
 
