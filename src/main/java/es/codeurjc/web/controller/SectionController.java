@@ -30,6 +30,8 @@ import es.codeurjc.web.service.*;
 @Controller
 public class SectionController {
 
+    private final PostService postService;
+
     private final PostRepository postRepository;
 
     private final PostController postController;
@@ -56,7 +58,7 @@ public class SectionController {
 
     SectionController(CommentRepository commentRepository, CommentService commentService,
             ImagePostService imagePostService, ImageUserService imageUserService, Manager manager,
-            PostController postController, PostRepository postRepository) {
+            PostController postController, PostRepository postRepository, PostService postService) {
         this.commentRepository = commentRepository;
         this.commentService = commentService;
         this.imagePostService = imagePostService;
@@ -64,6 +66,7 @@ public class SectionController {
         this.manager = manager;
         this.postController = postController;
         this.postRepository = postRepository;
+        this.postService = postService;
     }
 
     @GetMapping("/section")
@@ -260,6 +263,7 @@ public class SectionController {
                     .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
             Example<Section> example = Example.of(section, matcher);
             model.addAttribute("sections", sectionService.findAll(example));
+            model.addAttribute("isSearch", true);
         } else {
             model.addAttribute("sections", sectionService.findAll());
         }
