@@ -22,7 +22,7 @@ public class Section {
     @Lob
     private Blob sectionImage;
     
-   @ManyToMany(mappedBy = "sections")
+   @ManyToMany
     private List<Post> posts;
 
     private float averageRating;
@@ -43,7 +43,7 @@ public class Section {
     
 
     public void addPost(Post post) {
-        this.posts.add(post);
+        posts.add(post);
         numberOfPublications++;
     }
     public void addPostToSection(Post post){

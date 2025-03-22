@@ -29,7 +29,7 @@ public class Post {
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     
-    @ManyToMany
+    @ManyToMany(mappedBy = "posts")
     private List<Section> sections = new ArrayList<>();
     
     @ManyToMany
@@ -71,6 +71,7 @@ public class Post {
         this.contributors.add(user);
 
     }
+   
 
     public long getId() {
         return this.id;

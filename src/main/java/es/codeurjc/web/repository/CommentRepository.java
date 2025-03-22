@@ -6,6 +6,7 @@ import es.codeurjc.web.model.Comment;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
     /* 
     private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, Comment> comments = new ConcurrentHashMap<>();
