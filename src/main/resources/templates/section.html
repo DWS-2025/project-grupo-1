@@ -13,6 +13,9 @@
 </form>
 {{/isSearch}}
 
+{{#noResult}}
+<p class="text-light" style="text-align: center; background-color: red;">No se ha encontrado ninguna sección</p>
+{{/noResult}}
 
 
 <div class="live-stream">
@@ -53,6 +56,14 @@
       </div>
     </div>
     {{/sections}}
+
+    <div>
+      <nobr>
+        {{#hasPrev}}<a href="/section?page={{prev}}" style="background-color: palevioletred; color: palevioletred; border: none; color: white">Anterior</a>{{/hasPrev}}
+        {{#hasNext}}<a href="/section?page={{next}}" style="background-color: palevioletred; color: palevioletred; border: none; color: white">Siguiente</a>{{/hasNext}}
+      </nobr>
+    </div>
+
 
     <div class="col-lg-12">
       <div class="main-button">

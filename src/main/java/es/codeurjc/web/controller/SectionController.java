@@ -14,6 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,12 +74,17 @@ public class SectionController {
     }
 
     @GetMapping("/section")
-    public String showSections(Model model) {
-        List<Section> sections = sectionService.findAll();
-        model.addAttribute("sections", sections);
+    public String showSections(Model model, @RequestParam(defaultValue = "0") int page) {
+        int pageSize = 6;
 
-        boolean islogged = userService.isLogged(userService.getLoggedUser());
-        model.addAttribute("islogged", islogged);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Section> sectionsPage = sectionService.findAll(pageable);
+
+        model.addAttribute("sections", sectionsPage.getContent());
+        model.addAttribute("hasPrev", sectionsPage.hasPrevious());
+        model.addAttribute("hasNext", sectionsPage.hasNext());
+        model.addAttribute("prev", page - 1);
+        model.addAttribute("next", page + 1);
 
         return "section";
     }
@@ -262,10 +271,18 @@ public class SectionController {
                     .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase()
                     .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
             Example<Section> example = Example.of(section, matcher);
-            model.addAttribute("sections", sectionService.findAll(example));
-            model.addAttribute("isSearch", true);
+
+            if(sectionService.findAll(example).isEmpty()){
+                model.addAttribute("noResult", true);
+                model.addAttribute("sections", sectionService.findAll());
+            }
+            else{
+                model.addAttribute("sections", sectionService.findAll(example));
+                model.addAttribute("isSearch", true);
+            }
         } else {
             model.addAttribute("sections", sectionService.findAll());
+            
         }
         return "section";
 

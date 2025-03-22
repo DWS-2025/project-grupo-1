@@ -8,9 +8,8 @@
         We will use it the next fase --> 
         <form action="/login" method="post">
           <div class="form-group mb-3">
-            {{#Error}}{{/Error}}
             {{^Error}}
-            <p class="text-light" style="background-color: red;">Usuario o contraseña no válidos</p>
+            <p class="text-light" style="text-align: center; background-color: red;">Usuario o contraseña no válidos</p>
             {{/Error}}
             <label for="name" class="text-light">Nombre de Usuario</label>
             <input type="text" class="form-control auth-input" id="name" name="userName" required>
@@ -21,7 +20,7 @@
           </div>
           <button type="submit" class="auth-button">Iniciar Sesión</button>
           <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-          <a href="/register" class="forgot-password">¿No tienes cuenta? crea una</a>
+          <a href="/register" class="forgot-password">¿No tienes cuenta? Crear una</a>
         </form>
       </div>
   </div>

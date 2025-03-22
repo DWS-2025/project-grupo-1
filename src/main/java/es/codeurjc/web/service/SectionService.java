@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,13 +37,23 @@ public class SectionService {
         this.commentService = commentService;
     }
 
-    public List<Section> findAll(Example<Section> example){
-        return sectionRepository.findAll(example);
+    public long count() {
+        return sectionRepository.count();  
+    }
+
+    public Page<Section> findAll(Pageable pageable){
+        return sectionRepository.findAll(pageable);
     }
 
     public List<Section> findAll(){
         return sectionRepository.findAll();
     }
+
+    public List<Section> findAll(Example<Section> example) {
+        return sectionRepository.findAll(example);
+    }
+
+    
 
     public Optional<Section> findById(long id) {
         return sectionRepository.findById(id);
