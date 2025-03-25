@@ -68,14 +68,14 @@ public class PostController {
         
         String[] contributorsArray = contributors.split(",");
         for (String colaborator : contributorsArray) {
-            if (userService.findByUserName(colaborator) != null) {
-                post.addContributor(userService.findByUserName(colaborator));
+            User user = userService.findByUserName(colaborator);
+            if (user != null) {
+                post.addContributor(user);
             }
         }
 
-        imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
-        postService.save(post);
-        return "view_post";
+        postService.save(post, postImage);
+        return "redirect:/post";
     }
 
     @GetMapping("/post/{id}")
