@@ -28,7 +28,6 @@ public class CommentService {
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getName());
         comment.setCommentedPost(postToComment);
-        //postToComment.getComments().add(comment); //creo que no haria falta ya que al comentario le estamos asignando directamente un post -> preguntar en clase
         
         commentRepository.save(comment);
 
@@ -51,7 +50,6 @@ public class CommentService {
 
     public void deleteCommentFromPost(Post commentedPost, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
-        // Por que si  no estoy añadiendo al post explicitamente los comentarios, hay que borrarlos asi?
         commentedPost.getComments().remove(commentToDelete);
 
         commentRepository.delete(commentToDelete);
