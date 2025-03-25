@@ -1,5 +1,6 @@
 package es.codeurjc.web.model;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -18,8 +20,13 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(length = 100) 
+    private String title;
     @Column(length = 2000) 
-    private String title, content;
+    private String content;
+    
+    @Lob
+    private Blob postImage;
 
     @ManyToOne
     private User owner;
@@ -95,6 +102,14 @@ public class Post {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Blob getPostImage() {
+        return this.postImage;
+    }
+
+    public void setPostImage(Blob postImage) {
+        this.postImage = postImage;
     }
 
     public void setOwner(User owner) {

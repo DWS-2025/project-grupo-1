@@ -73,8 +73,8 @@ public class PostController {
             }
         }
 
-        imageService.saveImage(POSTS_FOLDER, post.getId(), postImage);
-        postService.save(post);
+        postService.savePostImage(post, postImage);
+        //postService.save(post);
         return "view_post";
     }
 
