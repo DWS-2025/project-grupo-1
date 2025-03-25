@@ -54,7 +54,8 @@ public class UserService {
 
     public void saveUserWithImage(User user, MultipartFile imageFile) throws IOException{
         if(!imageFile.isEmpty()){
-            user.setUserImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+            byte[] imageBytes = imageFile.getBytes();
+            user.setUserImage(BlobProxy.generateProxy(imageBytes));
         }
         this.save(user);
     }
