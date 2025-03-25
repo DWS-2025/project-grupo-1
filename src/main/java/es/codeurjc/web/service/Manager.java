@@ -13,6 +13,29 @@ import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import jakarta.annotation.PostConstruct;
 
+/*File imageFile = new File(localFilePath); CÓDIGO PARA QUE LAS IMÁGENES AL INICIALIZAR LA BBDD SEAN BLOBS
+public Blob localImageToBlob(String localFilePath){
+
+File imageFile = new File(localFilePath);
+
+if (imageFile.exists()) {
+
+try {
+
+return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
+
+} catch (IOException e) {
+
+throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
+
+}
+
+}
+
+return null;
+
+} */
+
 @Service
 public class Manager {
 
@@ -60,6 +83,7 @@ public class Manager {
         Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.", "image-3.jpeg");
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "image-5.jpeg");
+
 
         userService.save(mainUser);
         userService.save(user2);
@@ -221,9 +245,9 @@ public class Manager {
                     userToFollow = users.get(random.nextInt(users.size()));
                 } while (followedUsers.contains(userToFollow) || userService.getUserById(i).equals(userToFollow)); // Evitar seguir al mismo usuario
 
-                userService.getUserById(i).follow(userToFollow);
-                userService.save(userService.getUserById(i));
-                userService.save(userToFollow);
+                 userService.getUserById(i).follow(userToFollow); // Esta es la linea que da problemas Relacion n:m reflexiva
+                 userService.save(userService.getUserById(i));
+                 userService.save(userToFollow);
                 followedUsers.add(userToFollow);
                 /*user7.follow(user6);
                 userService.save(user7);
