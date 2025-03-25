@@ -63,12 +63,16 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public void saveImageSection(Section section, MultipartFile imageFile) throws IOException{
+    public void saveSectionWithImageSection(Section section, MultipartFile imageFile) throws IOException{
         if(!imageFile.isEmpty()){
             section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         this.saveSection(section);
     }
+
+
+
+
 
 
     public void deleteSection(Section sectionToDelete){
