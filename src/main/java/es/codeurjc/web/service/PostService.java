@@ -115,6 +115,20 @@ public class PostService {
     public CommentService getCommentService() {
         return this.commentService;
     }
+
+    public void setAverageRatingPost(long postId) {
+        Post post = postRepository.findById(postId).get();
+        if(!post.getComments().isEmpty())
+        {
+        post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
+        postRepository.save(post);
+        }
+        else
+        {
+            post.setAverageRating(0);
+            postRepository.save(post);
+        }
+    }
    
 
 }

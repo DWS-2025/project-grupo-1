@@ -25,7 +25,7 @@ public class User {
     private List<User> followers;
     @ManyToMany(fetch=FetchType.EAGER)
     private List<User> followings;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private List<Section> followedSections;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -58,8 +58,10 @@ public class User {
 
     // Follow a user
     public void follow(User user) {
+        if (!this.followings.contains(user) && !user.followers.contains(this)) {
         this.followings.add(user);
         user.followers.add(this);
+    }
     }
 
     // Unfollow a user

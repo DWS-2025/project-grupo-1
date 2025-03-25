@@ -1,17 +1,23 @@
 package es.codeurjc.web.repository;
 
-import java.security.PublicKey;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import es.codeurjc.web.model.User;
-import java.util.List;
 
 
 
 public interface UserRepository extends JpaRepository<User, Long>  {
 
     User findByuserName(String userName);
+    
+    List<User> findTop5ByOrderByUserRateDesc();
+
+    @Query("SELECT u FROM UserTable u JOIN u.followers f WHERE f.id = :userId ORDER BY u.userRate DESC")
+    List<User> findTopFollowedUsers(@Param("userId") Long userId);
     /* private AtomicLong nextId = new AtomicLong(1L);
     private ConcurrentHashMap<Long, User> users = new ConcurrentHashMap<>();
 

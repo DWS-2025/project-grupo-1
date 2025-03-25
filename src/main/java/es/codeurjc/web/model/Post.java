@@ -29,7 +29,7 @@ public class Post {
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     
-    @ManyToMany(mappedBy="posts", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "posts")
     private List<Section> sections = new ArrayList<>();
     
     @ManyToMany
@@ -71,6 +71,7 @@ public class Post {
         this.contributors.add(user);
 
     }
+   
 
     public long getId() {
         return this.id;
@@ -126,17 +127,6 @@ public class Post {
 
     public List<Section> getSections() {
         return this.sections;
-    }
-
-    public void calculatePostAverageRating() { 
-        setAverageRating(0f);
-        List<Comment> comments = getComments();
-
-        for (Comment comment: comments) {
-            averageRating += comment.getRating();
-        }
-        averageRating /= comments.size();
-        setAverageRating(Math.round( averageRating * 10) / 10.0f); 
     }
 
     public void setOwnerName(String name){

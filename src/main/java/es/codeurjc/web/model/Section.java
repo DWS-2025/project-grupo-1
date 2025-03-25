@@ -18,15 +18,17 @@ public class Section {
     private long id;
     private String title;
     private String description;
+    //private User author;
     @Lob
     private Blob sectionImage;
     
-    @ManyToMany
+   @ManyToMany
     private List<Post> posts;
+
     private float averageRating;
     private int numberOfPublications;
 
-    protected Section() {
+    public Section() {
     }
 
     public Section(String title, String description, String sectionImage) {
@@ -38,8 +40,10 @@ public class Section {
         this.posts = new ArrayList<>();
     }
 
+    
+
     public void addPost(Post post) {
-        this.posts.add(post);
+        posts.add(post);
         numberOfPublications++;
     }
     public void addPostToSection(Post post){

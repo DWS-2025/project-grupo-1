@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,8 @@ import es.codeurjc.web.repository.UserRepository;
 @Service
 public class SectionService {
 
+    private final CommentService commentService;
+
     private final CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
@@ -27,13 +32,28 @@ public class SectionService {
     @Autowired
     private SectionRepository sectionRepository;
 
-    SectionService(CommentRepository commentRepository) {
+    SectionService(CommentRepository commentRepository, CommentService commentService) {
         this.commentRepository = commentRepository;
+        this.commentService = commentService;
+    }
+
+    public long count() {
+        return sectionRepository.count();  
+    }
+
+    public Page<Section> findAll(Pageable pageable){
+        return sectionRepository.findAll(pageable);
     }
 
     public List<Section> findAll(){
         return sectionRepository.findAll();
     }
+
+    public List<Section> findAll(Example<Section> example) {
+        return sectionRepository.findAll(example);
+    }
+
+    
 
     public Optional<Section> findById(long id) {
         return sectionRepository.findById(id);
