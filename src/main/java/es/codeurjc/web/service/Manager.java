@@ -42,6 +42,14 @@ public class Manager {
         User user6 = new User("user6", "Contraseña5", "user5@gmail.com");
         User user7 = new User("user7", "Contraseña6", "user6@gmail.com");
 
+        mainUser.setUserImage(localImageToBlob("images/users/user-1.jpeg"));
+        user2.setUserImage(localImageToBlob("images/users/user-2.jpeg"));
+        user3.setUserImage(localImageToBlob("images/users/user-3.jpeg"));
+        user4.setUserImage(localImageToBlob("images/users/user-4.jpeg"));
+        user5.setUserImage(localImageToBlob("images/users/user-5.jpeg"));
+        user6.setUserImage(localImageToBlob("images/users/user-6.jpeg"));
+        
+
         // Some examples of posts and comments
         //section reversing, hacking web, hardware hacking
         Post post1 = new Post("La Ingeniería Reversa como Puerta de Entrada al Hacking", "La ingeniería reversa es una de las habilidades más potentes en el mundo del hacking, permitiendo analizar y comprender cómo funciona un sistema para encontrar vulnerabilidades o mejorar su seguridad. En aplicaciones web, esto se usa para descubrir puntos débiles en algoritmos de autenticación o cifrado. A nivel de hardware, los atacantes pueden modificar firmware o extraer claves de cifrado de dispositivos embebidos. ¿Cómo se puede defender una empresa ante estos ataques? Aquí exploramos técnicas de análisis, herramientas como Ghidra y Radare2, y estrategias para mitigar amenazas en cada capa del sistema");
@@ -60,11 +68,11 @@ public class Manager {
         Post post8 = new Post("Cómo Proteger tus Redes Contra Hackers Éticos y Maliciosos", "La seguridad de una red depende de múltiples factores, desde la fortaleza de sus contraseñas hasta la correcta segmentación del tráfico. En este post explicamos cómo se pueden prevenir ataques de escalada de privilegios en entornos empresariales, detectando intentos de inyección SQL en aplicaciones web y protegiendo redes WiFi contra ataques de fuerza bruta. Además, veremos cómo la ingeniería reversa puede ser utilizada para analizar malware y reforzar la seguridad de los sistemas.");
 
         //Create new sections
-        Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.", null);
-        Section defaultSection2 = new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "image-2.jpeg");
-        Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.", "image-3.jpeg");
-        Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
-        Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "image-5.jpeg");
+        Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.");
+        Section defaultSection2 = new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.");
+        Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.");
+        Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.");
+        Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.");
 
         defaultSection1.setSectionImage(localImageToBlob("images/sections/image-1.jpeg"));
         defaultSection2.setSectionImage(localImageToBlob("images/sections/image-2.jpeg"));

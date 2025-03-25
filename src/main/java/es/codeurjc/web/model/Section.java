@@ -31,7 +31,7 @@ public class Section {
     public Section() {
     }
 
-    public Section(String title, String description, String sectionImage) {
+    public Section(String title, String description) {
         this.title = title;
         this.description = description;
         this.averageRating = 0;

@@ -190,9 +190,7 @@ public class UserController {
         }
 
         if (userImage != null && !userImage.isEmpty()) {
-            imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
-            String imageName = userImage.getOriginalFilename();
-            user.setUserImage(imageName);
+            userService.saveUserWithImage(user, userImage);
         }
         userService.save(user);
 

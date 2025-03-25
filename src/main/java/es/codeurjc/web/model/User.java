@@ -1,14 +1,17 @@
 package es.codeurjc.web.model;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
@@ -17,8 +20,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String userName, password, description, userImage, email;
+    private String userName, password, description, email;
     private float userRate;
+
+    @Lob
+    private Blob userImage;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
     @ManyToMany(fetch=FetchType.EAGER)
@@ -45,7 +52,6 @@ public class User {
         this.followedSections = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.userRate = 0;
-        this.userImage = "imagen-1.jpeg";
     }
 
     public User() {
@@ -106,11 +112,11 @@ public class User {
         this.description = description;
     }
 
-    public String getUserImage() {
+    public Blob getUserImage() {
         return this.userImage;
     }
 
-    public void setUserImage(String userImage) {
+    public void setUserImage(Blob userImage) {
         this.userImage = userImage;
     }
 

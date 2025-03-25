@@ -128,7 +128,7 @@ public class SectionController {
     public String createSection(@RequestParam String title, @RequestParam String description,
             @RequestParam MultipartFile sectionImage) {
         try {
-            Section section = new Section(title, description, null);
+            Section section = new Section(title, description);
             sectionService.saveSectionWithImageSection(section, sectionImage);
             return "redirect:/section";
         } catch (IOException e) {
