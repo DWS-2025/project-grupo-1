@@ -158,10 +158,8 @@ public class Manager {
 
         
         post1.addContributor(user6);
-        postService.saveForInit(post1);
 
         post1.addContributor(user2);
-        postService.saveForInit(post1);
 
         post1.addContributor(user4);
         postService.saveForInit(post1);
@@ -179,10 +177,12 @@ public class Manager {
         postService.saveForInit(post5);
 
         post6.addContributor(user3);
-        postService.saveForInit(post6);
 
         post6.addContributor(user2);
+        post6.addContributor(mainUser);
         postService.saveForInit(post6);
+
+
 
     }
 // Not used yet due to issues with the database

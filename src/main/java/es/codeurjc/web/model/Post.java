@@ -37,7 +37,7 @@ public class Post {
 
     public Post() {}
 
-    public Post(String title, String content, String postImage) {
+    public Post(String title, String content) {
         this.title = title;
         this.content = content;
     }
