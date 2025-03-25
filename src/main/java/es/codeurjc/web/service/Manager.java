@@ -1,40 +1,23 @@
 package es.codeurjc.web.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import jakarta.annotation.PostConstruct;
-
-/*File imageFile = new File(localFilePath); CÓDIGO PARA QUE LAS IMÁGENES AL INICIALIZAR LA BBDD SEAN BLOBS
-public Blob localImageToBlob(String localFilePath){
-
-File imageFile = new File(localFilePath);
-
-if (imageFile.exists()) {
-
-try {
-
-return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
-
-} catch (IOException e) {
-
-throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
-
-}
-
-}
-
-return null;
-
-} */
 
 @Service
 public class Manager {
@@ -72,18 +55,22 @@ public class Manager {
         Post post5 = new Post("Red Team y Evaluación de Seguridad en Redes Inalámbricas", "En una evaluación de seguridad ofensiva, la explotación de redes WiFi es una de las primeras etapas del ataque. Desde la captura de handshakes hasta la manipulación de paquetes con herramientas como aircrack-ng y bettercap, los atacantes pueden obtener credenciales de acceso a redes corporativas. En este post analizamos cómo estos accesos pueden derivar en escaladas de privilegios en servidores web y bases de datos, comprometiendo sistemas críticos en entornos empresariales.");
         // Hardware Hacking, Reversing, Escalada de Privilegios
         Post post6 = new Post("Explotación de Dispositivos de Hardware en Entornos Industriales", "Muchas infraestructuras críticas dependen de dispositivos embebidos con firmware vulnerable. En este artículo exploramos cómo se pueden explotar fallos en sistemas industriales (ICS/SCADA), desde análisis de protocolos propietarios hasta la manipulación de dispositivos físicos mediante técnicas de reversing. La seguridad de estos entornos es fundamental, ya que un ataque exitoso podría comprometer sistemas eléctricos, plantas de tratamiento de agua o redes de transporte.");
-        // Hacking Web, Reversing, WiFi
         Post post7 = new Post("Seguridad en Aplicaciones Web: Análisis de Ataques en Tiempo Real", "Las aplicaciones web son el blanco principal de ataques en la actualidad. En este artículo realizamos un análisis en tiempo real de técnicas como la inyección SQL, la manipulación de sesiones y la explotación de servidores mal configurados. También exploramos cómo ataques de red, como la interceptación de tráfico WiFi, pueden ser utilizados para obtener credenciales y comprometer aplicaciones web críticas.");
         // WiFi, Hacking Web, Escalada de Privilegios, Reversing
         Post post8 = new Post("Cómo Proteger tus Redes Contra Hackers Éticos y Maliciosos", "La seguridad de una red depende de múltiples factores, desde la fortaleza de sus contraseñas hasta la correcta segmentación del tráfico. En este post explicamos cómo se pueden prevenir ataques de escalada de privilegios en entornos empresariales, detectando intentos de inyección SQL en aplicaciones web y protegiendo redes WiFi contra ataques de fuerza bruta. Además, veremos cómo la ingeniería reversa puede ser utilizada para analizar malware y reforzar la seguridad de los sistemas.");
 
         //Create new sections
-        Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.", "image-1.jpeg");
+        Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.", null);
         Section defaultSection2 = new Section("Hacking Web", "Explotación de vulnerabilidades en aplicaciones web.", "image-2.jpeg");
         Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.", "image-3.jpeg");
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.", "image-4.jpeg");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.", "image-5.jpeg");
 
+        defaultSection1.setSectionImage(localImageToBlob("images/sections/image-1.jpeg"));
+        defaultSection2.setSectionImage(localImageToBlob("images/sections/image-2.jpeg"));
+        defaultSection3.setSectionImage(localImageToBlob("images/sections/image-3.jpeg"));
+        defaultSection4.setSectionImage(localImageToBlob("images/sections/image-4.jpeg"));
+        defaultSection5.setSectionImage(localImageToBlob("images/sections/image-5.jpeg"));
 
         userService.save(mainUser);
         userService.save(user2);
@@ -209,7 +196,8 @@ public class Manager {
 
 
     }
-// Not used yet due to issues with the database
+
+    // Not used yet due to issues with the database
     public void followSectionAutomated() {
         Random random = new Random();
         List<Section> sections = sectionService.findAll();
@@ -221,17 +209,20 @@ public class Manager {
                     Section sectionToFollow;
                     do {
                         sectionToFollow = sections.get(random.nextInt(sections.size()));
-                    } while (userService.getUserById(i).getFollowers().contains(sectionToFollow)); // Ensure a user does not follow the same section more than once
+                    } while (userService.getUserById(i).getFollowers().contains(sectionToFollow)); // Ensure a user does
+                                                                                                   // not follow the
+                                                                                                   // same section more
+                                                                                                   // than once
                     userService.getUserById(i).followSection(sectionToFollow);
                     userService.save(userService.getUserById(i));
                     followedSections.add(sectionToFollow);
-                
 
                 }
             }
         }
     }
-// Not used yet due to issues with the database
+
+    // Not used yet due to issues with the database
     public void followUsersAutomated() {
         Random random = new Random();
         List<User> users = userService.findAllUsers();
@@ -243,17 +234,37 @@ public class Manager {
                 User userToFollow;
                 do {
                     userToFollow = users.get(random.nextInt(users.size()));
-                } while (followedUsers.contains(userToFollow) || userService.getUserById(i).equals(userToFollow)); // Evitar seguir al mismo usuario
+                } while (followedUsers.contains(userToFollow) || userService.getUserById(i).equals(userToFollow)); // Evitar
+                                                                                                                   // seguir
+                                                                                                                   // al
+                                                                                                                   // mismo
+                                                                                                                   // usuario
 
-                 userService.getUserById(i).follow(userToFollow); // Esta es la linea que da problemas Relacion n:m reflexiva
-                 userService.save(userService.getUserById(i));
-                 userService.save(userToFollow);
+                userService.getUserById(i).follow(userToFollow);
+                userService.save(userService.getUserById(i));
+                userService.save(userToFollow);
                 followedUsers.add(userToFollow);
-                /*user7.follow(user6);
-                userService.save(user7);
-                userService.save(user6);*/
+                /*
+                 * user7.follow(user6);
+                 * userService.save(user7);
+                 * userService.save(user6);
+                 */
 
             }
         }
+    }
+
+    public Blob localImageToBlob(String localFilePath) {
+        File imageFile = new File(localFilePath);
+
+        if (imageFile.exists()) {
+            try {
+                return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
+
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
+            }
+        }
+        return null;
     }
 }

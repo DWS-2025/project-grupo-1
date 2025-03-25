@@ -129,7 +129,7 @@ public class SectionController {
             @RequestParam MultipartFile sectionImage) {
         try {
             Section section = new Section(title, description, null);
-            sectionService.saveImageSection(section, sectionImage);
+            sectionService.saveSectionWithImageSection(section, sectionImage);
             return "redirect:/section";
         } catch (IOException e) {
             e.printStackTrace();
