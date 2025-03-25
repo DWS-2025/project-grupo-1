@@ -38,7 +38,12 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public void save(Post post) {
+    public void save(Post post, MultipartFile imageFile) throws IOException {
+
+        if(!imageFile.isEmpty()){
+            post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+
         User currentUser = userService.getLoggedUser();
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
@@ -130,14 +135,6 @@ public class PostService {
             post.setAverageRating(0);
             postRepository.save(post);
         }
-    }
-
-    public void savePostImage(Post post, MultipartFile imageFile) throws IOException {
-        if(!imageFile.isEmpty()){
-            post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
-        }
-        this.save(post);
-    }
-   
+    }   
 
 }
