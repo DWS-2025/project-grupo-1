@@ -12,7 +12,7 @@ import es.codeurjc.web.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long>  {
 
-    User findByuserName(String userName);
+    User findByUserName(String userName);
     
     List<User> findTop5ByOrderByUserRateDesc();
 

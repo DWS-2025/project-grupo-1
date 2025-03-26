@@ -3,12 +3,11 @@ package es.codeurjc.web.service;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
+import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 
@@ -24,6 +23,9 @@ public class UserService {
     @Autowired
     PostService postService;
 
+    @Autowired
+    SectionService sectionService;
+
     /*private User loggedUser;  THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT 
 
     public void setLoggedUser(HttpSession session, User user){
@@ -34,20 +36,19 @@ public class UserService {
     public User getLoggedUser(){
         return loggedUser;
     }*/
-
-    public User getLoggedUser(){
-        return userRepository.findAll().get(0);
+    public User getLoggedUser() {
+        return userRepository.findByUserName("mainUser");
     }
 
-    public List<User> findAllUsers(){
+    public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
-    public void save(User user){
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    public User getUserById (long id){
+    public User getUserById(long id) {
         return userRepository.findById(id).get();
     }
 
@@ -55,53 +56,57 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User findByUserName(String userName){
-        List<User> users = userRepository.findAll();
-        User requestUser = null;
-        for (User user : users) {
-            if (user.getName().equals(userName)) {
-                requestUser = user;
-            }
-        }
-        return requestUser;
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 
-
-    public Boolean isLogged(User user){
+    public Boolean isLogged(User user) {
         return userRepository.findAll().get(0).equals(user);
     }
 
-    public void deleteUser(User userToDelete){
+    public void deleteUser(User userToDelete) {
         long id = userToDelete.getId();
-        if(id!=1){
-        List<Comment> comments = userToDelete.getComments();
-        for (Comment comment : comments) {
-            commentService.deleteCommentFromPost(comment.getCommentedPost(), comment.getId());
+        if (id != 1) {
+            // We break the relationship between the posts and the sections
+            if(!userToDelete.getPosts().isEmpty())
+            {
+            for (Post post : userToDelete.getPosts()) {
+                List<Section> sections = post.getSections();
+                for (Section section : sections) {
+                    section.deletePost(post);
+                    sectionService.saveSection(section);
+                }
+            }
         }
-        comments.clear();
-
-        List<Post> posts = userToDelete.getPosts();
-        for (Post post : posts) {
-            postService.deletePost(post);
-        }
-        posts.clear();
-
-        userToDelete.getCollaboratedPosts().clear();
-        userRepository.deleteById(id);
-
-        for(User user: userRepository.findAll())
+        if(!userToDelete.getCollaboratedPosts().isEmpty())
         {
-            if(user.getFollowers().contains(userToDelete))
-            user.getFollowers().remove(userToDelete);
-
-            if(user.getFollowings().contains(userToDelete))
-            user.getFollowings().remove(userToDelete);
-
+            // We break the relationship between the posts and the contributors
+            for (Post post : userToDelete.getCollaboratedPosts()) {
+                post.getContributors().remove(userToDelete);
+                postService.save(post);
+            }
         }
-        userToDelete.getFollowedSections().clear();
-        userToDelete.getFollowers().clear();
-        userToDelete.getFollowings().clear();
-        
+        if(!userToDelete.getFollowers().isEmpty())
+        {
+            // We break the relationship between the user and the followers
+            for (User follower : userToDelete.getFollowers()) {
+                follower.getFollowings().remove(userToDelete);
+                userRepository.save(follower);
+            }
+        }
+        if(!userToDelete.getFollowings().isEmpty())
+        {
+            // We break the relationship between the user and the followings
+            for (User following : userToDelete.getFollowings()) {
+                following.getFollowers().remove(userToDelete);
+                userRepository.save(following);
+            }
+
+            
+            
+        }
     }
-}
+        // We finally delete the user
+        userRepository.deleteById(id);
+    }
 }
