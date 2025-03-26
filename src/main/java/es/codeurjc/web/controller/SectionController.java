@@ -34,21 +34,6 @@ import es.codeurjc.web.service.*;
 @Controller
 public class SectionController {
 
-    private final PostService postService;
-
-    private final PostRepository postRepository;
-
-    private final PostController postController;
-
-    private final Manager manager;
-
-    private final ImageUserService imageUserService;
-
-    private final ImagePostService imagePostService;
-
-    private final CommentService commentService;
-
-    private final CommentRepository commentRepository;
     @Autowired
     private SectionService sectionService;
 
@@ -59,19 +44,6 @@ public class SectionController {
     private ImageSectionService imageSectionService;
 
     private static final String SECTIONS_FOLDER = "sections";
-
-    SectionController(CommentRepository commentRepository, CommentService commentService,
-            ImagePostService imagePostService, ImageUserService imageUserService, Manager manager,
-            PostController postController, PostRepository postRepository, PostService postService) {
-        this.commentRepository = commentRepository;
-        this.commentService = commentService;
-        this.imagePostService = imagePostService;
-        this.imageUserService = imageUserService;
-        this.manager = manager;
-        this.postController = postController;
-        this.postRepository = postRepository;
-        this.postService = postService;
-    }
 
     @GetMapping("/section")
     public String showSections(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -128,7 +100,7 @@ public class SectionController {
     public String createSection(@RequestParam String title, @RequestParam String description,
             @RequestParam MultipartFile sectionImage) {
         try {
-            Section section = new Section(title, description, null);
+            Section section = new Section(title, description);
             sectionService.saveSectionWithImageSection(section, sectionImage);
             return "redirect:/section";
         } catch (IOException e) {

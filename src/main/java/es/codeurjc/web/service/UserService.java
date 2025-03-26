@@ -1,10 +1,13 @@
 package es.codeurjc.web.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -48,7 +51,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserById(long id) {
+    public void saveUserWithImage(User user, MultipartFile imageFile) throws IOException{
+        if(!imageFile.isEmpty()){
+            byte[] imageBytes = imageFile.getBytes();
+            user.setUserImage(BlobProxy.generateProxy(imageBytes));
+        }
+        this.save(user);
+    }
+
+
+    public User getUserById (long id){
         return userRepository.findById(id).get();
     }
 
@@ -83,7 +95,7 @@ public class UserService {
             // We break the relationship between the posts and the contributors
             for (Post post : userToDelete.getCollaboratedPosts()) {
                 post.getContributors().remove(userToDelete);
-                postService.save(post);
+                postService.saveForInit(post);
             }
         }
         if(!userToDelete.getFollowers().isEmpty())
@@ -103,7 +115,7 @@ public class UserService {
             }
 
             
-            
+
         }
     }
         // We finally delete the user
