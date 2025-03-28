@@ -1,7 +1,8 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +33,7 @@ import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 
+
 @Controller
 public class PostController {
 
@@ -47,7 +52,7 @@ public class PostController {
 
     @GetMapping("/post")
     public String viewPosts(Model model) {
-        model.addAttribute("posts", postService.findAllPosts());
+        model.addAttribute("posts", postService.findAll());
         return "post_list";
     }
 
@@ -55,16 +60,19 @@ public class PostController {
     public String createPost(Model model) {
         model.addAttribute("sections", sectionService.findAll());
         model.addAttribute("isEditing", false);
+        System.out.println("=======================================\n\n\nGET NEW\n\n\n=======================================");
         return "post_form";
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestAttribute MultipartFile postImage, String contributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
+    public String createPost(Model model, Post post, @RequestParam MultipartFile postImage, String contributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
+        System.out.println("=======================================\n\n\nSTART POST NEW\n\n\n=======================================");
         if (sectionIds != null) {    
             for (long sectionId : sectionIds) {
                 post.addSection(sectionService.findById(sectionId).get());
             }
         }
+        System.out.println("=======================================\n\n\nSECTIONS ADDED NEW\n\n\n=======================================");
         
         String[] contributorsArray = contributors.split(",");
         for (String colaborator : contributorsArray) {
@@ -73,16 +81,17 @@ public class PostController {
                 post.addContributor(user);
             }
         }
-
+        System.out.println("=======================================\n\n\nPRESAVE\n\n\n=======================================");
         postService.save(post, postImage);
         return "redirect:/post";
     }
 
     @GetMapping("/post/{id}")
     public String viewPost(Model model, @PathVariable long id) {
-        Optional<Post> op = postService.findPostById(id);
+        Optional<Post> op = postService.findById(id);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
+            model.addAttribute("hasImage", op.get().getPostImage() != null);
             return "view_post";
 
         } else {
@@ -92,13 +101,25 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}/image")
-    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
-        return imageService.createResponseFromImage(POSTS_FOLDER, id);
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+        
+        Optional<Post> op = postService.findById(id);
+        
+        if (op.isPresent() && op.get().getPostImage() != null) {
+            Blob image = op.get().getPostImage();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        
+        } else {
+            return ResponseEntity.notFound().build();
+        
+        }
+
     }
 
     @GetMapping("/post/{id}/edit")
     public String editPost(Model model, @PathVariable long id) {
-        Optional<Post> op = postService.findPostById(id);
+        Optional<Post> op = postService.findById(id);
         if (op.isPresent()) {
             Post post = op.get();
 
@@ -143,7 +164,7 @@ public class PostController {
     public String editPost(Model model, @PathVariable long id, Post updatedPost,
             @RequestAttribute MultipartFile postImage, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam("contributors") List<String> contributors)
             throws IOException {
-        Optional<Post> op = postService.findPostById(id);
+        Optional<Post> op = postService.findById(id);
 
         if (op.isPresent()) {
             if (sectionIds != null) {
@@ -169,7 +190,7 @@ public class PostController {
 
     @PostMapping("/post/{id}/delete")
     public String deletePost(@PathVariable long id, Model model) {
-        Optional<Post> op = postService.findPostById(id);
+        Optional<Post> op = postService.findById(id);
         if (op.isPresent()) {
             postService.deletePost(op.get());
             return "redirect:/post";
@@ -181,7 +202,7 @@ public class PostController {
 
     @GetMapping("/post/{postId}/comment/new")
     public String newPostCommentForm(Model model, @PathVariable long postId) {
-        Optional<Post> op = postService.findPostById(postId);
+        Optional<Post> op = postService.findById(postId);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
             return "comment_form";
@@ -193,7 +214,7 @@ public class PostController {
 
     @PostMapping("/post/{postId}/comment/new")
     public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
-        Optional<Post> op = postService.findPostById(postId);
+        Optional<Post> op = postService.findById(postId);
         if (op.isPresent()) {
             if (newComment.getContent().isEmpty()) {
                 model.addAttribute("message", "El comentario no puede estar vacio");
@@ -217,7 +238,7 @@ public class PostController {
     // on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
-        Optional<Post> op = postService.findPostById(postId);
+        Optional<Post> op = postService.findById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
@@ -235,7 +256,7 @@ public class PostController {
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostCommentInfo(@PathVariable long postId, @PathVariable long commentId, Model model,
             Comment updatedComment) {
-        Optional<Post> op = postService.findPostById(postId);
+        Optional<Post> op = postService.findById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
@@ -259,7 +280,7 @@ public class PostController {
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
     public String deletePostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
-        Optional<Post> op = postService.findPostById(postId);
+        Optional<Post> op = postService.findById(postId);
         Optional<Comment> opComment = commentService.findCommentById(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {

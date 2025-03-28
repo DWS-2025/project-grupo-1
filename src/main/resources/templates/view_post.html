@@ -23,7 +23,12 @@
                     </div>
                     <div class="row">
                       <div class="centered-image">
-                        <img src="/post/{{post.id}}/image" alt=""></img>
+                        {{#hasImage}}
+                          <img src="/post/{{post.id}}/image" alt=""></img>
+                        {{/hasImage}}
+                        {{^hasImage}}
+                          <img src="/no-image.png" alt=""></img>
+                        {{/hasImage}}
                       </div>
                     </div>
                     <div class="col-lg-12">

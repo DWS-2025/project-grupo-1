@@ -172,6 +172,8 @@ public class Manager {
         userService.save(user3);
         userService.save(user2);
         userService.save(user5);
+        userService.save(user6);
+        userService.save(user7);
 
 
 

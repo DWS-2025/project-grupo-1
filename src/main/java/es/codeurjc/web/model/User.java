@@ -37,7 +37,7 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    @ManyToMany(mappedBy = "contributors", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "contributors")
     private List<Post> collaboratedPosts;
 
     // Constructor with the information that the user provides when registering

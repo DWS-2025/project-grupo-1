@@ -30,16 +30,15 @@ public class PostService {
     @Autowired
     private ImagePostService imageService;
 
-    public List<Post> findAllPosts() {
+    public List<Post> findAll() {
         return postRepository.findAll();
     }
 
-    public Optional<Post> findPostById(long id) {
+    public Optional<Post> findById(long id) {
         return postRepository.findById(id);
     }
 
     public void save(Post post, MultipartFile imageFile) throws IOException {
-
         if(!imageFile.isEmpty()){
             post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
@@ -57,7 +56,6 @@ public class PostService {
         for (User contributor : contributors) {
             contributor.addCollaboratedPosts(post);
         }
-        
         postRepository.save(post);
     }
 
@@ -72,16 +70,16 @@ public class PostService {
     }
     
     public void deletePost(Post post) {
-        for (Comment comment : post.getComments()) {
-            commentService.deleteCommentFromPost(post, comment.getId());
-        }
+        // for (Comment comment : post.getComments()) {
+        //     commentService.deleteCommentFromPost(post, comment.getId());
+        // }
         
-        for (Section section : post.getSections()) {
-            section.deletePost(post);
-        }
+        // for (Section section : post.getSections()) {
+        //     section.deletePost(post);
+        // }
         
         postRepository.deleteById(post.getId());
-        post.getComments().clear();
+        // post.getComments().clear();
     }
 
     public void updatePost(Post post, Post updatedPost, MultipartFile postImage) throws IOException {
@@ -114,8 +112,8 @@ public class PostService {
             }
         }
         
-        imageService.deleteImage("posts", post.getId());
-        imageService.saveImage("posts", post.getId(), postImage);
+        // imageService.deleteImage("posts", post.getId());
+        // imageService.saveImage("posts", post.getId(), postImage);
         // post.setPostImage(updatedPost.getPostImage());
         postRepository.save(post);
     }
