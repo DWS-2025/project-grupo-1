@@ -11,26 +11,26 @@
             <div class="main-profile ">
               <div class="row">
                 <div class="col-lg-4">
-                  <img src="/user/{{user.id}}/image" alt="" class="profile-image">
+                  <img src="/user/{{id}}/image" alt="" class="profile-image">
                 </div>
                 <div class="col-lg-4 align-self-center">
                   <div class="main-info header-text">
 
                     <div class="col-lg-12">
                       <div class="main-button">
-                        <a href="/editProfile/{{user.id}}">Editar</a>
+                        <a href="/editProfile/{{id}}">Editar</a>
                       </div>
                     </div>
                     {{#notSameUser}}
                     <div class="col-lg-12">
                       {{#followed}}
                       <div class="delete-button">
-                        <a href="/user/{{user.id}}/unfollow">Dejar de seguir</a>
+                        <a href="/user/{{id}}/unfollow">Dejar de seguir</a>
                       </div>
                       {{/followed}}
                       {{^followed}}
                       <div class="main-button">
-                        <a href="/user/{{user.id}}/follow">Seguir</a>
+                        <a href="/user/{{id}}/follow">Seguir</a>
                       </div>
                       {{/followed}}
                     </div>
@@ -38,7 +38,7 @@
                     {{^hideDeleteButton}}
                     <div class="col-lg-12">
                       <div class="delete-button">
-                        <form action="/deleteUser/{{user.id}}" method="post">
+                        <form action="/deleteUser/{{id}}" method="post">
                           <input type='submit' value='Eliminar usuario' />
                         </form>
                       </div>
@@ -57,8 +57,8 @@
                 <div class="col-lg-4 align-self-center">
                   <ul>
                     <li>Número de publicaciones <span>{{numberOfPublications}}</span></li>
-                    <li> <a href="/user/{{user.id}}/followings">Seguidores</a><span>{{numberOfFollowers}}</span></li>
-                    <li> <a href="/user/{{user.id}}/followed">Siguiendo</a><span>{{numberOfFollowing}}</span></li>
+                    <li> <a href="/user/{{id}}/followings">Seguidores</a><span>{{numberOfFollowers}}</span></li>
+                    <li> <a href="/user/{{id}}/followed">Siguiendo</a><span>{{numberOfFollowing}}</span></li>
                     <li>Temas seguidos <span>{{numberOfFollowedSections}}</span></li>
                     <li>Valoración de usuario <span>{{user.userRate}}</span></li>
                   </ul>

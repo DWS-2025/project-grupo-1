@@ -2,10 +2,16 @@ package es.codeurjc.web.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -143,6 +149,7 @@ public class UserController {
             model.addAttribute("numberOfFollowing", user.getFollowings().size());
             model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
             model.addAttribute("user", user);
+            model.addAttribute("id", user.getId());
 
             if (user != userService.getLoggedUser()) {
                 model.addAttribute("notSameUser", true);
@@ -190,7 +197,6 @@ public class UserController {
         }
 
         if (userImage != null && !userImage.isEmpty()) {
-            imageUserService.saveImage(USERS_FOLDER, user.getId(), userImage);
             userService.saveUserWithImage(user, userImage);
         }
         userService.save(user);
@@ -198,9 +204,21 @@ public class UserController {
         return "redirect:/profile/" + user.getId();
     }
 
+
+
     @GetMapping("/user/{id}/image")
-    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws MalformedURLException {
-        return imageUserService.createResponseFromImage(USERS_FOLDER, id);
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+        Optional<User> op = userService.findById(id);
+
+        if (op.isPresent() && op.get().getUserImage() != null) {
+            Blob image = op.get().getUserImage();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length())
+                    .body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/deleteUser/{userId}")
@@ -277,4 +295,6 @@ public class UserController {
             return "error";
         }
     }
+
+    
 }
