@@ -1,7 +1,9 @@
 package es.codeurjc.web.service;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -97,10 +101,15 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public void update(Section oldSection, Section updatedSection){
+    public void update(Section oldSection, Section updatedSection, MultipartFile newImage) throws IOException{
         oldSection.setTitle(updatedSection.getTitle());
         oldSection.setDescription(updatedSection.getDescription());
-        oldSection.setSectionImage(updatedSection.getSectionImage());
+        
+        if (!newImage.isEmpty()){
+            Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts MultipartFile to Blob
+            oldSection.setSectionImage(updatedImage);  
+        }
+    
         sectionRepository.save(oldSection);
     }
 

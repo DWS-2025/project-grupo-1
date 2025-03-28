@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.repository.CommentRepository;
@@ -204,7 +205,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("/section/{id}/edit") // hacer la pagina
+    @GetMapping("/section/{id}/edit") 
     public String editSection(Model model, @PathVariable long id) {
         Optional<Section> section = sectionService.findById(id);
 
@@ -219,12 +220,13 @@ public class SectionController {
     }
 
     @PostMapping("/section/{id}/edit")
-    public String updateSection(Model model, @PathVariable long id, Section updatedSection) {
+    public String updateSection(RedirectAttributes redirectAttributes, Model model, @PathVariable long id, Section updatedSection, MultipartFile newImage) throws IOException {
         Optional<Section> op = sectionService.findById(id);
 
         if (op.isPresent()) {
             Section oldSection = op.get();
-            sectionService.update(oldSection, updatedSection);
+            sectionService.update(oldSection, updatedSection, newImage);
+            redirectAttributes.addFlashAttribute("successMessage", "La sección se ha editado correctamente.");
             return "redirect:/section";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
