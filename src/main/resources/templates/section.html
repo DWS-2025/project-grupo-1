@@ -7,6 +7,10 @@
   <button type="submit" style="background-color: palevioletred; color: palevioletred; border: none; color: white">Buscar</button>
 </form>
 
+{{#successMessage}}
+<p class="text-light" style="text-align: center; background-color: green;">{{successMessage}}</p>
+{{/successMessage}}
+
 {{#isSearch}}
 <form action="/section" method="get" style="text-align: center; margin-bottom: 20px;">
   <button type="submit" style="background-color: palevioletred; color: palevioletred; border: none; color: white; border-radius: 25px">Todas las secciones</button>
@@ -45,14 +49,17 @@
                   </form>
                 </a>
               </li>
+              <li>
+                <a href="/section/{{id}}/edit">Editar</a>
+              </li>
             </ul>
-
           </div>
         </div>
         <div class="down-content">
           <h4 style="text-align: center;">{{title}}</h4>
           <p style="text-align: center;">{{description}}</p>
         </div>
+        
       </div>
     </div>
     {{/sections}}
