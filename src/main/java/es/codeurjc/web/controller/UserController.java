@@ -96,7 +96,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(Model model, @RequestParam String userName, @RequestParam String password, HttpSession session) {
+    public String login(Model model, @RequestParam String userName, @RequestParam String password/* , HttpSession session*/) {
         User logingUser = userService.findByUserName(userName);
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
