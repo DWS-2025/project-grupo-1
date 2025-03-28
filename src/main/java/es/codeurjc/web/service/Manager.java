@@ -32,22 +32,22 @@ public class Manager {
     @PostConstruct
     public void init() {
 
-        // Default user
+        // Default user 
         User mainUser = new User("mainUser", "1234", "mainUser@gmail.com");
         // Other users
-        User user2 = new User("user2", "Contraseña1", "user1@gmail.com");
-        User user3 = new User("user3", "Contraseña2", "user2@gmail.com");
-        User user4 = new User("user4", "Contraseña3", "user3@gmail.com");
-        User user5 = new User("user5", "Contraseña4", "user4@gmail.com");
-        User user6 = new User("user6", "Contraseña5", "user5@gmail.com");
-        User user7 = new User("user7", "Contraseña6", "user6@gmail.com");
+        User user2 = new User("user2", "Pass2", "user2@gmail.com");
+        User user3 = new User("user3", "Pass3", "user3@gmail.com");
+        User user4 = new User("user4", "Pass4", "user4@gmail.com");
+        User user5 = new User("user5", "Pass5", "user5@gmail.com");
+        User user6 = new User("user6", "Pass6", "user6@gmail.com");
+        User user7 = new User("user7", "Pass7", "user7@gmail.com");
 
-        mainUser.setUserImage(localImageToBlob("images/users/user-1.jpeg"));
-        user2.setUserImage(localImageToBlob("images/users/user-2.jpeg"));
-        user3.setUserImage(localImageToBlob("images/users/user-3.jpeg"));
-        user4.setUserImage(localImageToBlob("images/users/user-4.jpeg"));
-        user5.setUserImage(localImageToBlob("images/users/user-5.jpeg"));
-        user6.setUserImage(localImageToBlob("images/users/user-6.jpeg"));
+        mainUser.setUserImage(localImageToBlob("images/users/image-1.jpeg"));
+        user2.setUserImage(localImageToBlob("images/users/image-2.jpeg"));
+        user3.setUserImage(localImageToBlob("images/users/image-3.jpeg"));
+        user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
+        user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
+        user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
         
 
         // Some examples of posts and comments
