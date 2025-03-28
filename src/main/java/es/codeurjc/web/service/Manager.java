@@ -42,12 +42,12 @@ public class Manager {
         User user6 = new User("user6", "Contraseña5", "user5@gmail.com");
         User user7 = new User("user7", "Contraseña6", "user6@gmail.com");
 
-        mainUser.setUserImage(localImageToBlob("images/users/user-1.jpeg"));
-        user2.setUserImage(localImageToBlob("images/users/user-2.jpeg"));
-        user3.setUserImage(localImageToBlob("images/users/user-3.jpeg"));
-        user4.setUserImage(localImageToBlob("images/users/user-4.jpeg"));
-        user5.setUserImage(localImageToBlob("images/users/user-5.jpeg"));
-        user6.setUserImage(localImageToBlob("images/users/user-6.jpeg"));
+        mainUser.setUserImage(localImageToBlob("images/users/image-1.jpeg"));
+        user2.setUserImage(localImageToBlob("images/users/image-2.jpeg"));
+        user3.setUserImage(localImageToBlob("images/users/image-3.jpeg"));
+        user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
+        user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
+        user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
         
 
         // Some examples of posts and comments
