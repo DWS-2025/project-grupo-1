@@ -1,7 +1,6 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -118,7 +117,7 @@ public class UserController {
             @RequestParam String password, @RequestParam String confirmedPassword) {
         List<User> users = userService.findAllUsers();
         for (User user : users) {
-            if(user.getEmail().equals(email) || user.getName().equals(userName)){
+            if(user.getEmail().equals(email) || user.getUserName().equals(userName)){
                 if(!password.equals(confirmedPassword)){
                     model.addAttribute("Error",true);
                     model.addAttribute("PassError", true);
@@ -226,7 +225,7 @@ public class UserController {
         if (userService.findById(userId).isPresent()) {
             User deletedUser = userService.getUserById(userId);
             userService.deleteUser(deletedUser);
-            model.addAttribute("name", deletedUser.getName());
+            model.addAttribute("name", deletedUser.getUserName());
             model.addAttribute("byPost", true);
             return "user_delete";
         } else {

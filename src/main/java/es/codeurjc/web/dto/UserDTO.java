@@ -1,6 +1,5 @@
 package es.codeurjc.web.dto;
 
-import java.sql.Blob;
 import java.util.List;
 
 public record UserDTO(
@@ -8,12 +7,12 @@ public record UserDTO(
         String userName,
         String description,
         String email,
-        Blob userImage,
-        List<PostDTO> posts,
-        List<UserDTO> followers,
-        List<UserDTO> followings,
+        String userImage,
+        List<PostBasicDTO> posts,
+        List<UserBasicDTO> followers,
+        List<UserBasicDTO> followings,
         float  averageRating,
-        List<SectionDTO> followedSections,
-        List<CommentDTO> comments,
-        List<PostDTO> contributedPosts) {
+        List<SectionBasicDTO> followedSections,
+        List<CommentBasicDTO> comments,
+        List<PostBasicDTO> contributedPosts) {
 }

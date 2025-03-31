@@ -13,9 +13,9 @@ public record PostDTO(
         User owner,
         String ownerName,
         float  averageRating,
-        List<CommentDTO> comments,
-        List<SectionDTO> sections,
-        List<UserDTO> contributors) {
+        List<CommentBasicDTO> comments,
+        List<SectionBasicDTO> sections,
+        List<UserBasicDTO> contributors) {
 }
     
 

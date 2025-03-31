@@ -6,10 +6,9 @@ import java.util.List;
 public record SectionDTO(
         Long id,
         String title,
-        String content,
         String description,
         Blob sectionImage,
         float  averageRating,
         int numberOfPublications,
-        List<PostDTO> posts) {
+        List<PostBasicDTO> posts) {
 }

@@ -38,7 +38,7 @@ public class Comment {
     public Comment(String content, User owner, Post post, int rating) {
         this.content = content;
         this.owner = owner;
-        this.commentOwnerName = owner.getName();
+        this.commentOwnerName = owner.getUserName();
         this.commentedPost = post;
         this.rating = rating;
     }

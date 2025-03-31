@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -65,7 +64,7 @@ public class PostService {
 
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
-        post.setOwnerName(user.getName());   
+        post.setOwnerName(user.getUserName());   
         postRepository.save(post);
     }
     

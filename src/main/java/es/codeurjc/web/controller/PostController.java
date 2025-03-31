@@ -143,7 +143,7 @@ public class PostController {
 
             String contributors = "";
             for (User user : post.getContributors()) {
-                contributors += user.getName() + ",";
+                contributors += user.getUserName() + ",";
             }
 
             model.addAttribute("sections", sectionsWithSelection);
