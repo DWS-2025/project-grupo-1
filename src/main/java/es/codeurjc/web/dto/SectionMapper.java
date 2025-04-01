@@ -1,8 +1,7 @@
-package es.codeurjc.web.mapper;
+package es.codeurjc.web.dto;
 
-import java.util.List;
+import java.util.Collection;
 
-import es.codeurjc.web.dto.SectionDTO;  
 import es.codeurjc.web.model.Section;
 import org.mapstruct.Mapper;
 
@@ -13,9 +12,9 @@ public interface SectionMapper {
 
     Section toDomain(SectionDTO sectionDTO); 
 
-    List<SectionDTO> toDTOs(List<Section> sections); 
+    Collection<SectionDTO> toDTOs(Collection<Section> sections); 
 
-    List<Section> toDomains(List<SectionDTO> sectionDTOs); 
+    Collection<Section> toDomains(Collection<SectionDTO> sectionDTOs); 
 
 
     

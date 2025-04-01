@@ -1,9 +1,10 @@
-package es.codeurjc.web.mapper;
+package es.codeurjc.web.dto;
 
 import org.mapstruct.Mapper;
 
-import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.model.Comment;
+
+import java.util.Collection;
 import java.util.List;
 
 
@@ -13,8 +14,8 @@ public interface CommentMapper {
     CommentDTO toDTO(Comment comment);
 
     Comment toDomain(CommentDTO commentDTO);
-    List<CommentDTO> toDTOs(List<Comment> comments); 
+    Collection<CommentDTO> toDTOs(Collection<Comment> comments); 
 
-    List<Comment> toDomains(List<CommentDTO> commentDTOs);
+    Collection<Comment> toDomains(Collection<CommentDTO> commentDTOs);
     
 }

@@ -1,10 +1,10 @@
-package es.codeurjc.web.mapper;
+package es.codeurjc.web.dto;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.User;
 
 @Mapper(componentModel = "spring")
@@ -16,8 +16,8 @@ public interface UserMapper {
 
     User toDomain(UserDTO userDTO);
 
-    List<UserDTO> toDTOs(List<User> users);
+    Collection<UserDTO> toDTOs(Collection<User> users);
 
-    List<User> toDomains(List<UserDTO> userDTOs);
+    Collection<User> toDomains(Collection<UserDTO> userDTOs);
     
 }

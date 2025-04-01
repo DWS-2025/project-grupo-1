@@ -7,6 +7,7 @@ public record UserDTO(
         String userName,
         String description,
         String email,
+        String image,
         List<PostBasicDTO> posts,
         List<UserBasicDTO> followers,
         List<UserBasicDTO> followings,

@@ -3,10 +3,6 @@ package es.codeurjc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Blob;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -206,7 +202,7 @@ public class Manager {
 
 
     }
-
+/* 
     // Not used yet due to issues with the database
     public void followSectionAutomated() {
         Random random = new Random();
@@ -231,9 +227,10 @@ public class Manager {
             }
         }
     }
+        */
 
     // Not used yet due to issues with the database
-    public void followUsersAutomated() {
+   /*  public void followUsersAutomated() {
         Random random = new Random();
         List<User> users = userService.findAllUsers();
         for (int i = 1; i <= userService.findAllUsers().size(); i++) {
@@ -254,15 +251,12 @@ public class Manager {
                 userService.save(userService.getUserById(i));
                 userService.save(userToFollow);
                 followedUsers.add(userToFollow);
-                /*
-                 * user7.follow(user6);
-                 * userService.save(user7);
-                 * userService.save(user6);
-                 */
+                
 
             }
         }
     }
+    */
 
     public Blob localImageToBlob(String localFilePath) {
         File imageFile = new File(localFilePath);

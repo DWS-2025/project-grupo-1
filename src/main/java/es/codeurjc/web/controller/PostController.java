@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -76,7 +77,7 @@ public class PostController {
         
         String[] contributorsArray = contributors.split(",");
         for (String colaborator : contributorsArray) {
-            User user = userService.findByUserName(colaborator);
+            UserDTO user = userService.findByUserName(colaborator);
             if (user != null) {
                 post.addContributor(user);
             }

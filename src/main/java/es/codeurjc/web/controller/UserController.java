@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageUserService;
@@ -52,7 +53,7 @@ public class UserController {
         if (userService.getLoggedUser() != null) {
             model.addAttribute("user", userService.getLoggedUser());
             model.addAttribute("session", true);
-            model.addAttribute("id", userService.getLoggedUser().getId());
+          
         } else {
             User user = new User();
             user.setName("Invitado");
@@ -65,7 +66,7 @@ public class UserController {
 
     @GetMapping("/following")
     public String following(Model model) {
-        model.addAttribute("sections", userService.getLoggedUser().getFollowedSections());
+        model.addAttribute("user", userService.getLoggedUser().followedSections());
         model.addAttribute("followed", true);
         model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser()));
         model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser()));
@@ -75,13 +76,8 @@ public class UserController {
 
     @GetMapping("/discover")
     public String discover(Model model, HttpSession session) {
-        List<Section> allSections = sectionService.findAll();
-        List<Section> followedSections = userService.getLoggedUser().getFollowedSections();
-        // Filter only the sections that are NOT in the list of followed sections
-        List<Section> notFollowedSections = allSections.stream()
-                .filter(section -> !followedSections.contains(section))
-                .collect(Collectors.toList());
-        model.addAttribute("sections", notFollowedSections);
+      
+        model.addAttribute("sections", sectionService.findNotFollowedSections());
         model.addAttribute("topUsers", rankingService.topUsersApp());
         model.addAttribute("topPosts", rankingService.topPostsApp());
 
@@ -96,11 +92,14 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(Model model, @RequestParam String userName, @RequestParam String password/* , HttpSession session*/) {
-        User logingUser = userService.findByUserName(userName);
+        UserDTO logingUser = userService.findByUserName(userName);
+       // this needs to be moved to the service layer
+        /* 
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
             return "/login";
         }
+            */
         /*userService.setLoggedUser(session, logingUser);*/
         return "redirect:/";
     }
@@ -115,9 +114,9 @@ public class UserController {
     @PostMapping("/register")
     public String postMethodName(Model model, @RequestParam String userName, @RequestParam String email,
             @RequestParam String password, @RequestParam String confirmedPassword) {
-        List<User> users = userService.findAllUsers();
-        for (User user : users) {
-            if(user.getEmail().equals(email) || user.getUserName().equals(userName)){
+        
+        for (UserDTO user : userService.findAllUsers()) {
+            if(user.email().equals(email) || user.userName().equals(userName)){
                 if(!password.equals(confirmedPassword)){
                     model.addAttribute("Error",true);
                     model.addAttribute("PassError", true);
@@ -141,19 +140,19 @@ public class UserController {
 
     @GetMapping("/profile/{userId}")
     public String showProfile(Model model, @PathVariable Long userId) {
-        User user = userService.getUserById(userId);
+        UserDTO user = userService.getUserById(userId);
         if (user != null) {
-            model.addAttribute("numberOfPublications", user.getPosts().size());
-            model.addAttribute("numberOfFollowers", user.getFollowers().size());
-            model.addAttribute("numberOfFollowing", user.getFollowings().size());
-            model.addAttribute("numberOfFollowedSections", user.getFollowedSections().size());
+            model.addAttribute("numberOfPublications", user.posts().size());
+            model.addAttribute("numberOfFollowers", user.followers().size());
+            model.addAttribute("numberOfFollowing", user.followings().size());
+            model.addAttribute("numberOfFollowedSections", user.followedSections().size());
             model.addAttribute("user", user);
-            model.addAttribute("id", user.getId());
+            model.addAttribute("id", user.id());
 
             if (user != userService.getLoggedUser()) {
                 model.addAttribute("notSameUser", true);
             }
-            if (userService.getLoggedUser().getFollowings().contains(user)) {
+            if (userService.getLoggedUser().followings().contains(user)) {
                 model.addAttribute("followed", true);
             }
             if (user.equals(userService.getLoggedUser())) {
@@ -180,36 +179,23 @@ public class UserController {
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage)
             throws IOException {
 
-        User user = userService.getUserById(userId);
+        UserDTO user = userService.getUserById(userId);
 
         if (user == null) {
             model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
+        userService.uptadeUser(user, newUserName, description, userImage);
 
-        if (newUserName != null && !newUserName.isEmpty()) {
-            user.setName(newUserName);
-        }
-
-        if (description != null && !description.isEmpty()) {
-            user.setDescription(description);
-        }
-
-        if (userImage != null && !userImage.isEmpty()) {
-            userService.saveUserWithImage(user, userImage);
-        }
-        userService.save(user);
-
-        return "redirect:/profile/" + user.getId();
+        return "redirect:/profile/" + user.id();
     }
-
 
 
     @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        Optional<User> op = userService.findById(id);
+        UserDTO op = userService.findById(id);
 
-        if (op.isPresent() && op.get().getUserImage() != null) {
+        if (op != null && op.image() != null) {
             Blob image = op.get().getUserImage();
             Resource file = new InputStreamResource(image.getBinaryStream());
 
@@ -222,10 +208,10 @@ public class UserController {
 
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
-        if (userService.findById(userId).isPresent()) {
-            User deletedUser = userService.getUserById(userId);
-            userService.deleteUser(deletedUser);
-            model.addAttribute("name", deletedUser.getUserName());
+        if (userService.findById(userId) != null) {
+            UserDTO userToDelete = userService.getUserById(userId);
+            userService.deleteUser(userToDelete);
+            model.addAttribute("name", userToDelete.userName());
             model.addAttribute("byPost", true);
             return "user_delete";
         } else {
@@ -236,7 +222,7 @@ public class UserController {
 
     @GetMapping("/deleteUser/{userId}")
     public String DeleteUser(Model model, @PathVariable long userId) {
-        if (userService.findById(userId).isPresent()) {
+        if (userService.findById(userId) != null) {
             return "user_delete";
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -247,9 +233,12 @@ public class UserController {
 
     @GetMapping("/user/{userId}/unfollow")
     public String unfollowUser(Model model, @PathVariable long userId) {
-        User userToUnfollow = userService.getUserById(userId);
+        
+       // User userToUnfollow = userService.getUserById(userId);
+        UserDTO userToUnfollow = userService.findById(userId);
         if(userToUnfollow != null){
-        userService.getLoggedUser().unfollow(userToUnfollow);
+        // userService.getLoggedUser().unfollow(userToUnfollow);
+        userService.unfollowUser(userToUnfollow);
         return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -259,9 +248,9 @@ public class UserController {
 
     @GetMapping("/user/{userId}/follow")
     public String followUser(Model model, @PathVariable long userId) {
-        User userTofollow = userService.getUserById(userId);
+        UserDTO userTofollow = userService.getUserById(userId);
         if(userTofollow != null){
-        userService.getLoggedUser().follow(userTofollow);
+        userService.followUser(userTofollow);
         return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -271,9 +260,9 @@ public class UserController {
 
     @GetMapping("/user/{id}/followed")
     public String followedUsers(Model model, @PathVariable long id) {
-        User user = userService.getUserById(id);
+        UserDTO user = userService.getUserById(id);
         if(user != null){
-        model.addAttribute("followedUsers", user.getFollowings());
+        model.addAttribute("followedUsers", user.followings());
         model.addAttribute("message", "seguidos");
         return "view_followers";
         } else {
@@ -284,10 +273,10 @@ public class UserController {
 
     @GetMapping("/user/{id}/followings")
     public String followingsUsers(Model model, @PathVariable long id) {
-        User user = userService.getUserById(id);
+        UserDTO user = userService.getUserById(id);
         if (user != null){
         model.addAttribute("message", "que le siguen");
-        model.addAttribute("followedUsers", user.getFollowers());
+        model.addAttribute("followedUsers", user.followers());
         return "view_followers";
         } else{
             model.addAttribute("message", "no se ha encontrado ese usuario");

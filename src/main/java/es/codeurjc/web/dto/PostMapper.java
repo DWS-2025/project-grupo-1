@@ -1,10 +1,10 @@
-package es.codeurjc.web.mapper;
+package es.codeurjc.web.dto;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.model.Post;
 
 @Mapper(componentModel = "spring")
@@ -14,8 +14,8 @@ public interface PostMapper {
 
     Post toDomain(PostDTO postDTO); 
 
-    List<PostDTO> toDTOs(List<Post> posts); 
+    Collection<PostDTO> toDTOs(Collection<Post> posts); 
 
-    List<Post> toDomains(List<PostDTO> postDTOs); 
+    Collection<Post> toDomains(Collection<PostDTO> postDTOs); 
     
 }
