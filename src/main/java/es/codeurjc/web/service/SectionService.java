@@ -2,6 +2,7 @@ package es.codeurjc.web.service;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +103,20 @@ public class SectionService {
         oldSection.setDescription(updatedSection.getDescription());
         oldSection.setSectionImage(updatedSection.getSectionImage());
         sectionRepository.save(oldSection);
+    }
+
+    public List<Section> getSectionsFromIdsList(List<Long> sectionIds) {
+        List<Section> sections = new ArrayList<>();
+        Section section;
+        
+        for (Long sectionId : sectionIds) {
+            section = findById(sectionId).orElse(null);
+            if (section != null) {
+                sections.add(section);
+            }
+        }
+
+        return sections;
     }
 
 }

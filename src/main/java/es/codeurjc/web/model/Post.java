@@ -74,11 +74,11 @@ public class Post {
     }
 
     public void addContributor(User user) {
-        if(!contributors.contains(user))
-        this.contributors.add(user);
+        if(!contributors.contains(user)) {
+            this.contributors.add(user);
+        }
 
     }
-   
 
     public long getId() {
         return this.id;
@@ -140,8 +140,16 @@ public class Post {
         return this.contributors;
     }
 
+    public void setContributors(List<User> contributors) {
+        this.contributors = contributors;
+    }
+
     public List<Section> getSections() {
         return this.sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 
     public void setOwnerName(String name){

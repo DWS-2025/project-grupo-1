@@ -1,6 +1,7 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,4 +122,19 @@ public class UserService {
         // We finally delete the user
         userRepository.deleteById(id);
     }
+
+    public List<User> getUsersFromUserNamesList(String[] contributorNames) {
+        List<User> users = new ArrayList<>();
+        User user;
+
+        for (String colaborator : contributorNames) {
+            user = findByUserName(colaborator);
+            if (user != null) {
+                users.add(user);
+            }
+        }
+        
+        return users;
+    }
+
 }

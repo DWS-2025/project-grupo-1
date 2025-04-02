@@ -65,24 +65,14 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestParam MultipartFile postImage, String contributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
-        System.out.println("=======================================\n\n\nSTART POST NEW\n\n\n=======================================");
-        if (sectionIds != null) {    
-            for (long sectionId : sectionIds) {
-                post.addSection(sectionService.findById(sectionId).get());
-            }
-        }
-        System.out.println("=======================================\n\n\nSECTIONS ADDED NEW\n\n\n=======================================");
+    public String createPost(Model model, Post post, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
         
-        String[] contributorsArray = contributors.split(",");
-        for (String colaborator : contributorsArray) {
-            User user = userService.findByUserName(colaborator);
-            if (user != null) {
-                post.addContributor(user);
-            }
-        }
-        System.out.println("=======================================\n\n\nPRESAVE\n\n\n=======================================");
-        postService.save(post, postImage);
+        postService.addSections(post, sectionIds);
+        
+        String[] contributorsArray = newContributors.split(",");
+        postService.addContributors(post, contributorsArray);
+        
+        postService.save(post, newImage);
         return "redirect:/post";
     }
 
@@ -161,25 +151,16 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/edit")
-    public String editPost(Model model, @PathVariable long id, Post updatedPost,
-            @RequestAttribute MultipartFile postImage, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam("contributors") List<String> contributors)
+    public String editPost(Model model, @PathVariable long id, @RequestParam String title, @RequestParam String content,
+            @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
         Optional<Post> op = postService.findById(id);
 
         if (op.isPresent()) {
-            if (sectionIds != null) {
-                for (long sectionId : sectionIds) {
-                    updatedPost.addSection(sectionService.findById(sectionId).get());
-                }
-            }
-            for (String colaborator : contributors) {
-                if (userService.findByUserName(colaborator) != null) {
-                    updatedPost.addContributor(userService.findByUserName(colaborator));
-                }
-            }
 
 
-            postService.updatePost(op.get(), updatedPost, postImage);
+
+            postService.updatePost(op.get(), title, content, newSectionIds, newContributorsStrings.split(","), newImage);
             return "redirect:/post/" + id;
 
         } else {

@@ -1,6 +1,7 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -28,7 +28,7 @@ public class PostService {
     private UserService userService;
 
     @Autowired
-    private ImagePostService imageService;
+    private SectionService sectionService;
 
     public List<Post> findAll() {
         return postRepository.findAll();
@@ -39,7 +39,7 @@ public class PostService {
     }
 
     public void save(Post post, MultipartFile imageFile) throws IOException {
-        if(!imageFile.isEmpty()){
+        if(!imageFile.isEmpty()) {
             post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
 
@@ -77,46 +77,37 @@ public class PostService {
         // for (Section section : post.getSections()) {
         //     section.deletePost(post);
         // }
-        
+        post.getContributors().clear();
+        post.getSections().clear();
         postRepository.deleteById(post.getId());
         // post.getComments().clear();
     }
 
-    public void updatePost(Post post, Post updatedPost, MultipartFile postImage) throws IOException {
-        post.setTitle(updatedPost.getTitle());
-        post.setContent(updatedPost.getContent());
-        
-        for (Section section : updatedPost.getSections()) {
-            if (!post.getSections().contains(section)) {
-                post.addSection(section);
-                section.addPost(post);
-            }
+    public void updatePost(Post post, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        post.setTitle(newTitle);
+        post.setContent(newContent);
+
+        List<Section> newSections = sectionService.getSectionsFromIdsList(newSectionIds);
+        post.getSections().clear();
+        System.out.println("==========================\n\n");
+        for(Section section : newSections) {
+            System.out.println(section.getId());
+        }
+        System.out.println("==========================\n\n");
+
+        // post.setSections(newSections);
+        addSections(post, newSectionIds);
+
+        List<User> newContributors = userService.getUsersFromUserNamesList(newContributorsStrings);
+        post.setContributors(newContributors);
+
+        if (!newImage.isEmpty()) {
+            post.setPostImage(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
         }
 
-        for (Section section : post.getSections()) {
-            if (!updatedPost.getSections().contains(section)) {
-                post.deleteSection(section);
-                section.deletePost(post);
-            }
-        }
-
-        for (User contributor : updatedPost.getContributors()) {
-            if (!post.getContributors().contains(contributor)) {
-                post.addContributor(contributor);
-            }
-        }
-
-        for (User contributor : post.getContributors()) {
-            if (!updatedPost.getContributors().contains(contributor)) {
-                post.getContributors().remove(contributor);
-            }
-        }
-        
-        // imageService.deleteImage("posts", post.getId());
-        // imageService.saveImage("posts", post.getId(), postImage);
-        // post.setPostImage(updatedPost.getPostImage());
         postRepository.save(post);
     }
+
     public CommentService getCommentService() {
         return this.commentService;
     }
@@ -125,14 +116,41 @@ public class PostService {
         Post post = postRepository.findById(postId).get();
         if(!post.getComments().isEmpty())
         {
-        post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
-        postRepository.save(post);
+            post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
+            postRepository.save(post);
         }
         else
         {
             post.setAverageRating(0);
             postRepository.save(post);
         }
-    }   
+    }  
+    
+    public void addSections(Post post, List<Long> sectionIds) {
+        if (sectionIds != null) {
+            for (long sectionId : sectionIds) {
+                post.addSection(sectionService.findById(sectionId).get());
+            }
+        }
+    }
+
+    public void addContributors(Post post, String[] contributorNames) {
+        User user;
+        for (String colaborator : contributorNames) {
+            user = userService.findByUserName(colaborator);
+            if (user != null) {
+                post.addContributor(user);
+            }
+        }
+    }
+
+    public void updateSections(Post post, List<Section> oldSections, List<Section> newSections) {
+        for (Section section : newSections) {
+            if (!post.getSections().contains(section)) {
+                post.addSection(section);
+                section.addPost(post);
+            }
+        }
+    }
 
 }
