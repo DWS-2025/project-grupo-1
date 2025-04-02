@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -70,8 +71,13 @@ public class PostController {
         postService.addSections(post, sectionIds);
         
         String[] contributorsArray = newContributors.split(",");
-        postService.addContributors(post, contributorsArray);
-        
+        for (String colaborator : contributorsArray) {
+            UserDTO user = userService.findByUserName(colaborator);
+            if (user != null) {
+                post.addContributor(user);
+            }
+        }
+        System.out.println("=======================================\n\n\nPRESAVE\n\n\n=======================================");
         postService.save(post, newImage);
         return "redirect:/post";
     }
@@ -133,7 +139,7 @@ public class PostController {
 
             String contributors = "";
             for (User user : post.getContributors()) {
-                contributors += user.getName() + ",";
+                contributors += user.getUserName() + ",";
             }
 
             model.addAttribute("sections", sectionsWithSelection);

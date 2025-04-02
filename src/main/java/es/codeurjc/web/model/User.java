@@ -4,7 +4,6 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -88,7 +87,7 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
+    public String getUserName() {
         return this.userName;
     }
 
@@ -204,7 +203,7 @@ public class User {
             return false;
         }
         User other = (User) obj;
-        return this.userName.equals(other.getName());
+        return this.userName.equals(other.getUserName());
     }
 
 }

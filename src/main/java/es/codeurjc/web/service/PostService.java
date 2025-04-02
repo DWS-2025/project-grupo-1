@@ -1,6 +1,7 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.PostDTO;
+import es.codeurjc.web.dto.PostMapper;
+import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -30,6 +34,11 @@ public class PostService {
     @Autowired
     private SectionService sectionService;
 
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    PostMapper postMapper;
+
     public List<Post> findAll() {
         return postRepository.findAll();
     }
@@ -38,25 +47,27 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public void save(Post post, MultipartFile imageFile) throws IOException {
-        if(!imageFile.isEmpty()) {
+    public PostDTO save(PostDTO postDTO, MultipartFile imageFile) throws IOException {
+        Post post = toDomain(postDTO);
+        if (!imageFile.isEmpty()) {
             post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
 
-        User currentUser = userService.getLoggedUser();
+        User currentUser = userMapper.toDomain(userService.getLoggedUser());
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
-        
+
         List<Section> sections = post.getSections();
         for (Section section : sections) {
             section.addPost(post);
         }
-        
+
         List<User> contributors = post.getContributors();
         for (User contributor : contributors) {
             contributor.addCollaboratedPosts(post);
         }
         postRepository.save(post);
+        return toDTO(post);
     }
 
     public void saveForInit(Post post) {
@@ -65,15 +76,15 @@ public class PostService {
 
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
-        post.setOwnerName(user.getName());   
+        post.setOwnerName(user.getUserName());
         postRepository.save(post);
     }
-    
+
     public void deletePost(Post post) {
         // for (Comment comment : post.getComments()) {
         //     commentService.deleteCommentFromPost(post, comment.getId());
         // }
-        
+
         // for (Section section : post.getSections()) {
         //     section.deletePost(post);
         // }
@@ -108,19 +119,17 @@ public class PostService {
         postRepository.save(post);
     }
 
+
     public CommentService getCommentService() {
         return this.commentService;
     }
 
     public void setAverageRatingPost(long postId) {
         Post post = postRepository.findById(postId).get();
-        if(!post.getComments().isEmpty())
-        {
-            post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
-            postRepository.save(post);
-        }
-        else
-        {
+        if (!post.getComments().isEmpty()) {
+                post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
+                postRepository.save(post);
+        } else {
             post.setAverageRating(0);
             postRepository.save(post);
         }
@@ -151,6 +160,18 @@ public class PostService {
                 section.addPost(post);
             }
         }
+    }   
+
+    private PostDTO toDTO(Post post) {
+        return postMapper.toDTO(post);
+    }
+
+    private Post toDomain(PostDTO postDTO) {
+        return postMapper.toDomain(postDTO);
+    }
+
+    private Collection<PostDTO> toDTOs(Collection<Post> posts) {
+        return postMapper.toDTOs(posts);
     }
 
 }
