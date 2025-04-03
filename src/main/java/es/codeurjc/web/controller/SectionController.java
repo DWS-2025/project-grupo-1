@@ -118,10 +118,10 @@ public class SectionController {
 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        Optional<Section> op = sectionService.findById(id);
+        Optional<SectionDTO> op = sectionService.findById(id);
 
-        if (op.isPresent() && op.get().getSectionImage() != null) {
-            Blob image = op.get().getSectionImage();
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
 
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length())
