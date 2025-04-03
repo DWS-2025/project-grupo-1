@@ -74,7 +74,9 @@ public class SectionService {
         return toDTO(sectionRepository.findById(id));
     } 
 
-
+    public Page<SectionDTO> findAllAsDTO(Pageable pageable) {
+        return sectionRepository.findAll(pageable).map(this::toDTO);
+    }
     /* public void saveSection(Section section) {
         sectionRepository.save(section);
     }  */
