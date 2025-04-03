@@ -48,6 +48,7 @@ public class SectionService {
     @Autowired
     private UserService userService;
 
+
     SectionService(CommentRepository commentRepository, CommentService commentService) {
         this.commentRepository = commentRepository;
         this.commentService = commentService;
@@ -69,23 +70,29 @@ public class SectionService {
         return toDTOs(sectionRepository.findAll(example));
     }
 
-    public Optional<Section> findById(long id) {
-        return sectionRepository.findById(id);
+    public Optional<SectionDTO> findById(long id) {
+        return toDTO(sectionRepository.findById(id));
     }
 
-    public void saveSection(Section section) {
+    /* public void saveSection(Section section) {
+        sectionRepository.save(section);
+    }  */
+
+    public void saveSection(Section section){
         sectionRepository.save(section);
     }
 
-    public void saveSectionWithImageSection(Section section, MultipartFile imageFile) throws IOException {
+    public void saveSectionWithImageSection(SectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
+        Section section = toDomain(sectionDTO);
+
         if (!imageFile.isEmpty()) {
             section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         this.saveSection(section);
     }
 
-    public void deleteSection(Section sectionToDelete) {
-
+    /* public void deleteSection(Section sectionToDelete) {
+   
         List<User> users = userRepository.findAll();
         Section section = sectionRepository.findById(sectionToDelete.getId()).get();
 
@@ -96,7 +103,23 @@ public class SectionService {
         }
         sectionRepository.delete(sectionToDelete);
 
+    } */
+    public SectionDTO deleteSection(SectionDTO sectionDTO) {
+        
+        Section sectionToDelete = toDomain(sectionDTO);
+
+        List<User> users = userRepository.findAll();
+        Section section = sectionRepository.findById(sectionToDelete.getId()).get();
+
+        for (User user : users) { //delete section from followed sections of all users
+            if (user.getFollowedSections().contains(section)) {
+                user.getFollowedSections().remove(section);
+            }
+        }
+        sectionRepository.delete(sectionToDelete);
+        return toDTO(sectionToDelete);
     }
+
 
     public void addPost(Section section, Post post) {
         section.addPost(post);
@@ -106,7 +129,10 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public void update(Section oldSection, Section updatedSection, MultipartFile newImage) throws IOException {
+    public void update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) throws IOException {
+        Section oldSection = toDomain(oldSectionDTO);
+        Section updatedSection = toDomain(updatedSectionDTO);
+        
         oldSection.setTitle(updatedSection.getTitle());
         oldSection.setDescription(updatedSection.getDescription());
 
@@ -118,18 +144,20 @@ public class SectionService {
         sectionRepository.save(oldSection);
     }
 
-    public List<Section> getSectionsFromIdsList(List<Long> sectionIds) {
-        List<Section> sections = new ArrayList<>();
+    public Collection<SectionDTO> getSectionsFromIdsList(List<Long> sectionIds) {
+        Collection<Section> sections = new ArrayList<>();
+        SectionDTO sectionDTO;
         Section section;
         
         for (Long sectionId : sectionIds) {
-            section = findById(sectionId).orElse(null);
-            if (section != null) {
+            sectionDTO = findById(sectionId).orElse(null);
+            if (sectionDTO != null) {
+                section = toDomain(sectionDTO); 
                 sections.add(section);
             }
         }
 
-        return sections;
+        return toDTOs(sections);
     }
 
     public Collection<SectionDTO> findNotFollowedSections() {
@@ -147,6 +175,10 @@ public class SectionService {
         return mapper.toDTO(section);
     }
 
+    private Optional<SectionDTO> toDTO(Optional<Section> section){
+        return section.map(this::toDTO); // if present, convert to DTO
+    }
+
     private Section toDomain(SectionDTO sectionDTO) {
         return mapper.toDomain(sectionDTO);
     }
@@ -159,4 +191,16 @@ public class SectionService {
         return mapper.toDomains(sectionsDTO);
 
     }
+
+    public Collection<SectionDTO> getSections(){
+        return toDTOs(sectionRepository.findAll());
+    }
+
+    public SectionDTO getSection (Long id) {
+        return toDTO(sectionRepository.findById(id).orElseThrow());
+    }
+
+    
+
+
 }
