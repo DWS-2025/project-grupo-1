@@ -18,9 +18,11 @@ public class Section {
     private long id;
     private String title;
     private String description;
-    //private User author;
+    private String image; // URL of the image
+
+
     @Lob
-    private Blob sectionImage;
+    private Blob imageFile; // Blob for storing the image file
     
    @ManyToMany
     private List<Post> posts;
@@ -80,20 +82,20 @@ public class Section {
         this.description = description;
     }
 
-   /* public String getSectionImage() {
-        return this.sectionImage;
+   /* public String getimageFile() {
+        return this.imageFile;
     }
 
-    public void setSectionImage(String sectionImage) {
-        this.sectionImage = sectionImage;
+    public void setimageFile(String imageFile) {
+        this.imageFile = imageFile;
     }*/ 
 
-    public Blob getSectionImage(){
-        return this.sectionImage;
+    public Blob getImageFile(){
+        return this.imageFile;
     }
 
-    public void setSectionImage(Blob sectionImage){
-        this.sectionImage = sectionImage;
+    public void setImageFile(Blob imageFile){
+        this.imageFile = imageFile;
     }
 
     public List<Post> getPosts() {
@@ -111,6 +113,14 @@ public class Section {
       this.averageRating = rate;
      
     }
+
+    public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
     public void calculateAverageRating() {
      List<Post> posts = getPosts();

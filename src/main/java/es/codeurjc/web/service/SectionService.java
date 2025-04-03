@@ -2,15 +2,21 @@ package es.codeurjc.web.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -89,12 +95,57 @@ public class SectionService {
     }
 
     public void saveSectionWithImageSection(SectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        
+        Section section = toDomain(sectionDTO);
+
         if (!imageFile.isEmpty()) {
-            section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize())); // CAMBIAR AUN IMAGENES
+            section.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize())); 
         }
         this.saveSection(sectionDTO);
     }
+
+    public void createSectionImage(long id, URI location, InputStream inputStream, long size){
+        Section section = sectionRepository.findById(id).orElseThrow();
+
+        section.setImage(location.toString()); // Set the image URL or path here
+        section.setImageFile(BlobProxy.generateProxy(inputStream, size)); // Converts inputStream to Blob
+        sectionRepository.save(section);
+    }
+
+    public Resource getSectionImage(long id) throws SQLException {
+        Section section = sectionRepository.findById(id).orElseThrow();
+
+        if (section.getImageFile() != null) {
+            return new InputStreamResource(section.getImageFile().getBinaryStream()); //
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    public void replaceSectionImage(long id, InputStream inputStream, long size){
+        Section section = sectionRepository.findById(id).orElseThrow();
+
+        if (section.getImage() == null){
+            throw new NoSuchElementException();
+        }
+
+        section.setImageFile(BlobProxy.generateProxy(inputStream, size)); // Converts inputStream to Blob
+
+        sectionRepository.save(section);
+    }
+
+    public void deleteSectionImage (long id) {
+        Section section = sectionRepository.findById(id).orElseThrow();
+
+        if (section.getImage() == null){
+            throw new NoSuchElementException();
+        } 
+
+        section.setImageFile(null); // Set the image URL or path here
+        section.setImage(null); // Set the image URL or path here
+
+    }
+
+
 
     /* public void deleteSection(Section sectionToDelete) {
    
@@ -143,7 +194,7 @@ public class SectionService {
 
         if (!newImage.isEmpty()) {
             Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts MultipartFile to Blob
-            oldSection.setSectionImage(updatedImage);
+            oldSection.setImageFile(updatedImage);
         }
 
         sectionRepository.save(oldSection);

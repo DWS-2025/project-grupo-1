@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.repository.CommentRepository;
 import es.codeurjc.web.repository.PostRepository;
@@ -132,7 +133,7 @@ public class SectionController {
 
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             sectionService.deleteSection(section.get());
@@ -147,7 +148,7 @@ public class SectionController {
 
     @GetMapping("/section/{id}/delete")
     public String deleteSectionG(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             sectionService.deleteSection(section.get());
@@ -162,7 +163,7 @@ public class SectionController {
 
     @GetMapping("/section/{id}")
     public String viewSection(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             model.addAttribute("section", section.get());
@@ -176,7 +177,7 @@ public class SectionController {
 
     @GetMapping("/section/{id}/unfollow")
     public String unfollowSection(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             userService.getLoggedUser().unfollowSection(section.get());
@@ -190,7 +191,7 @@ public class SectionController {
 
     @GetMapping("/section/{id}/follow")
     public String followSection(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             userService.getLoggedUser().followSection(section.get());
@@ -204,7 +205,7 @@ public class SectionController {
 
     @GetMapping("/section/{id}/edit") 
     public String editSection(Model model, @PathVariable long id) {
-        Optional<Section> section = sectionService.findById(id);
+        Optional<SectionDTO> section = sectionService.findById(id);
 
         if (section.isPresent()) {
             model.addAttribute("section", section.get());
@@ -217,11 +218,11 @@ public class SectionController {
     }
 
     @PostMapping("/section/{id}/edit")
-    public String updateSection(RedirectAttributes redirectAttributes, Model model, @PathVariable long id, Section updatedSection, MultipartFile newImage) throws IOException {
-        Optional<Section> op = sectionService.findById(id);
+    public String updateSection(RedirectAttributes redirectAttributes, Model model, @PathVariable long id, SectionDTO updatedSection, MultipartFile newImage) throws IOException {
+        Optional<SectionDTO> op = sectionService.findById(id);
 
         if (op.isPresent()) {
-            Section oldSection = op.get();
+            SectionDTO oldSection = op.get();
             sectionService.update(oldSection, updatedSection, newImage);
             redirectAttributes.addFlashAttribute("successMessage", "La sección se ha editado correctamente.");
             return "redirect:/section";
