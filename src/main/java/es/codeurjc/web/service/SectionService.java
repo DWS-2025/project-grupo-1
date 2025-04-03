@@ -72,23 +72,26 @@ public class SectionService {
 
     public Optional<SectionDTO> findById(long id) {
         return toDTO(sectionRepository.findById(id));
-    }
+    } 
+
 
     /* public void saveSection(Section section) {
         sectionRepository.save(section);
     }  */
 
-    public void saveSection(Section section){
+    public SectionDTO saveSection(SectionDTO sectionDTO){
+        Section section = toDomain(sectionDTO);
         sectionRepository.save(section);
+
+        return toDTO(section);
     }
 
     public void saveSectionWithImageSection(SectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        Section section = toDomain(sectionDTO);
-
+        
         if (!imageFile.isEmpty()) {
-            section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+            section.setSectionImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize())); // CAMBIAR AUN IMAGENES
         }
-        this.saveSection(section);
+        this.saveSection(sectionDTO);
     }
 
     /* public void deleteSection(Section sectionToDelete) {
@@ -129,7 +132,7 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public void update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) throws IOException {
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) throws IOException {
         Section oldSection = toDomain(oldSectionDTO);
         Section updatedSection = toDomain(updatedSectionDTO);
         
@@ -142,6 +145,7 @@ public class SectionService {
         }
 
         sectionRepository.save(oldSection);
+        return toDTO(oldSection);
     }
 
     public Collection<SectionDTO> getSectionsFromIdsList(List<Long> sectionIds) {
