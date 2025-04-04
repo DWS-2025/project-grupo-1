@@ -53,7 +53,7 @@ public class UserController {
         if (userService.getLoggedUser() != null) {
             model.addAttribute("user", userService.getLoggedUser());
             model.addAttribute("session", true);
-          
+        
         } else {
             User user = new User();
             user.setName("Invitado");
@@ -94,7 +94,7 @@ public class UserController {
     public String login(Model model, @RequestParam String userName, @RequestParam String password/* , HttpSession session*/) {
         UserDTO logingUser = userService.findByUserName(userName);
        // this needs to be moved to the service layer
-        /* 
+        /*
         if(logingUser == null || !(logingUser.getPassword().equals(password))){
             model.addAttribute("Error", false);
             return "/login";

@@ -11,13 +11,13 @@ import es.codeurjc.web.service.UserService;
 @RequestMapping("/api/users")
 
 public class UserRestController {
-     @Autowired
+
+    @Autowired
     private UserService userService;
-  
-/* 
-    @GetMapping("/") 
-    public Collection<UserDTO> getAllUsers() {
-        return userService.findAllUsers().stream().map(this::toDTO).toList();
+
+    @GetMapping("/")
+    public Page<UserDTO> getUsers(Pageable pageable) {
+        return userService.findAllAsDTO(pageable);
     }
-    */
+
 }
