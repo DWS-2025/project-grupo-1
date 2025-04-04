@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.codeurjc.web.dto.SectionDTO;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.repository.CommentRepository;
 import es.codeurjc.web.repository.PostRepository;
@@ -46,10 +47,10 @@ public class SectionController {
 
     @GetMapping("/section")
     public String showSections(Model model, @RequestParam(defaultValue = "0") int page) {
-        int pageSize = 6;
+        int pageSize = 10;
 
         Pageable pageable = PageRequest.of(page, pageSize);
-        Page<Section> sectionsPage = sectionService.findAll(pageable);
+        Page<SectionDTO> sectionsPage = sectionService.findAllAsDTO(pageable);
 
         model.addAttribute("sections", sectionsPage.getContent());
         model.addAttribute("hasPrev", sectionsPage.hasPrevious());
@@ -95,18 +96,31 @@ public class SectionController {
      * }
      */
 
-    @PostMapping("/section/new")
+    /* @PostMapping("/section/new")
     public String createSection(@RequestParam String title, @RequestParam String description,
             @RequestParam MultipartFile sectionImage) {
         try {
             Section section = new Section(title, description);
-            sectionService.saveSectionWithImageSection(section, sectionImage);
+            SectionDTO sectionDTO = sectionService.toDto(section);
+            sectionService.saveSectionWithImageSection(sectionDTO, sectionImage);
             return "redirect:/section";
         } catch (IOException e) {
             e.printStackTrace();
             return "error";
         }
-    }
+    } */
+
+    @PostMapping("/section/new")
+    public String createSection(@RequestParam SectionDTO sectionDTO, @RequestParam MultipartFile sectionImage) {
+        try {
+            sectionService.saveSectionWithImageSection(sectionDTO, sectionImage);
+            return "redirect:/section";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
+        }
+    } 
+
 
     /*
      * @GetMapping("/section/{id}/image")
@@ -178,9 +192,10 @@ public class SectionController {
     @GetMapping("/section/{id}/unfollow")
     public String unfollowSection(Model model, @PathVariable long id) {
         Optional<SectionDTO> section = sectionService.findById(id);
+        UserDTO userDTO = userService.getLoggedUser();
 
         if (section.isPresent()) {
-            userService.getLoggedUser().unfollowSection(section.get());
+            userService.unfollowSection(userDTO, section.get());
             return "redirect:/following";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");
@@ -192,9 +207,10 @@ public class SectionController {
     @GetMapping("/section/{id}/follow")
     public String followSection(Model model, @PathVariable long id) {
         Optional<SectionDTO> section = sectionService.findById(id);
+        UserDTO userDTO = userService.getLoggedUser();
 
         if (section.isPresent()) {
-            userService.getLoggedUser().followSection(section.get());
+            userService.followSection(userDTO, section.get());
             return "redirect:/discover";
         } else {
             model.addAttribute("message", "No se ha encontrado una sección con ese nombre");

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Post;
@@ -187,6 +188,29 @@ public class UserService {
         }
         
         return users;
+    }
+
+
+    public SectionDTO followSection(UserDTO userDTO, SectionDTO sectionDTO){
+        User user = toDomain(userDTO);
+        Section section = sectionService.toDomain(sectionDTO);
+        
+        user.followSection(section);
+        userRepository.save(user);
+        sectionService.saveSection(section);
+        
+        return sectionDTO;
+    }
+
+    public SectionDTO unfollowSection (UserDTO userDTO, SectionDTO sectionDTO){
+        User user = toDomain(userDTO);
+        Section section = sectionService.toDomain(sectionDTO);
+
+        user.unfollowSection(section);
+        userRepository.save(user);
+        sectionService.saveSection(section);
+
+        return sectionDTO;
     }
 
 }
