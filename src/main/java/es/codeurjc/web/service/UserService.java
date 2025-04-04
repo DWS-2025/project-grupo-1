@@ -131,7 +131,7 @@ public class UserService {
 
     public void uptadeUser(UserDTO userDTO, String newUserName, String description, MultipartFile userImage) throws IOException {
         User user = toDomain(userDTO);
-           
+        
         if (newUserName != null && !newUserName.isEmpty()) {
             user.setName(newUserName);
         }
