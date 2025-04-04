@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -39,16 +40,24 @@ public class PostService {
     @Autowired
     PostMapper postMapper;
 
-    public List<Post> findAll() {
+    public Collection<Post> findAll() {
         return postRepository.findAll();
+    }
+
+    public Collection<PostDTO> findAllDTO() {
+        return toDTOs(postRepository.findAll());
     }
 
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
     }
 
-    public PostDTO save(PostDTO postDTO, MultipartFile imageFile) throws IOException {
-        Post post = toDomain(postDTO);
+    public Optional<PostDTO> findByIdDTO(long id) {
+        return postRepository.findById(id).map(this::toDTO);
+    }
+
+    protected void save(Post post, MultipartFile imageFile) throws IOException { // Swapped from Post to void
+
         if (!imageFile.isEmpty()) {
             post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
@@ -67,7 +76,12 @@ public class PostService {
             contributor.addCollaboratedPosts(post);
         }
         postRepository.save(post);
-        return toDTO(post);
+
+    }
+
+    public void save(PostDTO postDTO, MultipartFile imagFile) throws IOException {
+        save(toDomain(postDTO), imagFile);
+
     }
 
     public void saveForInit(Post post) {
@@ -92,6 +106,10 @@ public class PostService {
         post.getSections().clear();
         postRepository.deleteById(post.getId());
         // post.getComments().clear();
+    }
+
+    public void deletePost(PostDTO postDTO) {
+        deletePost(toDomain(postDTO));
     }
 
     public void updatePost(Post post, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
@@ -144,7 +162,7 @@ public class PostService {
     }
 
     public void addContributors(Post post, String[] contributorNames) {
-        User user;
+        UserDTO user;
         for (String colaborator : contributorNames) {
             user = userService.findByUserName(colaborator);
             if (user != null) {
