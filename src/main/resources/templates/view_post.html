@@ -68,12 +68,12 @@
           <div class="heading-section">
             <h4> Comentarios</h4>
           </div>
-          {{#post.comments}}
+          {{#comments}}
           <div class="item">
             <ul>
               <li><img src="/user/{{owner.id}}/image" alt="" class="templatemo-item"></li>
               <li>
-                <h4>Nombre de usuario</h4><span style="color: white;">{{owner.name}}</span>
+                <h4>Nombre de usuario</h4><span style="color: white;">{{owner.userName}}</span>
               </li>
               <li>
                 <h4>Valoración</h4><span><i class="fa fa-star" style="color: yellow;"></i>{{rating}}</span>
@@ -95,7 +95,7 @@
               </li>
             </ul>
           </div>
-          {{/post.comments}}
+          {{/comments}}
         </div>
       </div>
     </div>

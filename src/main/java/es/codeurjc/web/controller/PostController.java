@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -83,12 +84,12 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String viewPost(Model model, @PathVariable long id) {
-        Optional<Post> op = postService.findById(id);
-        if (op.isPresent()) {
-            
+    public String viewPost(Model model, @PathVariable long id, @RequestParam(defaultValue = "0") int page) {
+        Optional<PostDTO> op = postService.findByIdDTO(id);
+        if (op.isPresent()) {   
             model.addAttribute("post", op.get());
-            model.addAttribute("hasImage", op.get().getPostImage() != null);
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page));
+            model.addAttribute("hasImage", op.get().postImage() != null);
             return "view_post";
 
         } else {
