@@ -6,11 +6,13 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,7 +40,8 @@ public class SectionRestController {
     private SectionService sectionService;
 
     @GetMapping("/")
-    public Page<SectionDTO> getSections(Pageable pageable) {
+    public Page<SectionDTO> getSections(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
         return sectionService.findAllAsDTO(pageable);
     }
 
@@ -63,7 +66,7 @@ public class SectionRestController {
         return ResponseEntity.created(location).body(sectionDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/edit")
     public SectionDTO updateSection(@PathVariable long id, @RequestBody SectionDTO oldSectionDTO, MultipartFile newImage) throws IOException {
 
         SectionDTO newSection = sectionService.getSection(id);
@@ -75,7 +78,7 @@ public class SectionRestController {
         }
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public SectionDTO deleteSection(@PathVariable long id){
 
         SectionDTO section = sectionService.getSection(id);
@@ -87,4 +90,6 @@ public class SectionRestController {
         }
 
     }
+
+    
 }

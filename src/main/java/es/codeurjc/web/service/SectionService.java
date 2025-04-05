@@ -83,13 +83,15 @@ public class SectionService {
     public Page<SectionDTO> findAllAsDTO(Pageable pageable) {
         return sectionRepository.findAll(pageable).map(this::toDTO);
     }
-    /* public void saveSection(Section section) {
+
+    protected void saveSection(Section section) {
         sectionRepository.save(section);
-    }  */
+    }
 
     public SectionDTO saveSection(SectionDTO sectionDTO){
         Section section = toDomain(sectionDTO);
-        sectionRepository.save(section);
+        // sectionRepository.save(section);
+        saveSection(section);
 
         return toDTO(section);
     }
@@ -236,7 +238,7 @@ public class SectionService {
         return section.map(this::toDTO); // if present, convert to DTO
     }
 
-    private Section toDomain(SectionDTO sectionDTO) {
+    Section toDomain(SectionDTO sectionDTO) {
         return mapper.toDomain(sectionDTO);
     }
 
@@ -256,8 +258,5 @@ public class SectionService {
     public SectionDTO getSection (Long id) {
         return toDTO(sectionRepository.findById(id).orElseThrow());
     }
-
-    
-
 
 }
