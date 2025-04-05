@@ -86,6 +86,7 @@ public class PostController {
     public String viewPost(Model model, @PathVariable long id) {
         Optional<Post> op = postService.findById(id);
         if (op.isPresent()) {
+            
             model.addAttribute("post", op.get());
             model.addAttribute("hasImage", op.get().getPostImage() != null);
             return "view_post";

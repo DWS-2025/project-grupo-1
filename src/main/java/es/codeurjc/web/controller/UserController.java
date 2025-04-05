@@ -232,12 +232,9 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/unfollow")
-    public String unfollowUser(Model model, @PathVariable long userId) {
-        
-       // User userToUnfollow = userService.getUserById(userId);
+    public String unfollowUser(Model model, @PathVariable long userId) {   
         UserDTO userToUnfollow = userService.findById(userId);
         if(userToUnfollow != null){
-        // userService.getLoggedUser().unfollow(userToUnfollow);
         userService.unfollowUser(userToUnfollow);
         return "redirect:/profile/" + userId;
         } else {
