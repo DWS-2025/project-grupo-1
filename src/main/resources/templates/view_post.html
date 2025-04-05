@@ -96,8 +96,8 @@
             </ul>
           </div>
           {{/comments}}
-          
-          <button id="load-more-comments" data-page="1" data-post-id="{{post.id}}" class="main-border-button">
+
+          <button id="load-more-comments" data-page="{{currentPage}}" data-post-id="{{post.id}}" class="main-border-button">
             Cargar más
         </button>
         <!-- Spinner -->

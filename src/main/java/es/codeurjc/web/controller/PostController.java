@@ -89,8 +89,12 @@ public class PostController {
     public String viewPost(Model model, @PathVariable long id, @RequestParam(defaultValue = "0") int page) {
         Optional<PostDTO> op = postService.findByIdDTO(id);
         if (op.isPresent()) {   
+
+            Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
+
             model.addAttribute("post", op.get());
             model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
+            model.addAttribute("currentPage", commentPage.getNumber());
             model.addAttribute("hasImage", op.get().postImage() != null);
             return "view_post";
 
