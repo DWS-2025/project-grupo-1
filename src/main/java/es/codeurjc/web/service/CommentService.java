@@ -69,8 +69,8 @@ public class CommentService {
        
     }
 
-    public Page<CommentDTO> findAllCommentsByPostId(long postId, int page) {
-        Pageable pageable = PageRequest.of(page, 10); 
+    public Page<CommentDTO> findAllCommentsByPostId(long postId, int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 10); 
         Page<Comment> commentsPage = commentRepository.findByCommentedPost(postId, pageable); 
         return commentsPage.map(this::toDTO); 
     }

@@ -1,5 +1,5 @@
 {{>Common/header}}
-
+<script src="/assets/js/ajaxRequest.js"></script>
 <div class="container">
   <div class="row header-text">
     <div class="col-lg-12">
@@ -96,6 +96,14 @@
             </ul>
           </div>
           {{/comments}}
+          
+          <button id="load-more-comments" data-page="1" data-post-id="{{post.id}}" class="main-border-button">
+            Cargar más
+        </button>
+        <!-- Spinner -->
+        <div id="loading-spinner" style="display: none;">
+            <img src="/images/spinner.gif" alt="Cargando...">
+        </div>
         </div>
       </div>
     </div>

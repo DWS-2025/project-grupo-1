@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Comment;
@@ -34,6 +35,7 @@ import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import org.springframework.data.domain.Page;
 
 
 @Controller
@@ -88,7 +90,7 @@ public class PostController {
         Optional<PostDTO> op = postService.findByIdDTO(id);
         if (op.isPresent()) {   
             model.addAttribute("post", op.get());
-            model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page));
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
             model.addAttribute("hasImage", op.get().postImage() != null);
             return "view_post";
 
