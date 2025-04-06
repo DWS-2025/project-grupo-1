@@ -7,10 +7,13 @@ import java.util.List;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.SectionDTO;
+import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Post;
@@ -57,7 +60,21 @@ public class UserService {
         return toDTOs(userRepository.findAll());
     }
 
-    public void save(User user) {
+    public Page<UserDTO> findAllAsDTO(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::toDTO);
+    }
+
+    public Page<UserBasicDTO> findAllAsBasicDTO(Pageable pageable) {
+        return userRepository.findAll(pageable).map(this::toBasicDTO);
+    }
+
+    public UserDTO save(UserDTO userDTO){
+        User user = toDomain(userDTO);
+        this.save(user);
+        return userDTO;
+    }
+
+    void save(User user) {
         userRepository.save(user);
     }
 
@@ -89,7 +106,7 @@ public class UserService {
         return userRepository.findAll().get(0).equals(user);
     }
 
-    public void deleteUser(UserDTO userDTO) {
+    public UserDTO deleteUser(UserDTO userDTO) {
         User userToDelete = toDomain(userDTO);
         long id = userToDelete.getId();
         if (id != 1) {
@@ -128,6 +145,7 @@ public class UserService {
         }
         // We finally delete the user
         userRepository.deleteById(id);
+        return toDTO(userToDelete);
     }
 
     public void uptadeUser(UserDTO userDTO, String newUserName, String description, MultipartFile userImage) throws IOException {
@@ -164,6 +182,10 @@ public class UserService {
         return mapper.toDTO(user);
     }
 
+    private UserBasicDTO toBasicDTO(User user) {
+        return mapper.toBasicDTO(user);
+    }
+
     private User toDomain(UserDTO userDTO) {
         return mapper.toDomain(userDTO);
     }
@@ -181,7 +203,7 @@ public class UserService {
         User user;
 
         for (String colaborator : contributorNames) {
-            user = findByUserName(colaborator);
+            user = userRepository.findByUserName(colaborator);
             if (user != null) {
                 users.add(user);
             }
@@ -212,5 +234,4 @@ public class UserService {
 
         return sectionDTO;
     }
-
 }

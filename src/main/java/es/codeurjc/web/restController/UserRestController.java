@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.service.UserService;
 
@@ -37,9 +38,9 @@ public class UserRestController {
     private UserService UserService;
 
     @GetMapping("/")
-    public Page<UserDTO> getUsers(@RequestParam(defaultValue = "0") int page) {
+    public Page<UserBasicDTO> getUsers(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return UserService.findAllAsDTO(pageable);
+        return UserService.findAllAsBasicDTO(pageable);
     }
 
     @GetMapping("/{id}")
@@ -52,7 +53,7 @@ public class UserRestController {
 
     }
 
-    @PostMapping("/new")
+    @PostMapping("/")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO UserDTO) {
         UserDTO = UserService.save(UserDTO);
 
@@ -61,7 +62,7 @@ public class UserRestController {
         return ResponseEntity.created(location).body(UserDTO);
     }
 
-    @PutMapping("/{id}/edit")
+    @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO oldUserDTO,
             MultipartFile newImage) throws IOException {
 
@@ -74,7 +75,7 @@ public class UserRestController {
         }
     }
 
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public UserDTO deleteUser(@PathVariable long id) {
 
         UserDTO User = UserService.findById(id);

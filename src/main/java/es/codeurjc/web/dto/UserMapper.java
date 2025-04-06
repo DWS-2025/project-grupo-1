@@ -14,10 +14,14 @@ public interface UserMapper {
 
     UserDTO toDTO(User user);
 
+    UserBasicDTO toBasicDTO(User user);
+
     User toDomain(UserDTO userDTO);
 
     Collection<UserDTO> toDTOs(Collection<User> users);
 
     Collection<User> toDomains(Collection<UserDTO> userDTOs);
     
+    List<UserBasicDTO> toBasicDTOs(Collection<User> users);
+
 }
