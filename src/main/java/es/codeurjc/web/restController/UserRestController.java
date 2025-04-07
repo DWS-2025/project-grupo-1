@@ -63,10 +63,13 @@ public class UserRestController {
 
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
-            MultipartFile newImage) throws IOException {
+            MultipartFile newImage) throws IOException, SQLException {
 
         UserDTO oldUser = UserService.findById(id);
-        return UserService.uptadeUser(oldUser, newUserDTO.userName(), newUserDTO.description(), newImage);
+        if (oldUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return UserService.updateUser(id, newUserDTO);
         
     }
 
