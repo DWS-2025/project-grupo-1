@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
+import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.UserService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +37,9 @@ public class UserRestController {
 
     @Autowired
     private UserService UserService;
+
+    @Autowired
+    private NoSuchElementExceptionControllerAdvice advicer;
 
     @GetMapping("/")
     public Page<UserBasicDTO> getUsers(@RequestParam(defaultValue = "0") int page) {
@@ -67,9 +71,7 @@ public class UserRestController {
             MultipartFile newImage) throws IOException {
 
         UserDTO newUser = UserService.findById(id);
-
-      
-            return UserService.update(newUser, oldUserDTO, newImage);
+        return UserService.updateUser(newUser, oldUserDTO, newImage);
         
     }
 
@@ -86,4 +88,22 @@ public class UserRestController {
 
     }
 
+    @PostMapping("/{id}/followings")
+    public UserBasicDTO followUser(@PathVariable long id, @RequestBody UserBasicDTO userToFollowDTO) {
+        UserBasicDTO userDTO = UserService.findBasicById(id);
+
+        UserService.followUser(userToFollowDTO, userDTO);
+
+        return userDTO;
+    }
+
+    @DeleteMapping("/{id}/followings")
+    public UserBasicDTO unfollowUser(@PathVariable long id, @RequestBody UserBasicDTO userToUnFollowDTO) {
+        UserBasicDTO userDTO = UserService.findBasicById(id);
+
+        if (UserService.existsById(userToUnFollowDTO.id()) && userDTO.followings().contains(userToUnFollowDTO)) {
+            UserService.unfollowUser(userToUnFollowDTO, userDTO);
+
+        return userDTO;
+    }
 }

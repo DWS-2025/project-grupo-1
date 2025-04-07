@@ -18,6 +18,8 @@ public interface UserMapper {
 
     User toDomain(UserDTO userDTO);
 
+    User toBasicDomain(UserBasicDTO userBasicDTO);
+
     Collection<UserDTO> toDTOs(Collection<User> users);
 
     Collection<User> toDomains(Collection<UserDTO> userDTOs);

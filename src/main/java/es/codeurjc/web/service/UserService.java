@@ -55,6 +55,10 @@ public class UserService {
         return toDTO(userRepository.findByUserName("mainUser"));
     }
 
+    public UserBasicDTO getLoggedUserBasic() {
+        return toBasicDTO(userRepository.findByUserName("mainUser"));
+    }
+
     public Collection<UserDTO> findAllUsers() {
         return toDTOs(userRepository.findAll());
     }
@@ -73,8 +77,12 @@ public class UserService {
         return userDTO;
     }
 
-    void save(User user) {
+    public void save(User user) {
         userRepository.save(user);
+    }
+
+    public boolean existsById(long id) {
+        return userRepository.existsById(id);
     }
 
     
@@ -94,6 +102,10 @@ public class UserService {
 
     public UserDTO findById(long id) {
         return toDTO(userRepository.findById(id).orElseThrow());
+    }
+
+    public UserBasicDTO findBasicById(long id) {
+        return toBasicDTO(userRepository.findById(id).orElseThrow());
     }
 
     public UserDTO findByUserName(String userName) {
@@ -162,16 +174,16 @@ public class UserService {
         }
         this.save(user);
     }
-    public void unfollowUser(UserDTO userToUnfollowDTO){
+    public void unfollowUser(UserBasicDTO userToUnfollowDTO, UserBasicDTO loggedUserDTO){
         User userToUnfollow = toDomain(userToUnfollowDTO);
-        User loggedUser = toDomain(getLoggedUser());
+        User loggedUser = toDomain(loggedUserDTO);
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
-    public void followUser(UserDTO userToFollowDTO){
+    public void followUser(UserBasicDTO userToFollowDTO, UserBasicDTO loggedUserDTO){
         User userToFollow = toDomain(userToFollowDTO);
-        User loggedUser = toDomain(getLoggedUser());
+        User loggedUser = toDomain(loggedUserDTO);
         loggedUser.follow(userToFollow);
         userRepository.save(loggedUser);
         userRepository.save(userToFollow);
@@ -187,6 +199,10 @@ public class UserService {
 
     private User toDomain(UserDTO userDTO) {
         return mapper.toDomain(userDTO);
+    }
+
+    private User toDomain(UserBasicDTO userBasicDTO) {
+        return mapper.toBasicDomain(userBasicDTO);
     }
 
     private Collection<UserDTO> toDTOs(List<User> users) {
