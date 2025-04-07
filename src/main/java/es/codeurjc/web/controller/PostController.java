@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -60,11 +62,29 @@ public class PostController {
         return "post_list";
     }
 
+    @GetMapping("/post")
+    public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
+        int pageSize = 10; // Number of posts per page
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<PostDTO> postPage = postService.findAllAsDTO(pageable);
+
+        model.addAttribute("posts", postPage.getContent());
+        model.addAttribute("currentPage", postPage.getNumber());
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        model.addAttribute("hasPrev", postPage.hasPrevious());
+        model.addAttribute("hasNext", postPage.hasNext());
+        model.addAttribute("prev", page - 1);
+        model.addAttribute("next", page + 1);
+
+        return "post_list";
+
+    }
+
     @GetMapping("/post/new")
     public String createPost(Model model) {
         model.addAttribute("sections", sectionService.findAll());
         model.addAttribute("isEditing", false);
-        System.out.println("=======================================\n\n\nGET NEW\n\n\n=======================================");
+        
         return "post_form";
     }
 
@@ -80,7 +100,7 @@ public class PostController {
                 post.addContributor(user);
             }
         }
-        System.out.println("=======================================\n\n\nPRESAVE\n\n\n=======================================");
+        
         postService.save(post, newImage);
         return "redirect:/post";
     }
@@ -192,6 +212,22 @@ public class PostController {
         } else {
             model.addAttribute("message", "No se ha encontrado un post con ese nombre");
             return "error";
+        }
+    }
+
+    @GetMapping("/post/{postId}/image")
+    public ResponseEntity<Object> downloadPostImage(@PathVariable long postId) throws SQLException {
+        Optional<Post> op = postService.findById(postId);
+        
+        if (op.isPresent() && op.get().getPostImage() != null) {
+            Blob image = op.get().getPostImage();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        
+        } else {
+            return ResponseEntity.notFound().build();
+
         }
     }
 
