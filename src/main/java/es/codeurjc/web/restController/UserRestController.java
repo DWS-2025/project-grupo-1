@@ -68,11 +68,9 @@ public class UserRestController {
 
         UserDTO newUser = UserService.findById(id);
 
-        if (newUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        } else {
+      
             return UserService.update(newUser, oldUserDTO, newImage);
-        }
+        
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,5 @@
 package es.codeurjc.web.restController;
 
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -25,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
-import es.codeurjc.web.dto.PostBasicDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.service.CommentService;
@@ -82,7 +80,12 @@ public class PostRestController {
         postService.deletePost(postToDelete); // Delete the post
         return postToDelete;
     }
-
+    @GetMapping("/comments")
+    //Get all comments for all posts
+    public ResponseEntity<Page<CommentDTO>> getAllComments(@RequestParam(defaultValue = "0") int page) {
+        Page<CommentDTO> commentsPage = commentService.findAllComments(page);
+        return ResponseEntity.ok(commentsPage);
+    }
     // Get all comments for a specific post
     @GetMapping("/{postId}/comments")
     public ResponseEntity<Page<CommentDTO>> getCommentsByPostId(
@@ -126,7 +129,8 @@ public class PostRestController {
     }
 
     // delete a specific comment from a post
-    public void deleteCommentFromPost(long postId, long commentId) {
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public void deleteCommentFromPost(@RequestParam long postId, @RequestParam long commentId) {
         commentService.deleteCommentFromPost(commentId, postId);
 
     }

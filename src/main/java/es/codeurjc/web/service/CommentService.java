@@ -73,6 +73,11 @@ public class CommentService {
         Page<Comment> commentsPage = commentRepository.findByCommentedPost(postId, pageable); 
         return commentsPage.map(this::toDTO); 
     }
+    public Page<CommentDTO> findAllComments(int pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 10); 
+        Page<Comment> commentsPage = commentRepository.findAll(pageable); 
+        return commentsPage.map(this::toDTO); 
+    }
 
     public void deleteCommentFromPost(long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();

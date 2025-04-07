@@ -1,8 +1,8 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.engine.jdbc.BlobProxy;
@@ -50,8 +50,7 @@ public class UserService {
         return loggedUser;
     }*/
 
-    // idk if we need to return a UserDTO in this case, it conflicts with postService save method and the CommentService
-    // maybe we can do 2 methods, one for the services and one for the controller, or just have 2 mappers on those services
+    
     public UserDTO getLoggedUser() {
         return toDTO(userRepository.findByUserName("mainUser"));
     }

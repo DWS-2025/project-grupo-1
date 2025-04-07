@@ -56,12 +56,13 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/post")
+    /* comento por que estaba repetido y peta (misma ruta que el de abajo)
+    @GetMapping("/post?")
     public String viewPosts(Model model) {
         model.addAttribute("posts", postService.findAll());
         return "post_list";
     }
-
+*/
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
         int pageSize = 10; // Number of posts per page
