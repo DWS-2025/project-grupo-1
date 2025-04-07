@@ -1,13 +1,19 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -225,7 +231,72 @@ public class PostService {
                 section.addPost(post);
             }
         }
-    }   
+    }
+
+    public PostDTO replacePost(long id, PostDTO updatedPostDTO) throws SQLException {
+
+		Post oldPost = postRepository.findById(id).orElseThrow();
+		Post updatedPost = toDomain(updatedPostDTO);
+		updatedPost.setId(id);
+
+		if (oldPost.getImage() != null) {
+
+			//Set the image in the updated post
+			updatedPost.setPostImage(BlobProxy.generateProxy(oldPost.getPostImage().getBinaryStream(), oldPost.getPostImage().length()));
+			updatedPost.setImage(oldPost.getImage());
+            
+		}
+
+		postRepository.save(updatedPost);
+
+		return toDTO(updatedPost);
+	}
+    
+    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.setImage(location.toString());
+        post.setPostImage(BlobProxy.generateProxy(inputStream, size));
+    
+        postRepository.save(post);
+    }
+
+    public Resource getPostImage(long id) throws SQLException {
+
+		Post post = postRepository.findById(id).orElseThrow();
+
+		if (post.getPostImage() != null) {
+			return new InputStreamResource(post.getPostImage().getBinaryStream());
+		} else {
+			throw new NoSuchElementException();
+		}
+	}
+
+    public void replacePostImage(long id, InputStream inputStream, long size) {
+
+		Post post = postRepository.findById(id).orElseThrow();
+
+		if(post.getImage() == null){
+			throw new NoSuchElementException();
+		}
+
+		post.setPostImage(BlobProxy.generateProxy(inputStream, size));
+
+		postRepository.save(post);
+	}
+
+	public void deletePostImage(long id) {
+
+		Post post = postRepository.findById(id).orElseThrow();
+
+		if(post.getImage() == null){
+			throw new NoSuchElementException();
+		}
+
+		post.setPostImage(null);
+		post.setImage(null);
+
+		postRepository.save(post);
+	}
 
     private PostDTO toDTO(Post post) {
         return postMapper.toDTO(post);

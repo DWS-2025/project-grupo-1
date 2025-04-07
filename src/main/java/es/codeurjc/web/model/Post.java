@@ -28,6 +28,7 @@ public class Post {
     @Column(length = 2000) 
     private String content;
     
+    private String image;
     @Lob
     private Blob postImage;
 
@@ -109,6 +110,14 @@ public class Post {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Blob getPostImage() {
