@@ -115,6 +115,9 @@ public class CommentService {
     public Optional<Comment> findCommentById(long id) {
         return commentRepository.findById(id);
     }
+    public Optional<CommentDTO> findCommentByIdDTO(long id) {
+        return commentRepository.findById(id).map(this::toDTO);
+    }
 
     public CommentDTO findCommentById(long id, long postId) {
        return toDTO(commentRepository.findById(id).orElseThrow());

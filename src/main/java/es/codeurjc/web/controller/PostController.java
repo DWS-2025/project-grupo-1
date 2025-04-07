@@ -197,7 +197,7 @@ public class PostController {
 
     @GetMapping("/post/{postId}/comment/new")
     public String newPostCommentForm(Model model, @PathVariable long postId) {
-        Optional<Post> op = postService.findById(postId);
+        Optional<PostDTO> op = postService.findByIdDTO(postId);
         if (op.isPresent()) {
             model.addAttribute("post", op.get());
             return "comment_form";
@@ -208,18 +208,18 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, Comment newComment) {
-        Optional<Post> op = postService.findById(postId);
+    public String newPostComment(Model model, @PathVariable long postId, CommentDTO newComment) {
+        Optional<PostDTO> op = postService.findByIdDTO(postId);
         if (op.isPresent()) {
-            if (newComment.getContent().isEmpty()) {
+            if (newComment.content().isEmpty()) {
                 model.addAttribute("message", "El comentario no puede estar vacio");
                 return "error";
 
-            } else if (newComment.getRating() > 5 || newComment.getRating() < 0) {
+            } else if (newComment.rating() > 5 || newComment.rating() < 0) {
                 model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
                 return "error";
             }
-            commentService.saveCommentInPost(op.get(), newComment);
+            commentService.saveCommentInPost(postId, newComment);
             return "redirect:/post/" + postId;
 
         } else {
@@ -233,8 +233,8 @@ public class PostController {
     // on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
-        Optional<Post> op = postService.findById(postId);
-        Optional<Comment> opComment = commentService.findCommentById(commentId);
+        Optional<PostDTO> op = postService.findByIdDTO(postId);
+        Optional<CommentDTO> opComment = commentService.findCommentByIdDTO(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
             model.addAttribute("post", op.get());
@@ -250,20 +250,20 @@ public class PostController {
 
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostCommentInfo(@PathVariable long postId, @PathVariable long commentId, Model model,
-            Comment updatedComment) {
-        Optional<Post> op = postService.findById(postId);
-        Optional<Comment> opComment = commentService.findCommentById(commentId);
+            CommentDTO updatedComment) {
+        Optional<PostDTO> op = postService.findByIdDTO(postId);
+        Optional<CommentDTO> opComment = commentService.findCommentByIdDTO(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
-            if (updatedComment.getContent().isEmpty()) {
+            if (updatedComment.content().isEmpty()) {
                 model.addAttribute("message", "El comentario no puede estar vacio");
                 return "error";
 
-            } else if (updatedComment.getRating() > 5 || updatedComment.getRating() < 0) {
+            } else if (updatedComment.rating() > 5 || updatedComment.rating() < 0) {
                 model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
                 return "error";
             }
-            commentService.updateComment(commentId, updatedComment, op.get());
+            commentService.updateComment(commentId, updatedComment, postId);
             return "redirect:/post/" + postId;
 
         } else {
@@ -275,13 +275,13 @@ public class PostController {
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
     public String deletePostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
-        Optional<Post> op = postService.findById(postId);
-        Optional<Comment> opComment = commentService.findCommentById(commentId);
+        Optional<PostDTO> op = postService.findByIdDTO(postId);
+        Optional<CommentDTO> opComment = commentService.findCommentByIdDTO(commentId);
 
         if (op.isPresent() && opComment.isPresent()) {
-            commentService.deleteCommentFromPost(op.get(), commentId);
+            commentService.deleteCommentFromPost(postId, commentId);
             model.addAttribute("post", op.get());
-            model.addAttribute("Comments", op.get().getComments());
+            model.addAttribute("Comments", op.get().comments());
             return "redirect:/post/" + postId;
 
         } else {
