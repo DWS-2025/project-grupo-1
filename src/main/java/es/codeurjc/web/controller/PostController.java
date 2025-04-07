@@ -76,6 +76,7 @@ public class PostController {
         model.addAttribute("hasNext", postPage.hasNext());
         model.addAttribute("prev", page - 1);
         model.addAttribute("next", page + 1);
+        model.addAttribute("currentPage", page);
 
         return "post_list";
 

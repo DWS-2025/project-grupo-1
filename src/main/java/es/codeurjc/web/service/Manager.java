@@ -44,7 +44,6 @@ public class Manager {
         user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
         user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
         user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
-        
 
         // Some examples of posts and comments
         //section reversing, hacking web, hardware hacking
@@ -62,6 +61,29 @@ public class Manager {
         Post post7 = new Post("Seguridad en Aplicaciones Web: Análisis de Ataques en Tiempo Real", "Las aplicaciones web son el blanco principal de ataques en la actualidad. En este artículo realizamos un análisis en tiempo real de técnicas como la inyección SQL, la manipulación de sesiones y la explotación de servidores mal configurados. También exploramos cómo ataques de red, como la interceptación de tráfico WiFi, pueden ser utilizados para obtener credenciales y comprometer aplicaciones web críticas.");
         // WiFi, Hacking Web, Escalada de Privilegios, Reversing
         Post post8 = new Post("Cómo Proteger tus Redes Contra Hackers Éticos y Maliciosos", "La seguridad de una red depende de múltiples factores, desde la fortaleza de sus contraseñas hasta la correcta segmentación del tráfico. En este post explicamos cómo se pueden prevenir ataques de escalada de privilegios en entornos empresariales, detectando intentos de inyección SQL en aplicaciones web y protegiendo redes WiFi contra ataques de fuerza bruta. Además, veremos cómo la ingeniería reversa puede ser utilizada para analizar malware y reforzar la seguridad de los sistemas.");
+// Post sobre análisis de malware
+        Post post9 = new Post("Análisis de Malware: Técnicas y Herramientas para Detectar Amenazas",
+                "El análisis de malware es una disciplina esencial en la ciberseguridad moderna. En este artículo exploramos cómo identificar y desarmar amenazas utilizando herramientas como IDA Pro, Ghidra y Cuckoo Sandbox. También discutimos cómo los atacantes utilizan técnicas de ofuscación para evadir detección y cómo los analistas pueden contrarrestarlas.");
+
+// Post sobre seguridad en IoT
+        Post post10 = new Post("Seguridad en IoT: Protegiendo Dispositivos Conectados",
+                "Los dispositivos IoT están cada vez más presentes en nuestras vidas, pero también son un objetivo atractivo para los atacantes. En este post analizamos vulnerabilidades comunes en dispositivos IoT, como contraseñas predeterminadas y firmware desactualizado, y ofrecemos estrategias para proteger redes y dispositivos conectados.");
+
+// Post sobre ataques de fuerza bruta
+        Post post11 = new Post("Ataques de Fuerza Bruta: Métodos y Contramedidas",
+                "Los ataques de fuerza bruta siguen siendo una técnica popular entre los atacantes para comprometer cuentas y sistemas. En este artículo exploramos cómo funcionan estos ataques, las herramientas más utilizadas como Hydra y John the Ripper, y las mejores prácticas para prevenirlos, como el uso de autenticación multifactor y políticas de bloqueo de cuentas.");
+
+// Post sobre pentesting
+        Post post12 = new Post("Pentesting: Evaluación de Seguridad en Aplicaciones y Redes",
+                "El pentesting es una práctica fundamental para identificar vulnerabilidades antes de que los atacantes las exploten. En este post discutimos las fases de un pentest, desde el reconocimiento hasta la explotación, y las herramientas más utilizadas, como Metasploit, Burp Suite y Nmap.");
+
+// Post sobre seguridad en redes
+        Post post13 = new Post("Seguridad en Redes: Configuración de Firewalls y Detección de Intrusos",
+                "La seguridad en redes es una de las primeras líneas de defensa contra los atacantes. En este artículo exploramos cómo configurar firewalls para proteger redes empresariales y cómo implementar sistemas de detección de intrusos (IDS) para identificar actividades sospechosas en tiempo real.");
+
+// Post sobre ransomware
+        Post post14 = new Post("Ransomware: Cómo Protegerse de la Mayor Amenaza Empresarial",
+                "El ransomware se ha convertido en una de las amenazas más peligrosas para las empresas. En este post analizamos cómo funcionan estos ataques, desde la infección inicial hasta el cifrado de datos, y ofrecemos estrategias para prevenirlos, como copias de seguridad regulares y formación en ciberseguridad.");
 
         //Create new sections
         Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.");
@@ -69,13 +91,20 @@ public class Manager {
         Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.");
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.");
-/* 
+        Section defaultSection6 = new Section("Criptografía", "Estudio y aplicación de técnicas para proteger la información mediante cifrado.");
+        Section defaultSection7 = new Section("Pentesting", "Evaluación de seguridad en sistemas y redes mediante pruebas de intrusión.");
+        Section defaultSection8 = new Section("Seguridad en IoT", "Protección de dispositivos conectados y redes en el Internet de las Cosas.");
+        Section defaultSection9 = new Section("Análisis de Malware", "Identificación y desarme de amenazas mediante técnicas de análisis.");
+        Section defaultSection10 = new Section("Seguridad en Redes", "Configuración de firewalls y detección de intrusos para proteger redes.");
+        Section defaultSection11 = new Section("Ransomware", "Estudio de ataques de cifrado de datos y estrategias de prevención.");
+     /*      
+
         defaultSection1.setImageFile(localImageToBlob("images/sections/image-1.jpeg"));
         defaultSection2.setImageFile(localImageToBlob("images/sections/image-2.jpeg"));
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
-*/
+                 */ 
         userService.save(mainUser);
         userService.save(user2);
         userService.save(user3);
@@ -92,12 +121,25 @@ public class Manager {
         postService.saveOtherUsersPost(post6, user3);
         postService.saveOtherUsersPost(post7, user4);
         postService.saveOtherUsersPost(post8, user4);
+        postService.saveOtherUsersPost(post9, user5);
+        postService.saveOtherUsersPost(post10, user5);
+        postService.saveOtherUsersPost(post11, user6);
+        postService.saveOtherUsersPost(post12, user6);
+        postService.saveOtherUsersPost(post13, user7);
+        postService.saveOtherUsersPost(post14, user7);
 
         sectionService.saveSection(defaultSection1);
         sectionService.saveSection(defaultSection2);
         sectionService.saveSection(defaultSection3);
         sectionService.saveSection(defaultSection4);
         sectionService.saveSection(defaultSection5);
+        sectionService.saveSection(defaultSection6);
+        sectionService.saveSection(defaultSection7);
+        sectionService.saveSection(defaultSection8);
+        sectionService.saveSection(defaultSection9);
+        sectionService.saveSection(defaultSection10);
+        sectionService.saveSection(defaultSection11);
+        
 
         defaultSection1.addPost(post1);
 
@@ -120,7 +162,7 @@ public class Manager {
         sectionService.saveSection(defaultSection3);
         sectionService.saveSection(defaultSection4);
         sectionService.saveSection(defaultSection5);
-        
+
         // Follow users
         mainUser.follow(user2);
         mainUser.follow(user3);
@@ -128,7 +170,6 @@ public class Manager {
         mainUser.followSection(defaultSection5);
         mainUser.followSection(defaultSection4);
         mainUser.followSection(defaultSection3);
-        
 
         user2.follow(user3);
         user2.follow(user4);
@@ -136,7 +177,6 @@ public class Manager {
         user2.followSection(defaultSection1);
         user2.followSection(defaultSection2);
         user2.followSection(defaultSection3);
-       
 
         user3.follow(user4);
         user3.follow(user5);
@@ -144,7 +184,6 @@ public class Manager {
         user3.followSection(defaultSection5);
         user3.followSection(defaultSection1);
         user3.followSection(defaultSection3);
-      
 
         user4.follow(user5);
         user4.follow(mainUser);
@@ -152,7 +191,6 @@ public class Manager {
         user4.followSection(defaultSection4);
         user4.followSection(defaultSection5);
         user4.followSection(defaultSection1);
-    
 
         user5.follow(mainUser);
         user5.follow(user6);
@@ -160,8 +198,6 @@ public class Manager {
         user5.followSection(defaultSection2);
         user5.followSection(defaultSection3);
         user5.followSection(defaultSection4);
-
-
 
         userService.save(mainUser);
         userService.save(user4);
@@ -171,9 +207,6 @@ public class Manager {
         userService.save(user6);
         userService.save(user7);
 
-
-
-        
         post1.addContributor(user6);
 
         post1.addContributor(user2);
@@ -199,10 +232,9 @@ public class Manager {
         post6.addContributor(mainUser);
         postService.saveForInit(post6);
 
-
-
     }
-/* 
+
+    /* 
     // Not used yet due to issues with the database
     public void followSectionAutomated() {
         Random random = new Random();
@@ -227,10 +259,10 @@ public class Manager {
             }
         }
     }
-        */
+     */
 
     // Not used yet due to issues with the database
-   /*  public void followUsersAutomated() {
+    /*  public void followUsersAutomated() {
         Random random = new Random();
         List<User> users = userService.findAllUsers();
         for (int i = 1; i <= userService.findAllUsers().size(); i++) {
@@ -256,8 +288,7 @@ public class Manager {
             }
         }
     }
-    */
-
+     */
     public Blob localImageToBlob(String localFilePath) {
         File imageFile = new File(localFilePath);
 

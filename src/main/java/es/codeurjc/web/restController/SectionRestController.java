@@ -39,7 +39,7 @@ public class SectionRestController {
     @Autowired
     private SectionService sectionService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public Page<SectionDTO> getSections(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return sectionService.findAllAsDTO(pageable);

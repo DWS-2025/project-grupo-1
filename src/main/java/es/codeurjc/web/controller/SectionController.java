@@ -46,6 +46,7 @@ public class SectionController {
         model.addAttribute("hasNext", sectionsPage.hasNext());
         model.addAttribute("prev", page - 1);
         model.addAttribute("next", page + 1);
+        model.addAttribute("currentPage", page);
 
         return "section";
     }
