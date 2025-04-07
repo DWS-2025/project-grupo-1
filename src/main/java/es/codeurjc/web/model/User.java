@@ -21,6 +21,7 @@ public class User {
     private long id;
     private String userName, password, description, email;
     private float userRate;
+    private String image;
 
     @Lob
     private Blob userImage;
@@ -110,6 +111,14 @@ public class User {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }  
 
     public Blob getUserImage() {
         return this.userImage;

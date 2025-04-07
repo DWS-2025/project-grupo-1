@@ -1,12 +1,18 @@
 package es.codeurjc.web.service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,18 +45,19 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
-    /*private User loggedUser;  THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT 
+    /*
+     * private User loggedUser; THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT
+     * 
+     * public void setLoggedUser(HttpSession session, User user){
+     * session.setAttribute("User", user);
+     * loggedUser = user;
+     * }
+     * 
+     * public User getLoggedUser(){
+     * return loggedUser;
+     * }
+     */
 
-    public void setLoggedUser(HttpSession session, User user){
-        session.setAttribute("User", user);
-        loggedUser = user;
-    }
-
-    public User getLoggedUser(){
-        return loggedUser;
-    }*/
-
-    
     public UserDTO getLoggedUser() {
         return toDTO(userRepository.findByUserName("mainUser"));
     }
@@ -71,7 +78,7 @@ public class UserService {
         return userRepository.findAll(pageable).map(this::toBasicDTO);
     }
 
-    public UserDTO save(UserDTO userDTO){
+    public UserDTO save(UserDTO userDTO) {
         User user = toDomain(userDTO);
         this.save(user);
         return userDTO;
@@ -85,9 +92,8 @@ public class UserService {
         return userRepository.existsById(id);
     }
 
-    
-    public void saveUserWithImage(User user, MultipartFile imageFile) throws IOException {
-
+    public void saveUserWithImage(UserDTO userDTO, MultipartFile imageFile) throws IOException {
+        User user = toDomain(userDTO);
         if (!imageFile.isEmpty()) {
             byte[] imageBytes = imageFile.getBytes();
             user.setUserImage(BlobProxy.generateProxy(imageBytes));
@@ -159,30 +165,52 @@ public class UserService {
         return toDTO(userToDelete);
     }
 
-    public UserDTO uptadeUser(UserDTO userDTO, String newUserName, String description, MultipartFile userImage) throws IOException {
-        User user = toDomain(userDTO);
-        
-        if (newUserName != null && !newUserName.isEmpty()) {
-            user.setName(newUserName);
+
+    public UserDTO updateUser(long id, UserDTO updatedUserDTO) throws SQLException {
+        User oldUser = userRepository.findById(id).orElseThrow();
+        User updatedUser = toDomain(updatedUserDTO);
+        updatedUser.setId(id);
+
+        String userName = updatedUser.getUserName();
+        if (userName != null && !userName.isEmpty()) {
+            oldUser.setName(userName);
         }
 
+        String description = updatedUser.getDescription();
         if (description != null && !description.isEmpty()) {
-            user.setDescription(description);
+            oldUser.setDescription(description);
         }
-        if (userImage != null && !userImage.isEmpty()) {
-            this.saveUserWithImage(user, userImage);
+
+        String email = updatedUser.getEmail();
+        if (email != null && !email.isEmpty()) {
+            oldUser.setEmail(email);
         }
-        this.save(user);
-        return toDTO(user);
+
+        String password = updatedUser.getPassword();
+        if (password != null && !password.isEmpty()) {
+            oldUser.setPassword(password);
+        }
+
+        if (oldUser.getImage() != null) {
+            // Set the image in the updated post
+            updatedUser.setUserImage(BlobProxy.generateProxy(
+                    oldUser.getUserImage().getBinaryStream(),
+                    oldUser.getUserImage().length()));
+            updatedUser.setImage(oldUser.getImage());
+        }
+        userRepository.save(updatedUser);
+        return toDTO(updatedUser);
     }
-    public void unfollowUser(UserDTO userToUnfollowDTO, UserDTO loggedUserDTO){
+
+    public void unfollowUser(UserDTO userToUnfollowDTO, UserDTO loggedUserDTO) {
         User userToUnfollow = toDomain(userToUnfollowDTO);
         User loggedUser = toDomain(loggedUserDTO);
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
-    public void followUser(UserDTO userToFollowDTO, UserDTO loggedUserDTO){
+
+    public void followUser(UserDTO userToFollowDTO, UserDTO loggedUserDTO) {
         User userToFollow = toDomain(userToFollowDTO);
         User loggedUser = toDomain(loggedUserDTO);
         loggedUser.follow(userToFollow);
@@ -224,23 +252,22 @@ public class UserService {
                 users.add(user);
             }
         }
-        
+
         return users;
     }
 
-
-    public SectionDTO followSection(UserDTO userDTO, SectionDTO sectionDTO){
+    public SectionDTO followSection(UserDTO userDTO, SectionDTO sectionDTO) {
         User user = toDomain(userDTO);
         Section section = sectionService.toDomain(sectionDTO);
-        
+
         user.followSection(section);
         userRepository.save(user);
         sectionService.saveSection(section);
-        
+
         return sectionDTO;
     }
 
-    public SectionDTO unfollowSection (UserDTO userDTO, SectionDTO sectionDTO){
+    public SectionDTO unfollowSection(UserDTO userDTO, SectionDTO sectionDTO) {
         User user = toDomain(userDTO);
         Section section = sectionService.toDomain(sectionDTO);
 
@@ -249,5 +276,40 @@ public class UserService {
         sectionService.saveSection(section);
 
         return sectionDTO;
+    }
+
+    public void createUserImage(long id, URI location, InputStream inputStream, long size) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setImage(location.toString());
+        user.setUserImage(BlobProxy.generateProxy(inputStream, size));
+        userRepository.save(user);
+    }
+
+    public Resource getUserImage(long id) throws SQLException {
+        User user = userRepository.findById(id).orElseThrow();
+        if (user.getUserImage() != null) {
+            return new InputStreamResource(user.getUserImage().getBinaryStream());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    public void replaceUserImage(long id, InputStream inputStream, long size) {
+        User user = userRepository.findById(id).orElseThrow();
+        if (user.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+        user.setUserImage(BlobProxy.generateProxy(inputStream, size));
+        userRepository.save(user);
+    }
+
+    public void deleteUserImage(long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        if (user.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+        user.setUserImage(null);
+        user.setImage(null);
+        userRepository.save(user);
     }
 }
