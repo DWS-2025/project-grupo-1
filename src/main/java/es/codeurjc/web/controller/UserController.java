@@ -1,9 +1,9 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.User;
-import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -168,7 +167,7 @@ public class UserController {
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage)
-            throws IOException {
+            throws IOException, SQLException {
 
         UserDTO user = userService.getUserById(userId);
 
@@ -176,7 +175,7 @@ public class UserController {
             model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
-        userService.uptadeUser(user, newUserName, description, userImage);
+        userService.updateUser(userId, user);
 
         return "redirect:/profile/" + user.id();
     }
