@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CommentMapper;
-import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
@@ -39,9 +38,9 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-    public CommentDTO saveCommentInPost(PostDTO postDTO, CommentDTO commentDTO) {
+    public CommentDTO saveCommentInPost(long postID, CommentDTO commentDTO) {
         Comment comment = toDomain(commentDTO);
-        Post postToComment = postMapper.toDomain(postDTO);
+        Post postToComment = postService.findById(postID).get();
 
     
         User currentUser = userMapper.toDomain(userService.getLoggedUser());
@@ -75,8 +74,9 @@ public class CommentService {
         return commentsPage.map(this::toDTO); 
     }
 
-    public void deleteCommentFromPost(Post commentedPost, Long commentId) {
+    public void deleteCommentFromPost(long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
+        Post commentedPost = postService.findById(commentedPostId).get();
         commentedPost.getComments().remove(commentToDelete);
 
         commentRepository.delete(commentToDelete);
@@ -92,8 +92,10 @@ public class CommentService {
         commentRepository.delete(commentToDelete);
     }
 
-    public void updateComment(Long commentId, Comment updatedComment, Post commentedPost) {
-        if (commentRepository.findById(commentId).isPresent()) {
+    public void updateComment(Long commentId, CommentDTO updatedCommentDTO, long postId) {
+        if (commentRepository.findById(commentId).isPresent() && postService.findById(postId).isPresent()) {
+            Comment updatedComment = toDomain(updatedCommentDTO);
+            Post commentedPost = postService.findById(postId).get();
             commentRepository.findById(commentId).get().updateComment(updatedComment.getContent(), updatedComment.getRating());
             commentRepository.save(commentRepository.findById(commentId).get());
 
@@ -112,6 +114,10 @@ public class CommentService {
 
     public Optional<Comment> findCommentById(long id) {
         return commentRepository.findById(id);
+    }
+
+    public CommentDTO findCommentById(long id, long postId) {
+       return toDTO(commentRepository.findById(id).orElseThrow());
     }
 
     private CommentDTO toDTO(Comment comment) {
