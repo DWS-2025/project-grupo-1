@@ -121,7 +121,8 @@ public class SectionController {
 /* 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-        Optional<SectionDTO> op = sectionService.findById(id);
+        Optional<Section> op = sectionService.findSectionById(id);
+
 
         if (op.isPresent() && op.get().getImageFile() != null) {
             Blob image = op.get().getImageFile();
