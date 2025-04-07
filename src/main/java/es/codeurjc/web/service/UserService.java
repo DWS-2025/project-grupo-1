@@ -159,7 +159,7 @@ public class UserService {
         return toDTO(userToDelete);
     }
 
-    public void uptadeUser(UserDTO userDTO, String newUserName, String description, MultipartFile userImage) throws IOException {
+    public UserDTO uptadeUser(UserDTO userDTO, String newUserName, String description, MultipartFile userImage) throws IOException {
         User user = toDomain(userDTO);
         
         if (newUserName != null && !newUserName.isEmpty()) {
@@ -173,6 +173,7 @@ public class UserService {
             this.saveUserWithImage(user, userImage);
         }
         this.save(user);
+        return toDTO(user);
     }
     public void unfollowUser(UserBasicDTO userToUnfollowDTO, UserBasicDTO loggedUserDTO){
         User userToUnfollow = toDomain(userToUnfollowDTO);

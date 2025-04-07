@@ -67,11 +67,11 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO oldUserDTO,
+    public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
             MultipartFile newImage) throws IOException {
 
-        UserDTO newUser = UserService.findById(id);
-        return UserService.updateUser(newUser, oldUserDTO, newImage);
+        UserDTO oldUser = UserService.findById(id);
+        return UserService.uptadeUser(oldUser, newUserDTO.userName(), newUserDTO.description(), newImage);
         
     }
 
@@ -106,4 +106,7 @@ public class UserRestController {
 
         return userDTO;
     }
+    else return null;
+    }
+
 }

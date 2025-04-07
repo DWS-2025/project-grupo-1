@@ -1,39 +1,28 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Section;
-import es.codeurjc.web.repository.CommentRepository;
-import es.codeurjc.web.repository.PostRepository;
-import es.codeurjc.web.service.*;
+import es.codeurjc.web.service.SectionService;
+import es.codeurjc.web.service.UserService;
 
 @Controller
 public class SectionController {
@@ -129,7 +118,7 @@ public class SectionController {
      * return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
      * }
      */
-
+/* 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         Optional<SectionDTO> op = sectionService.findById(id);
@@ -144,7 +133,7 @@ public class SectionController {
             return ResponseEntity.notFound().build();
         }
     }
-
+*/
     @PostMapping("/section/{id}/delete")
     public String deleteSection(Model model, @PathVariable long id) {
         Optional<SectionDTO> section = sectionService.findById(id);
