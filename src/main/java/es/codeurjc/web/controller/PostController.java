@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.UserDTO;
-import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -35,7 +36,6 @@ import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
-import org.springframework.data.domain.Page;
 
 
 @Controller
@@ -122,12 +122,12 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}/edit")
-    public String editPost(Model model, @PathVariable long id) {
+    public String updatePost(Model model, @PathVariable long id) {
         Optional<Post> op = postService.findById(id);
         if (op.isPresent()) {
             Post post = op.get();
 
-            List<Section> allSections = sectionService.findAll();
+            Collection<Section> allSections = sectionService.findAll();
             List<Section> postSections = post.getSections();
 
             // Create a List<Section> with "selected" property
@@ -165,7 +165,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/edit")
-    public String editPost(Model model, @PathVariable long id, @RequestParam String title, @RequestParam String content,
+    public String updatePost(Model model, @PathVariable long id, @RequestParam String title, @RequestParam String content,
             @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
         Optional<Post> op = postService.findById(id);

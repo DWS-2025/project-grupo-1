@@ -2,9 +2,11 @@ package es.codeurjc.web.model;
 
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import es.codeurjc.web.dto.UserDTO;
+import es.codeurjc.web.service.UserService;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,6 +81,10 @@ public class Post {
             this.contributors.add(user);
         }
 
+    }
+
+    public void addContributor(UserDTO userDTO) {
+        
     }
 
     public long getId() {

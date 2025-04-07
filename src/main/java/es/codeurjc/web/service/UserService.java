@@ -198,8 +198,8 @@ public class UserService {
         return mapper.toDomains(userDTOs);
     }
 
-    public List<User> getUsersFromUserNamesList(String[] contributorNames) {
-        List<User> users = new ArrayList<>();
+    public Collection<User> getUsersFromUserNamesList(String[] contributorNames) {
+        Collection<User> users = new ArrayList<>();
         User user;
 
         for (String colaborator : contributorNames) {

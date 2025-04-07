@@ -4,6 +4,6 @@ public record PostBasicDTO(
         Long id,
         String title,
         String ownerName,
-        float  averageRating
+        float averageRating
      ) {
 }

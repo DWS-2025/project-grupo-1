@@ -68,12 +68,20 @@ public class SectionService {
         return sectionRepository.findAll(pageable);
     }
 
-    public Collection<SectionDTO> findAll() {
-        return toDTOs(sectionRepository.findAll());
+    public Collection<Section> findAll() {
+        return sectionRepository.findAll();
     }
 
-    public Collection<SectionDTO> findAll(Example<Section> example) {
-        return toDTOs(sectionRepository.findAll(example));
+    public Collection<SectionDTO> findAllDTO() {
+        return toDTOs(findAll());
+    }
+
+    public Collection<Section> findAll(Example<Section> example) {
+        return sectionRepository.findAll(example);
+    }
+
+    public Collection<SectionDTO> findAllDTO(Example<Section> example) {
+        return toDTOs(findAll(example));
     }
 
     public Optional<SectionDTO> findById(long id) {
@@ -203,20 +211,22 @@ public class SectionService {
         return toDTO(oldSection);
     }
 
-    public Collection<SectionDTO> getSectionsFromIdsList(List<Long> sectionIds) {
+    public Collection<Section> getSectionsFromIdsList(List<Long> sectionIds) {
         Collection<Section> sections = new ArrayList<>();
         SectionDTO sectionDTO;
-        Section section;
         
         for (Long sectionId : sectionIds) {
             sectionDTO = findById(sectionId).orElse(null);
-            if (sectionDTO != null) {
-                section = toDomain(sectionDTO); 
-                sections.add(section);
+            if (sectionDTO != null) { 
+                sections.add(toDomain(sectionDTO));
             }
         }
 
-        return toDTOs(sections);
+        return sections;
+    }
+
+    public Collection<SectionDTO> getSectionsFromIdsListDTO(List<Long> sectionIds) {
+        return toDTOs(getSectionsFromIdsList(sectionIds));
     }
 
     public Collection<SectionDTO> findNotFollowedSections() {
