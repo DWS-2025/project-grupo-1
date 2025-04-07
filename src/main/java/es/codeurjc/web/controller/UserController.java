@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageUserService;
@@ -224,9 +223,9 @@ public class UserController {
 
     @GetMapping("/user/{userId}/unfollow")
     public String unfollowUser(Model model, @PathVariable long userId) {   
-        UserBasicDTO userToUnfollow = userService.findBasicById(userId);
+        UserDTO userToUnfollow = userService.getUserById(userId);
         if(userToUnfollow != null){
-        userService.unfollowUser(userToUnfollow, userService.getLoggedUserBasic());
+        userService.unfollowUser(userToUnfollow, userService.getLoggedUser());
         return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -236,9 +235,9 @@ public class UserController {
 
     @GetMapping("/user/{userId}/follow")
     public String followUser(Model model, @PathVariable long userId) {
-        UserBasicDTO userTofollow = userService.findBasicById(userId);
+        UserDTO userTofollow = userService.getUserById(userId);
         if(userTofollow != null){
-        userService.followUser(userTofollow, userService.getLoggedUserBasic());
+        userService.followUser(userTofollow, userService.getLoggedUser());
         return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");

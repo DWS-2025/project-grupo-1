@@ -175,14 +175,14 @@ public class UserService {
         this.save(user);
         return toDTO(user);
     }
-    public void unfollowUser(UserBasicDTO userToUnfollowDTO, UserBasicDTO loggedUserDTO){
+    public void unfollowUser(UserDTO userToUnfollowDTO, UserDTO loggedUserDTO){
         User userToUnfollow = toDomain(userToUnfollowDTO);
         User loggedUser = toDomain(loggedUserDTO);
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
-    public void followUser(UserBasicDTO userToFollowDTO, UserBasicDTO loggedUserDTO){
+    public void followUser(UserDTO userToFollowDTO, UserDTO loggedUserDTO){
         User userToFollow = toDomain(userToFollowDTO);
         User loggedUser = toDomain(loggedUserDTO);
         loggedUser.follow(userToFollow);
