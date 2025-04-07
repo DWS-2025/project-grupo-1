@@ -69,13 +69,13 @@ public class Manager {
         Section defaultSection3 = new Section("Escalada de Privilegios", "Métodos para obtener acceso administrativo en Windows.");
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.");
-
+/* 
         defaultSection1.setImageFile(localImageToBlob("images/sections/image-1.jpeg"));
         defaultSection2.setImageFile(localImageToBlob("images/sections/image-2.jpeg"));
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
-
+*/
         userService.save(mainUser);
         userService.save(user2);
         userService.save(user3);

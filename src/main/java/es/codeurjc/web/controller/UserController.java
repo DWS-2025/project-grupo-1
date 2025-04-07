@@ -1,17 +1,8 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
-import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.ImageUserService;
 import es.codeurjc.web.service.RankingService;
@@ -191,7 +181,7 @@ public class UserController {
         return "redirect:/profile/" + user.id();
     }
 
-
+    /* 
     @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         UserDTO op = userService.findById(id);
@@ -206,7 +196,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
+*/
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
         if (userService.findById(userId) != null) {
