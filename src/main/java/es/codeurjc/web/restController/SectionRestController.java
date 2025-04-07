@@ -57,7 +57,7 @@ public class SectionRestController {
         
     }
     
-    @PostMapping("/new")
+    @PostMapping("/")
     public ResponseEntity<SectionDTO> createSection(@RequestBody SectionDTO sectionDTO) {
         sectionDTO = sectionService.saveSection(sectionDTO);
         
@@ -66,7 +66,7 @@ public class SectionRestController {
         return ResponseEntity.created(location).body(sectionDTO);
     }
 
-    @PutMapping("/{id}/edit")
+    @PutMapping("/{id}")
     public SectionDTO updateSection(@PathVariable long id, @RequestBody SectionDTO oldSectionDTO, MultipartFile newImage) throws IOException {
 
         SectionDTO newSection = sectionService.getSection(id);
@@ -78,7 +78,7 @@ public class SectionRestController {
         }
     }
     
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public SectionDTO deleteSection(@PathVariable long id){
 
         SectionDTO section = sectionService.getSection(id);

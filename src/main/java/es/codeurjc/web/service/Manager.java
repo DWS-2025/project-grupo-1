@@ -70,11 +70,11 @@ public class Manager {
         Section defaultSection4 = new Section("Hardware Hacking", "Explotación de vulnerabilidades a nivel de hardware.");
         Section defaultSection5 = new Section("WiFi", "Ataques y auditorías de seguridad en redes inalámbricas.");
 
-        defaultSection1.setSectionImage(localImageToBlob("images/sections/image-1.jpeg"));
-        defaultSection2.setSectionImage(localImageToBlob("images/sections/image-2.jpeg"));
-        defaultSection3.setSectionImage(localImageToBlob("images/sections/image-3.jpeg"));
-        defaultSection4.setSectionImage(localImageToBlob("images/sections/image-4.jpeg"));
-        defaultSection5.setSectionImage(localImageToBlob("images/sections/image-5.jpeg"));
+        defaultSection1.setImageFile(localImageToBlob("images/sections/image-1.jpeg"));
+        defaultSection2.setImageFile(localImageToBlob("images/sections/image-2.jpeg"));
+        defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
+        defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
+        defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
 
         userService.save(mainUser);
         userService.save(user2);

@@ -83,6 +83,10 @@ public class SectionService {
     public Optional<SectionDTO> findById(long id) {
         return toDTO(sectionRepository.findById(id));
     } 
+    public Optional<Section> findSectionById(long id) {
+        return sectionRepository.findById(id);
+    } 
+
 
     public Page<SectionDTO> findAllAsDTO(Pageable pageable) {
         return sectionRepository.findAll(pageable).map(this::toDTO);
