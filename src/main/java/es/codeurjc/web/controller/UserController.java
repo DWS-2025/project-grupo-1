@@ -1,9 +1,15 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -180,24 +186,21 @@ public class UserController {
         return "redirect:/profile/" + user.id();
     }
 
-    /*
-     * @GetMapping("/user/{id}/image")
-     * public ResponseEntity<Object> downloadImage(@PathVariable long id) throws
-     * SQLException {
-     * UserDTO op = userService.findById(id);
-     * 
-     * if (op != null && op.image() != null) {
-     * Blob image = op.get().getUserImage();
-     * Resource file = new InputStreamResource(image.getBinaryStream());
-     * 
-     * return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE,
-     * "image/jpeg").contentLength(image.length())
-     * .body(file);
-     * } else {
-     * return ResponseEntity.notFound().build();
-     * }
-     * }
-     */
+    
+    @GetMapping("/user/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+    UserDTO userDTO = userService.findById(id);
+    
+    if (userDTO != null) {
+    Blob image = userService.getImage(id);
+    Resource file = new InputStreamResource(image.getBinaryStream());
+    
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE,"image/jpeg").contentLength(image.length()).body(file);
+    } else {
+    return ResponseEntity.notFound().build();
+    }
+    }
+    
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
         if (userService.findById(userId) != null) {

@@ -3,6 +3,7 @@ package es.codeurjc.web.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,6 +122,15 @@ public class UserService {
     public Boolean isLogged(UserDTO userDTO) {
         User user = toDomain(userDTO);
         return userRepository.findAll().get(0).equals(user);
+    }
+
+    public Blob getImage(long id) throws SQLException {
+        User user = userRepository.findById(id).orElseThrow();
+        if (user.getUserImage() != null) {
+            return user.getUserImage();
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public UserDTO deleteUser(UserDTO userDTO) {
