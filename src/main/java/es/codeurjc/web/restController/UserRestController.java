@@ -53,12 +53,12 @@ public class UserRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserBasicDTO> createUser(@RequestBody UserBasicDTO UserBasicDTO) {
-        UserBasicDTO = UserService.create(UserBasicDTO);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO UserDTO) {
+        UserDTO = UserService.save(UserDTO);
 
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(UserBasicDTO.id()).toUri(); // URI for the new User
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(UserDTO.id()).toUri(); // URI for the new User
 
-        return ResponseEntity.created(location).body(UserBasicDTO);
+        return ResponseEntity.created(location).body(UserDTO);
     }
 
     @PutMapping("/{id}")

@@ -138,7 +138,7 @@ public class UserService {
         long id = userToDelete.getId();
         if (id != 1) {
             // We break the relationship between the posts and the sections
-            if (!userToDelete.getPosts().isEmpty()) {
+            if (userToDelete.getPosts() != null) {
                 for (Post post : userToDelete.getPosts()) {
                     List<Section> sections = post.getSections();
                     for (Section section : sections) {
@@ -147,21 +147,21 @@ public class UserService {
                     }
                 }
             }
-            if (!userToDelete.getCollaboratedPosts().isEmpty()) {
+            if (userToDelete.getCollaboratedPosts() != null) {
                 // We break the relationship between the posts and the contributors
                 for (Post post : userToDelete.getCollaboratedPosts()) {
                     post.getContributors().remove(userToDelete);
                     postService.saveForInit(post);
                 }
             }
-            if (!userToDelete.getFollowers().isEmpty()) {
+            if (userToDelete.getFollowers() != null) {
                 // We break the relationship between the user and the followers
                 for (User follower : userToDelete.getFollowers()) {
                     follower.getFollowings().remove(userToDelete);
                     userRepository.save(follower);
                 }
             }
-            if (!userToDelete.getFollowings().isEmpty()) {
+            if (userToDelete.getFollowings() != null) {
                 // We break the relationship between the user and the followings
                 for (User following : userToDelete.getFollowings()) {
                     following.getFollowers().remove(userToDelete);
