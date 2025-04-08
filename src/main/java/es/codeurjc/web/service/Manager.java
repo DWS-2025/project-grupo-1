@@ -44,6 +44,13 @@ public class Manager {
         user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
         user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
         user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
+        mainUser.setImage("/api/users/1/image");
+        user2.setImage("/api/users/2/image");
+        user3.setImage("/api/users/3/image");
+        user4.setImage("/api/users/4/image");
+        user5.setImage("/api/users/5/image");
+        user6.setImage("/api/users/6/image");
+
 
         // Some examples of posts and comments
         //section reversing, hacking web, hardware hacking

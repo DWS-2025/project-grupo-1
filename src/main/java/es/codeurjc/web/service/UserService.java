@@ -212,17 +212,17 @@ public class UserService {
         return toDTO(updatedUser);
     }
 
-    public void unfollowUser(UserDTO userToUnfollowDTO, UserDTO loggedUserDTO) {
+    public void unfollowUser(UserDTO userToUnfollowDTO) {
         User userToUnfollow = toDomain(userToUnfollowDTO);
-        User loggedUser = toDomain(loggedUserDTO);
+        User loggedUser = toDomain(this.getLoggedUser());
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
 
-    public void followUser(UserDTO userToFollowDTO, UserDTO loggedUserDTO) {
+    public void followUser(UserDTO userToFollowDTO) {
         User userToFollow = toDomain(userToFollowDTO);
-        User loggedUser = toDomain(loggedUserDTO);
+        User loggedUser = toDomain(this.getLoggedUser());
         loggedUser.follow(userToFollow);
         userRepository.save(loggedUser);
         userRepository.save(userToFollow);

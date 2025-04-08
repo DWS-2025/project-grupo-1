@@ -82,7 +82,7 @@ public class UserRestController {
     @PostMapping("/{id}/followings")
     public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO) {
         UserDTO userDTO = UserService.getUserById(id);
-        UserService.followUser(userToFollowDTO, userDTO);
+        UserService.followUser(userToFollowDTO);
         return userDTO;
     }
 
@@ -90,7 +90,7 @@ public class UserRestController {
     public UserDTO unfollowUser(@PathVariable long id, @RequestBody UserDTO userToUnFollowDTO) {
         UserDTO userDTO = UserService.getUserById(id);
         if (UserService.existsById(userToUnFollowDTO.id()) && userDTO.followings().contains(userToUnFollowDTO)) {
-            UserService.unfollowUser(userToUnFollowDTO, userDTO);
+            UserService.unfollowUser(userToUnFollowDTO);
         return userDTO;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");    
