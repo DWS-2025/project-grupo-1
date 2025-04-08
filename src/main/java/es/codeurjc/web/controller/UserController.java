@@ -230,7 +230,7 @@ public class UserController {
     public String unfollowUser(Model model, @PathVariable long userId) {
         UserDTO userToUnfollow = userService.getUserById(userId);
         if (userToUnfollow != null) {
-            userService.unfollowUser(userToUnfollow, userService.getLoggedUser());
+            userService.unfollowUser(userToUnfollow);
             return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -242,7 +242,7 @@ public class UserController {
     public String followUser(Model model, @PathVariable long userId) {
         UserDTO userTofollow = userService.getUserById(userId);
         if (userTofollow != null) {
-            userService.followUser(userTofollow, userService.getLoggedUser());
+            userService.followUser(userTofollow);
             return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
