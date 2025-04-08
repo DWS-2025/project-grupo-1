@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "fcb5df18-807d-46d2-9634-3997ca133062",
+		"name": "Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "43541831",
+		"_collection_link": "https://markel-6334295.postman.co/workspace/markel's-Workspace~325af611-9f62-4d0d-8f93-d9f9f005c35a/collection/43541831-fcb5df18-807d-46d2-9634-3997ca133062?action=share&source=collection_link&creator=43541831"
+	},
+	"item": [
+		{
+			"name": "GET all sections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET all posts",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GET all users",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GET all comments",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
