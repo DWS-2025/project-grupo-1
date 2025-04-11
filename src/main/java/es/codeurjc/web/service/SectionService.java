@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.CreateSectionDTO;
 import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.dto.SectionMapper;
 import es.codeurjc.web.dto.UserMapper;
@@ -104,13 +105,14 @@ public class SectionService {
         return toDTO(section);
     }
 
-    public void saveSectionWithImageSection(SectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        Section section = toDomain(sectionDTO);
+    public void saveSectionWithImageSection(CreateSectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
+        //Section section = toDomain(sectionDTO);
+        Section section = new Section(sectionDTO.title(), sectionDTO.description());
 
         if (!imageFile.isEmpty()) {
             section.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize())); 
         }
-        this.saveSection(sectionDTO);
+        this.saveSection(section);
     }
 
     public void createSectionImage(long id, URI location, InputStream inputStream, long size){

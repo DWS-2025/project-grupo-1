@@ -48,7 +48,7 @@ public class PostRestController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public Page<PostDTO> getPosts(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return postService.findAllAsDTO(pageable);

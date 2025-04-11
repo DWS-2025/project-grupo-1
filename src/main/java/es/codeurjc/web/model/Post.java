@@ -22,7 +22,7 @@ import jakarta.persistence.OneToMany;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     @Column(length = 100) 
     private String title;
     @Column(length = 2000) 

@@ -104,14 +104,14 @@ public class Manager {
         Section defaultSection9 = new Section("Análisis de Malware", "Identificación y desarme de amenazas mediante técnicas de análisis.");
         Section defaultSection10 = new Section("Seguridad en Redes", "Configuración de firewalls y detección de intrusos para proteger redes.");
         Section defaultSection11 = new Section("Ransomware", "Estudio de ataques de cifrado de datos y estrategias de prevención.");
-     /*      
+           
 
         defaultSection1.setImageFile(localImageToBlob("images/sections/image-1.jpeg"));
         defaultSection2.setImageFile(localImageToBlob("images/sections/image-2.jpeg"));
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
-                 */ 
+                 
         userService.save(mainUser);
         userService.save(user2);
         userService.save(user3);
