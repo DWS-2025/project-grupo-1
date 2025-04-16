@@ -1,12 +1,13 @@
+
 document.addEventListener('DOMContentLoaded', function () {
-    function setupLoadMore(buttonId, listId, apiUrl) {
+    function setupLoadMore(buttonId, listId, apiUrl, itemsPerPage) {
         const loadMoreButton = document.getElementById(buttonId); // Get the "Load More" button by its ID
         const spinner = document.getElementById('loading-spinner'); // Get the spinner element for loading indication
 
         if (loadMoreButton) {
             loadMoreButton.addEventListener('click', function () {
                 console.log('Load More button clicked'); // Debugging log
-                const page = parseInt(loadMoreButton.getAttribute('data-page')); // Get the current page number
+                let page = parseInt(loadMoreButton.getAttribute('data-page')); // Get the current page number
                 console.log('Current page:', page); // Debugging log
 
                 spinner.style.display = 'block'; // Show the spinner while loading
@@ -58,11 +59,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             list.insertAdjacentHTML('beforeend', sectionHTML); // Append the new section to the list
                         });
 
-                        // Update the page number for the next request
-                        loadMoreButton.setAttribute('data-page', page + 1);
+                        // Increment the page number for the next request
+                        page += 1; // Increment the page number
+                        loadMoreButton.setAttribute('data-page', page); // Update the button's data-page attribute
 
                         // Hide the "Load More" button if there are no more results
-                        if (data.last) {
+                        if (data.content.length < itemsPerPage) {
+                            console.log('No more pages to load. Hiding the button.');
                             loadMoreButton.style.display = 'none';
                         }
                     })
@@ -77,5 +80,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Set up the "Load More" button for sections
-    setupLoadMore('load-more-sections', 'sections-list', '/api/sections');
+    setupLoadMore('load-more-sections', 'sections-list', '/api/sections', 10); // Assuming 10 items per page
 });
