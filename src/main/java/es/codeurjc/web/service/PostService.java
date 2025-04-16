@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserDTO;
@@ -52,6 +53,14 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Collection<PostDTO> findAllAsDTO() {
+        return toDTOs(postRepository.findAll());
+    }
+
+    public Page<CreatePostDTO> findAllAsCreateDTO(Pageable pageable) {
+        return postRepository.findAll(pageable).map(this::toCreatePostDTO);
+    }
+
     public Page<PostDTO> findAllAsDTO(Pageable pageable) {
         return postRepository.findAll(pageable).map(this::toDTO);
     }
@@ -67,31 +76,19 @@ public class PostService {
     public Post save(Post post, MultipartFile imageFile) throws IOException { // Swapped from Post to void
 
         if (!imageFile.isEmpty()) {
-            post.setPostImage(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+            post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
 
-        User currentUser = userMapper.toDomain(userService.getLoggedUser());
-        post.setOwner(currentUser);
-        currentUser.getPosts().add(post);
-
-        List<Section> sections = post.getSections();
-        for (Section section : sections) {
-            section.addPost(post);
-        }
-
-        List<User> contributors = post.getContributors();
-        for (User contributor : contributors) {
-            contributor.addCollaboratedPosts(post);
-        }
-        postRepository.save(post);
-
-        return post;
+        return save(post);
 
     }
 
     public PostDTO save(PostDTO postDTO, MultipartFile imagFile) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile));
+    }
 
+    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile) throws IOException {
+        return toDTO(save(toDomain(toDTO(postDTO)), imagFile));
     }
 
     public Post save(Post post) { // Swapped from Post to void
@@ -162,7 +159,7 @@ public class PostService {
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
 
         if (!newImage.isEmpty()) {
-            oldPost.setPostImage(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
+            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
         }
 
         postRepository.save(oldPost);
@@ -178,7 +175,7 @@ public class PostService {
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
 
         if (!newImage.isEmpty()) {
-            oldPost.setPostImage(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
+            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
         }
 
         postRepository.save(oldPost);
@@ -242,7 +239,7 @@ public class PostService {
 		if (oldPost.getImage() != null) {
 
 			//Set the image in the updated post
-			updatedPost.setPostImage(BlobProxy.generateProxy(oldPost.getPostImage().getBinaryStream(), oldPost.getPostImage().length()));
+			updatedPost.setImageFile(BlobProxy.generateProxy(oldPost.getImageFile().getBinaryStream(), oldPost.getImageFile().length()));
 			updatedPost.setImage(oldPost.getImage());
             
 		}
@@ -255,17 +252,17 @@ public class PostService {
     public void createPostImage(long id, URI location, InputStream inputStream, long size) {
         Post post = postRepository.findById(id).orElseThrow();
         post.setImage(location.toString());
-        post.setPostImage(BlobProxy.generateProxy(inputStream, size));
+        post.setImageFile(BlobProxy.generateProxy(inputStream, size));
     
         postRepository.save(post);
     }
 
-    public Resource getPostImage(long id) throws SQLException {
+    public Resource getImageFile(long id) throws SQLException {
 
 		Post post = postRepository.findById(id).orElseThrow();
 
-		if (post.getPostImage() != null) {
-			return new InputStreamResource(post.getPostImage().getBinaryStream());
+		if (post.getImageFile() != null) {
+			return new InputStreamResource(post.getImageFile().getBinaryStream());
 		} else {
 			throw new NoSuchElementException();
 		}
@@ -279,7 +276,7 @@ public class PostService {
 			throw new NoSuchElementException();
 		}
 
-		post.setPostImage(BlobProxy.generateProxy(inputStream, size));
+		post.setImageFile(BlobProxy.generateProxy(inputStream, size));
 
 		postRepository.save(post);
 	}
@@ -292,7 +289,7 @@ public class PostService {
 			throw new NoSuchElementException();
 		}
 
-		post.setPostImage(null);
+		post.setImageFile(null);
 		post.setImage(null);
 
 		postRepository.save(post);
@@ -300,6 +297,14 @@ public class PostService {
 
     private PostDTO toDTO(Post post) {
         return postMapper.toDTO(post);
+    }
+
+    private PostDTO toDTO(CreatePostDTO postDTO) {
+        return postMapper.toDTO(postDTO);
+    }
+
+    private CreatePostDTO toCreatePostDTO(Post post) {
+        return postMapper.toCreatePostDTO(post);
     }
 
     private Post toDomain(PostDTO postDTO) {

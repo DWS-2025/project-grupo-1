@@ -12,6 +12,10 @@ import es.codeurjc.web.model.Post;
 public interface PostMapper {
     PostDTO toDTO(Post post);
 
+    PostDTO toDTO(CreatePostDTO postDTO);
+
+    CreatePostDTO toCreatePostDTO(Post post);
+
     Post toDomain(PostDTO postDTO); 
 
     Collection<PostDTO> toDTOs(Collection<Post> posts); 

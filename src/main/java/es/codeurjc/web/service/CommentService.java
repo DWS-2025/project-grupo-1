@@ -38,7 +38,7 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-    public CommentDTO saveCommentInPost(long postID, CommentDTO commentDTO) {
+    public CommentDTO saveCommentInPost(Long postID, CommentDTO commentDTO) {
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
 
@@ -68,7 +68,12 @@ public class CommentService {
        
     }
 
-    public Page<CommentDTO> findAllCommentsByPostId(long postId, int pageNumber) {
+    public Collection<CommentDTO> findAllCommentsByPostId(Long postId) {
+        Post post = postService.findById(postId).get();
+        return toDTOs(post.getComments());
+    }
+
+    public Page<CommentDTO> findAllCommentsByPostId(Long postId, int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, 10); 
         Page<Comment> commentsPage = commentRepository.findByCommentedPost(postId, pageable); 
         return commentsPage.map(this::toDTO); 
@@ -79,7 +84,7 @@ public class CommentService {
         return commentsPage.map(this::toDTO); 
     }
 
-    public void deleteCommentFromPost(long commentedPostId, Long commentId) {
+    public void deleteCommentFromPost(Long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         Post commentedPost = postService.findById(commentedPostId).get();
         commentedPost.getComments().remove(commentToDelete);
@@ -97,7 +102,7 @@ public class CommentService {
         commentRepository.delete(commentToDelete);
     }
 
-    public void updateComment(Long commentId, CommentDTO updatedCommentDTO, long postId) {
+    public void updateComment(Long commentId, CommentDTO updatedCommentDTO, Long postId) {
         if (commentRepository.findById(commentId).isPresent() && postService.findById(postId).isPresent()) {
             Comment updatedComment = toDomain(updatedCommentDTO);
             Post commentedPost = postService.findById(postId).get();
@@ -117,14 +122,14 @@ public class CommentService {
         }
     }
 
-    public Optional<Comment> findCommentById(long id) {
+    public Optional<Comment> findCommentById(Long id) {
         return commentRepository.findById(id);
     }
-    public Optional<CommentDTO> findCommentByIdDTO(long id) {
+    public Optional<CommentDTO> findCommentByIdDTO(Long id) {
         return commentRepository.findById(id).map(this::toDTO);
     }
 
-    public CommentDTO findCommentById(long id, long postId) {
+    public CommentDTO findCommentById(Long id, Long postId) {
        return toDTO(commentRepository.findById(id).orElseThrow());
     }
 

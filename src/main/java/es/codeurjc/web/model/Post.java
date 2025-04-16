@@ -30,7 +30,7 @@ public class Post {
     
     private String image;
     @Lob
-    private Blob postImage;
+    private Blob imageFile;
 
     @ManyToOne
     private User owner;
@@ -120,12 +120,12 @@ public class Post {
         this.image = image;
     }
 
-    public Blob getPostImage() {
-        return this.postImage;
+    public Blob getImageFile() {
+        return this.imageFile;
     }
 
-    public void setPostImage(Blob postImage) {
-        this.postImage = postImage;
+    public void setImageFile(Blob imageFile) {
+        this.imageFile = imageFile;
     }
 
     public void setOwner(User owner) {

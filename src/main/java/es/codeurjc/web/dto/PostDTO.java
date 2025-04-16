@@ -9,7 +9,7 @@ public record PostDTO(
         Long id,
         String title,
         String content,
-        Blob postImage,
+        String image,
         User owner,
         String ownerName,
         float  averageRating,

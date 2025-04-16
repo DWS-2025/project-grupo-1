@@ -34,7 +34,6 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.CommentService;
-import es.codeurjc.web.service.ImagePostService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -43,26 +42,18 @@ import es.codeurjc.web.service.UserService;
 @Controller
 public class PostController {
 
-    private static final String POSTS_FOLDER = "posts";
-
     @Autowired
     private PostService postService;
+
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private ImagePostService imageService;
+
     @Autowired
     private SectionService sectionService;
+
     @Autowired
     private UserService userService;
 
-    /* comento por que estaba repetido y peta (misma ruta que el de abajo)
-    @GetMapping("/post?")
-    public String viewPosts(Model model) {
-        model.addAttribute("posts", postService.findAll());
-        return "post_list";
-    }
-*/
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
         int pageSize = 10; // Number of posts per page
@@ -108,16 +99,17 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String viewPost(Model model, @PathVariable long id, @RequestParam(defaultValue = "0") int page) {
+    public String viewPost(Model model, @PathVariable long id) {//, @RequestParam(defaultValue = "0") int page) {
         Optional<PostDTO> op = postService.findByIdDTO(id);
         if (op.isPresent()) {   
 
-            Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
+            //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
 
             model.addAttribute("post", op.get());
-            model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
-            model.addAttribute("currentPage", commentPage.getNumber());
-            model.addAttribute("hasImage", op.get().postImage() != null);
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
+            //model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
+            model.addAttribute("currentPage", 0); //commentPage.getNumber());
+            model.addAttribute("hasImage", op.get().image() != null);
             return "view_post";
 
         } else {
@@ -131,8 +123,8 @@ public class PostController {
         
         Optional<Post> op = postService.findById(id);
         
-        if (op.isPresent() && op.get().getPostImage() != null) {
-            Blob image = op.get().getPostImage();
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
         
@@ -221,8 +213,8 @@ public class PostController {
     public ResponseEntity<Object> downloadPostImage(@PathVariable long postId) throws SQLException {
         Optional<Post> op = postService.findById(postId);
         
-        if (op.isPresent() && op.get().getPostImage() != null) {
-            Blob image = op.get().getPostImage();
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
             Resource file = new InputStreamResource(image.getBinaryStream());
 
             return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);

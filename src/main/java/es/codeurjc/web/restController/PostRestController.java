@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.web.dto.CommentDTO;
+import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.service.CommentService;
@@ -49,10 +50,11 @@ public class PostRestController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public Page<PostDTO> getPosts(@RequestParam(defaultValue = "0") int page) {
+    public Page<CreatePostDTO> getPosts(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        return postService.findAllAsDTO(pageable);
+        return postService.findAllAsCreateDTO(pageable);
     }
+
 
     @GetMapping("/{id}")
     public PostDTO getPost(@PathVariable long id) {
@@ -65,9 +67,9 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO, MultipartFile imageFile)
+    public ResponseEntity<PostDTO> createPost(@RequestBody CreatePostDTO createPostDTO, MultipartFile imageFile)
             throws IOException {
-        postDTO = postService.save(postDTO, imageFile); // Save the post and image
+        PostDTO postDTO = postService.save(createPostDTO, imageFile); // Save the post and image
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(postDTO.id()).toUri(); // URI for the new post
         return ResponseEntity.created(location).body(postDTO);
     }
@@ -86,8 +88,8 @@ public class PostRestController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getPostImage(@PathVariable long id) throws SQLException, IOException {
-        Resource postImage = postService.getPostImage(id);
+    public ResponseEntity<Object> getImageFile(@PathVariable long id) throws SQLException, IOException {
+        Resource postImage = postService.getImageFile(id);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(postImage);
     }
