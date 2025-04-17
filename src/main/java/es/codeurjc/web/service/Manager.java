@@ -234,7 +234,6 @@ public class Manager {
         postService.saveForInit(post5);
 
         post6.addContributor(user3);
-
         post6.addContributor(user2);
         post6.addContributor(mainUser);
         postService.saveForInit(post6);

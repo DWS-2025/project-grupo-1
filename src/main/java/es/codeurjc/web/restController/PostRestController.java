@@ -1,7 +1,5 @@
 package es.codeurjc.web.restController;
 
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -28,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
+import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
@@ -151,7 +151,7 @@ public class PostRestController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(
             @PathVariable long postId,
-            @RequestBody CommentDTO commentDTO) {
+            @RequestBody CreateCommentDTO commentDTO) {
 
         CommentDTO savedComment = commentService.saveCommentInPost(postId, commentDTO);
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(savedComment.id()).toUri();

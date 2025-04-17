@@ -294,6 +294,10 @@ public class PostService {
 
 		postRepository.save(post);
 	}
+    
+    public void simpleSave(Post post) {
+        postRepository.save(post);
+    }
 
     private PostDTO toDTO(Post post) {
         return postMapper.toDTO(post);
