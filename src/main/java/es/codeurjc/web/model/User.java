@@ -187,10 +187,13 @@ public class User {
         // Index for counting the posts with comments
         int index = 0;
         setUserRate(0);
+        if (posts.isEmpty()) {
+            return;
+        }
 
         for (Post post : posts) {
             if (!post.getComments().isEmpty()) {
-                userRate += post.getAverageRating();
+              userRate += post.getAverageRating();
                 index++;
             }
         }

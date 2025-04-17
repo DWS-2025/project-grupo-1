@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.CommentDTO;
+import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Post;
@@ -238,7 +239,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, CommentDTO newComment) {
+    public String newPostComment(Model model, @PathVariable long postId, CreateCommentDTO newComment) {
         Optional<PostDTO> op = postService.findByIdDTO(postId);
         if (op.isPresent()) {
             if (newComment.content().isEmpty()) {

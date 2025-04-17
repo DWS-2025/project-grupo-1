@@ -6,7 +6,6 @@ package es.codeurjc.web.dto;
         UserBasicDTO owner,
         PostBasicDTO commentedPost,
         String commentOwnerName,
-        float  averageRating,
         int rating) {
 }
     

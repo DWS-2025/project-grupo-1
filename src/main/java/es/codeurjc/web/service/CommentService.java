@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CommentMapper;
+import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
@@ -38,12 +39,13 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-    public CommentDTO saveCommentInPost(Long postID, CommentDTO commentDTO) {
+    public CommentDTO saveCommentInPost(Long postID, CreateCommentDTO commentDTO) {
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
 
-    
+
         User currentUser = userMapper.toDomain(userService.getLoggedUser());
+
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getUserName());
         comment.setCommentedPost(postToComment);
@@ -60,12 +62,10 @@ public class CommentService {
         }
             
 
-        // currentUser.getComments().add(comment); creo que no haria falta ya que al comentario le estamos asignando directamente un usuario (owner) -> preguntar en clase
         userService.save(postToComment.getOwner());
         userService.save(currentUser);
         return toDTO(comment);
         
-       
     }
 
     public Collection<CommentDTO> findAllCommentsByPostId(Long postId) {
@@ -138,6 +138,9 @@ public class CommentService {
         
     }
     private Comment toDomain(CommentDTO commentDTO) {
+        return mapper.toDomain(commentDTO);
+    }
+    private Comment toDomain(CreateCommentDTO commentDTO) {
         return mapper.toDomain(commentDTO);
     }
     public Collection<CommentDTO> toDTOs(Collection<Comment> comments) {
