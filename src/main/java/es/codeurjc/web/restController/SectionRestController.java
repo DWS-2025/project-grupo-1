@@ -2,13 +2,16 @@ package es.codeurjc.web.restController;
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +42,18 @@ public class SectionRestController {
     @Autowired
     private SectionService sectionService;
 
-    @GetMapping("")
+    /* @GetMapping("")
     public Page<SectionDTO> getSections(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return sectionService.findAllAsDTO(pageable);
+    } */
+
+    @GetMapping("")
+    public ResponseEntity<List<SectionDTO>> getSections(@RequestParam(defaultValue = "0") int page) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<SectionDTO> sectionPage = sectionService.findAllAsDTO(pageable);
+        return ResponseEntity.ok(sectionPage.getContent());
     }
 
 
@@ -57,7 +68,7 @@ public class SectionRestController {
         
     }
     
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<SectionDTO> createSection(@RequestBody SectionDTO sectionDTO) {
         sectionDTO = sectionService.saveSection(sectionDTO);
         
@@ -90,5 +101,40 @@ public class SectionRestController {
         }
 
     }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Object> getImageFile(@PathVariable long id) throws SQLException, IOException {
+        Resource sectionImage = sectionService.getSectionImage(id);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(sectionImage);
+    }
+    
+
+    @PostMapping("/{id}/image")
+	public ResponseEntity<Object> createSectionImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+
+		URI location = fromCurrentRequest().build().toUri();
+
+		sectionService.createSectionImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+
+		return ResponseEntity.created(location).build();
+
+	}
+
+    @PutMapping("/{id}/image")
+	public ResponseEntity<Object> replaceSectionImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+
+		sectionService.replaceSectionImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+		return ResponseEntity.noContent().build();
+	}
+
+    @DeleteMapping("/{id}/image")
+	public ResponseEntity<Object> deleteSectionImage(@PathVariable long id) throws IOException {
+
+		sectionService.deleteSectionImage(id);
+
+		return ResponseEntity.noContent().build();
+	}
 
 }
