@@ -3,6 +3,7 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -247,7 +249,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("/section/search")
+   /* @GetMapping("/section/search")
     public String searchSection(Model model, @RequestParam(required = false) String title) {
         if (title != null) {
             Section section = new Section();
@@ -273,5 +275,51 @@ public class SectionController {
         return "section";
 
     }
+    */
+
+    @GetMapping("/section/search")
+    public String searchSection(Model model,
+                            @RequestParam(required = false) String title,
+                            @RequestParam(required = false) String orderBy) {
+
+    Sort sort;
+
+    if (title == null && orderBy == null) {
+        sort = Sort.by(Sort.Direction.ASC, "id");
+    } else if ("rating".equalsIgnoreCase(orderBy)) {
+        sort = Sort.by(Sort.Direction.DESC, "averageRating");
+    } else if ("title".equalsIgnoreCase(orderBy)) {
+        sort = Sort.by(Sort.Direction.ASC, "title");
+    } else {
+        sort = Sort.by(Sort.Direction.ASC, "id");
+    }
+
+    if (title != null && !title.isBlank()) {
+        Section section = new Section();
+        section.setTitle(title);
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase()
+                .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
+
+        Example<Section> example = Example.of(section, matcher);
+
+        List<Section> filtered = sectionService.findAll(example, sort);
+
+        if (filtered.isEmpty()) {
+            model.addAttribute("noResult", true);
+            model.addAttribute("sections", sectionService.findAll(Sort.by("id")));
+        } else {
+            model.addAttribute("sections", filtered);
+            model.addAttribute("isSearch", true);
+        }
+
+    } else {
+        model.addAttribute("sections", sectionService.findAll(sort));
+    }
+
+    return "section";
+}
 
 }
