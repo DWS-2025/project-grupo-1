@@ -1,11 +1,12 @@
 package es.codeurjc.web.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import es.codeurjc.web.model.Section;
 
 
-public interface SectionRepository extends JpaRepository<Section, Long> {
+public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
 
     /* 
 

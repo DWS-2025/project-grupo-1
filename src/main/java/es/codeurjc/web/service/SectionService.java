@@ -13,12 +13,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,6 +93,32 @@ public class SectionService {
 
     public Page<SectionDTO> findAllAsDTO(Pageable pageable) {
         return sectionRepository.findAll(pageable).map(this::toDTO);
+    }
+
+    public List<Section> findAll(Example<Section> example, Sort sort) {
+        return sectionRepository.findAll(example, sort);
+    }
+
+    public List<Section> findAll(Sort sort) {
+        return sectionRepository.findAll(sort);
+    }
+    
+    public Collection<SectionDTO> getOrderSections (String orderBy){
+        Sort sort;
+
+        switch (orderBy) {
+            case "title":
+                sort = Sort.by(Sort.Direction.ASC, "title");
+                break;
+            
+            case "rating":
+                sort = Sort.by(Sort.Direction.DESC, "averageRating");
+                break;
+
+            default:
+                sort = Sort.unsorted();
+        }
+        return toDTOs(sectionRepository.findAll(sort));
     }
 
     protected void saveSection(Section section) {

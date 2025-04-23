@@ -43,15 +43,15 @@ public class SectionRestController {
         Pageable pageable = PageRequest.of(page, 10);
         return sectionService.findAllAsDTO(pageable);
     } 
-/*
-    @GetMapping("")
+
+   /* @GetMapping("")
     public ResponseEntity<List<SectionDTO>> getSections(@RequestParam(defaultValue = "0") int page) {
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<SectionDTO> sectionPage = sectionService.findAllAsDTO(pageable);
         return ResponseEntity.ok(sectionPage.getContent());
-    }
- */
+    } */
+
 
 
     @GetMapping("/{id}")
