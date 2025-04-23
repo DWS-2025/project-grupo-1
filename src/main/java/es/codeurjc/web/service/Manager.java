@@ -44,6 +44,7 @@ public class Manager {
         user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
         user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
         user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
+
         mainUser.setImage("/api/users/1/image");
         user2.setImage("/api/users/2/image");
         user3.setImage("/api/users/3/image");
@@ -71,26 +72,6 @@ public class Manager {
 // Post sobre análisis de malware
         Post post9 = new Post("Análisis de Malware: Técnicas y Herramientas para Detectar Amenazas",
                 "El análisis de malware es una disciplina esencial en la ciberseguridad moderna. En este artículo exploramos cómo identificar y desarmar amenazas utilizando herramientas como IDA Pro, Ghidra y Cuckoo Sandbox. También discutimos cómo los atacantes utilizan técnicas de ofuscación para evadir detección y cómo los analistas pueden contrarrestarlas.");
-
-// Post sobre seguridad en IoT
-        Post post10 = new Post("Seguridad en IoT: Protegiendo Dispositivos Conectados",
-                "Los dispositivos IoT están cada vez más presentes en nuestras vidas, pero también son un objetivo atractivo para los atacantes. En este post analizamos vulnerabilidades comunes en dispositivos IoT, como contraseñas predeterminadas y firmware desactualizado, y ofrecemos estrategias para proteger redes y dispositivos conectados.");
-
-// Post sobre ataques de fuerza bruta
-        Post post11 = new Post("Ataques de Fuerza Bruta: Métodos y Contramedidas",
-                "Los ataques de fuerza bruta siguen siendo una técnica popular entre los atacantes para comprometer cuentas y sistemas. En este artículo exploramos cómo funcionan estos ataques, las herramientas más utilizadas como Hydra y John the Ripper, y las mejores prácticas para prevenirlos, como el uso de autenticación multifactor y políticas de bloqueo de cuentas.");
-
-// Post sobre pentesting
-        Post post12 = new Post("Pentesting: Evaluación de Seguridad en Aplicaciones y Redes",
-                "El pentesting es una práctica fundamental para identificar vulnerabilidades antes de que los atacantes las exploten. En este post discutimos las fases de un pentest, desde el reconocimiento hasta la explotación, y las herramientas más utilizadas, como Metasploit, Burp Suite y Nmap.");
-
-// Post sobre seguridad en redes
-        Post post13 = new Post("Seguridad en Redes: Configuración de Firewalls y Detección de Intrusos",
-                "La seguridad en redes es una de las primeras líneas de defensa contra los atacantes. En este artículo exploramos cómo configurar firewalls para proteger redes empresariales y cómo implementar sistemas de detección de intrusos (IDS) para identificar actividades sospechosas en tiempo real.");
-
-// Post sobre ransomware
-        Post post14 = new Post("Ransomware: Cómo Protegerse de la Mayor Amenaza Empresarial",
-                "El ransomware se ha convertido en una de las amenazas más peligrosas para las empresas. En este post analizamos cómo funcionan estos ataques, desde la infección inicial hasta el cifrado de datos, y ofrecemos estrategias para prevenirlos, como copias de seguridad regulares y formación en ciberseguridad.");
 
         //Create new sections
         Section defaultSection1 = new Section("Reversing", "Análisis y descompilación de binarios para entender su funcionamiento.");
@@ -120,6 +101,7 @@ public class Manager {
         userService.save(user6);
         userService.save(user7);
 
+        
         postService.saveOtherUsersPost(post1, mainUser);
         postService.saveOtherUsersPost(post2, mainUser);
         postService.saveOtherUsersPost(post3, user2);
@@ -129,11 +111,7 @@ public class Manager {
         postService.saveOtherUsersPost(post7, user4);
         postService.saveOtherUsersPost(post8, user4);
         postService.saveOtherUsersPost(post9, user5);
-        postService.saveOtherUsersPost(post10, user5);
-        postService.saveOtherUsersPost(post11, user6);
-        postService.saveOtherUsersPost(post12, user6);
-        postService.saveOtherUsersPost(post13, user7);
-        postService.saveOtherUsersPost(post14, user7);
+      
 
         sectionService.saveSection(defaultSection1);
         sectionService.saveSection(defaultSection2);

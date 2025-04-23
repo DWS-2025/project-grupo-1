@@ -62,6 +62,10 @@ public class UserService {
     public UserDTO getLoggedUser() {
         return toDTO(userRepository.findByUserName("mainUser"));
     }
+    
+    public User getLoggedUserDomain() {
+        return userRepository.findByUserName("mainUser");
+    }
 
     public UserBasicDTO getLoggedUserBasic() {
         return toBasicDTO(userRepository.findByUserName("mainUser"));
