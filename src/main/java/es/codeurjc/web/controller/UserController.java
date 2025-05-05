@@ -3,7 +3,6 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -59,7 +58,7 @@ public class UserController {
 
     @GetMapping("/following")
     public String following(Model model) {
-        model.addAttribute("user", userService.getLoggedUser().followedSections());
+        model.addAttribute("sections", userService.getLoggedUser().followedSections());
         model.addAttribute("followed", true);
         model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser()));
         model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser()));
