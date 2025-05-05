@@ -43,14 +43,17 @@ public class CommentService {
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
 
-
-        User currentUser = userMapper.toDomain(userService.getLoggedUser());
-
+        //Ocurre lo mismo que en el tema de el discover y el following, no se por que al hacer la conversión de userDTO a user no funciona correctamente.
+        //User currentUser = userMapper.toDomain(userService.getLoggedUser());
+        User currentUser = userService.getLoggedUserDomain();
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getUserName());
         comment.setCommentedPost(postToComment);
+    
         
         commentRepository.save(comment);
+        
+        // El rating va bien a la segunda vez que se ejecuta, por que al ejecutarse por primera vez, detecta que el post no tiene comentarios y le asigna un rating de 0
 
         // Calculates the rating of the post 
         postService.setAverageRatingPost(postToComment.getId());
