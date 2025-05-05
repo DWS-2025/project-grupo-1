@@ -140,6 +140,10 @@ public class User {
         return this.posts;
     }
 
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
     public List<User> getFollowers() {
         return this.followers;
     }

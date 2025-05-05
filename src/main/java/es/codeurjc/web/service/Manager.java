@@ -120,6 +120,18 @@ public class Manager {
         userService.save(user6);
         userService.save(user7);
 
+        post1.setImageFile(localImageToBlob("images/posts/image-0.jpeg"));
+        post2.setImageFile(localImageToBlob("images/posts/image-1.jpeg"));
+        post3.setImageFile(localImageToBlob("images/posts/image-2.jpeg"));
+        post4.setImageFile(localImageToBlob("images/posts/image-3.jpeg"));
+        post5.setImageFile(localImageToBlob("images/posts/image-4.jpeg"));
+        post6.setImageFile(localImageToBlob("images/posts/image-5.jpeg"));
+        post7.setImageFile(localImageToBlob("images/posts/image-6.jpeg"));
+        post8.setImageFile(localImageToBlob("images/posts/image-7.jpeg"));
+        post9.setImageFile(localImageToBlob("images/posts/image-8.jpeg"));
+        post10.setImageFile(localImageToBlob("images/posts/image-9.jpeg"));
+        post11.setImageFile(localImageToBlob("images/posts/image-10.jpeg"));
+
         postService.saveOtherUsersPost(post1, mainUser);
         postService.saveOtherUsersPost(post2, mainUser);
         postService.saveOtherUsersPost(post3, user2);
