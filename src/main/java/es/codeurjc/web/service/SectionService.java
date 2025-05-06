@@ -306,4 +306,8 @@ public class SectionService {
         return toDTO(sectionRepository.findById(id).orElseThrow());
     }
 
+    public Collection<SectionDTO> getSectionByTitltesASC() {
+        return toDTOs(sectionRepository.findSectionByTitleASC());
+    }
+
 }

@@ -3,6 +3,7 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -277,6 +278,8 @@ public class SectionController {
     }
     */
 
+
+    /* 
     @GetMapping("/section/search")
     public String searchSection(Model model,
                             @RequestParam(required = false) String title,
@@ -321,5 +324,13 @@ public class SectionController {
 
     return "section";
 }
+    */
+    @GetMapping("/section/search")
+    public String searchSection(Model model){
+        Collection<SectionDTO> sections = sectionService.getSectionByTitltesASC();
+
+        model.addAttribute("sections", sections);
+        return "section";
+    }
 
 }
