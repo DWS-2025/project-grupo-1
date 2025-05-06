@@ -187,7 +187,7 @@ public class UserService {
 
         String userName = updatedUser.getUserName();
         if (userName != null && !userName.isEmpty()) {
-            oldUser.setName(userName);
+            oldUser.setUserName(userName);
         }
 
         String description = updatedUser.getDescription();
