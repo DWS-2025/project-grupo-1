@@ -14,6 +14,8 @@ public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpec
     @Query("SELECT s FROM Section s ORDER BY s.title ASC")
     List<Section> findSectionByTitleASC();
 
+    @Query("SELECT s FROM Section s ORDER BY s.averageRating DESC")
+    List<Section> findSectionByAverageRatingDESC();
 
     /* 
 

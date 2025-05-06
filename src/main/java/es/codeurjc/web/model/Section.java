@@ -19,7 +19,8 @@ public class Section {
     private String title;
     private String description;
     private String image; // URL of the image
-
+    private float averageRating;
+    private int numberOfPublications;
 
     @Lob
     private Blob imageFile; // Blob for storing the image file
@@ -27,9 +28,7 @@ public class Section {
    @ManyToMany
     private List<Post> posts = new ArrayList<>();
 
-    private float averageRating;
-    private int numberOfPublications;
-
+   
     public Section() {
     }
 

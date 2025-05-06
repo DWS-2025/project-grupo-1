@@ -278,57 +278,14 @@ public class SectionController {
     }
     */
 
-
-    /* 
-    @GetMapping("/section/search")
-    public String searchSection(Model model,
-                            @RequestParam(required = false) String title,
-                            @RequestParam(required = false) String orderBy) {
-
-    Sort sort;
-
-    if (title == null && orderBy == null) {
-        sort = Sort.by(Sort.Direction.ASC, "id");
-    } else if ("rating".equalsIgnoreCase(orderBy)) {
-        sort = Sort.by(Sort.Direction.DESC, "averageRating");
-    } else if ("title".equalsIgnoreCase(orderBy)) {
-        sort = Sort.by(Sort.Direction.ASC, "title");
-    } else {
-        sort = Sort.by(Sort.Direction.ASC, "id");
-    }
-
-    if (title != null && !title.isBlank()) {
-        Section section = new Section();
-        section.setTitle(title);
-
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withIgnoreCase()
-                .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
-
-        Example<Section> example = Example.of(section, matcher);
-
-        List<Section> filtered = sectionService.findAll(example, sort);
-
-        if (filtered.isEmpty()) {
-            model.addAttribute("noResult", true);
-            model.addAttribute("sections", sectionService.findAll(Sort.by("id")));
-        } else {
-            model.addAttribute("sections", filtered);
-            model.addAttribute("isSearch", true);
-        }
-
-    } else {
-        model.addAttribute("sections", sectionService.findAll(sort));
-    }
-
-    return "section";
-}
-    */
     @GetMapping("/section/search")
     public String searchSection(Model model){
-        Collection<SectionDTO> sections = sectionService.getSectionByTitltesASC();
+        Collection<SectionDTO> sectionsTitleASC = sectionService.getSectionByTitltesASC();
+        Collection<SectionDTO> sectionsAverageRatingDESC = sectionService.getSectionByAverageRatingDESC();
+        Collection<SectionDTO> sections = sectionService.getAllSections();
 
+        model.addAttribute("sections", sectionsTitleASC);
+        model.addAttribute("sections", sectionsAverageRatingDESC);
         model.addAttribute("sections", sections);
         return "section";
     }
