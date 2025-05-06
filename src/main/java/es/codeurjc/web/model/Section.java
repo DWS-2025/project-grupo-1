@@ -25,7 +25,7 @@ public class Section {
     private Blob imageFile; // Blob for storing the image file
     
    @ManyToMany
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     private float averageRating;
     private int numberOfPublications;
@@ -39,7 +39,6 @@ public class Section {
         this.averageRating = 0;
         this.id = 0;
         this.numberOfPublications = 0;
-        this.posts = new ArrayList<>();
     }
 
     
