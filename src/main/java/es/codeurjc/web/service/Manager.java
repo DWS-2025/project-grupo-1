@@ -92,6 +92,18 @@ public class Manager {
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
+
+        defaultSection1.setAverageRating(10);
+        defaultSection2.setAverageRating(9);
+        defaultSection3.setAverageRating(8);
+        defaultSection4.setAverageRating(7);
+        defaultSection5.setAverageRating(20);
+        defaultSection6.setAverageRating(5);
+        defaultSection7.setAverageRating(4);
+        defaultSection8.setAverageRating(3);
+        defaultSection9.setAverageRating(2);
+        defaultSection10.setAverageRating(1);
+        defaultSection11.setAverageRating(0);
                  
         userService.save(mainUser);
         userService.save(user2);

@@ -19,17 +19,16 @@ public class Section {
     private String title;
     private String description;
     private String image; // URL of the image
-
+    private float averageRating;
+    private int numberOfPublications;
 
     @Lob
     private Blob imageFile; // Blob for storing the image file
     
    @ManyToMany
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
-    private float averageRating;
-    private int numberOfPublications;
-
+   
     public Section() {
     }
 
@@ -39,7 +38,6 @@ public class Section {
         this.averageRating = 0;
         this.id = 0;
         this.numberOfPublications = 0;
-        this.posts = new ArrayList<>();
     }
 
     

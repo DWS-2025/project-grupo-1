@@ -94,7 +94,6 @@ public class PostController {
                 post.addContributor(user);
             }
         }
-        
         postService.save(post, newImage);
         return "redirect:/post";
     }
