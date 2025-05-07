@@ -92,6 +92,14 @@ public class Manager {
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
+        defaultSection6.setImageFile(localImageToBlob("images/sections/image-6.jpeg"));
+        defaultSection7.setImageFile(localImageToBlob("images/sections/image-7.jpeg"));
+        defaultSection8.setImageFile(localImageToBlob("images/sections/image-8.jpeg"));
+        defaultSection9.setImageFile(localImageToBlob("images/sections/image-9.jpeg"));
+        defaultSection10.setImageFile(localImageToBlob("images/sections/image-10.jpeg"));
+        defaultSection11.setImageFile(localImageToBlob("images/sections/image-11.jpeg"));
+
+
 
         defaultSection1.setAverageRating(10);
         defaultSection2.setAverageRating(9);

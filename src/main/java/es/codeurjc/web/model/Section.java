@@ -3,6 +3,7 @@ package es.codeurjc.web.model;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -135,5 +136,19 @@ public class Section {
             setAverageRating(averageRating / index);
         }
      }
+
+     // Overriding equals and hashCode methods to compare sections by their id
+     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Section section = (Section) o;
+        return Objects.equals(id, section.id); 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); 
+    }
 
 }
