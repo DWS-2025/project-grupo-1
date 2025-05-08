@@ -138,46 +138,40 @@ public class UserService {
     }
 
     public UserDTO deleteUser(UserDTO userDTO) {
-        User userToDelete = toDomain(userDTO);
-        long id = userToDelete.getId();
-        if (id != 1) {
-            // We break the relationship between the posts and the sections
-            if (userToDelete.getPosts() != null) {
-                for (Post post : userToDelete.getPosts()) {
-                    List<Section> sections = post.getSections();
-                    for (Section section : sections) {
-                        section.deletePost(post);
-                        sectionService.saveSection(section);
-                    }
-                }
-            }
-            if (userToDelete.getCollaboratedPosts() != null) {
-                // We break the relationship between the posts and the contributors
-                for (Post post : userToDelete.getCollaboratedPosts()) {
-                    post.getContributors().remove(userToDelete);
-                    postService.saveForInit(post);
-                }
-            }
-            if (userToDelete.getFollowers() != null) {
-                // We break the relationship between the user and the followers
-                for (User follower : userToDelete.getFollowers()) {
-                    follower.getFollowings().remove(userToDelete);
-                    userRepository.save(follower);
-                }
-            }
-            if (userToDelete.getFollowings() != null) {
-                // We break the relationship between the user and the followings
-                for (User following : userToDelete.getFollowings()) {
-                    following.getFollowers().remove(userToDelete);
-                    userRepository.save(following);
-                }
 
+    User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
+    long id = userToDelete.getId();
+    if (id != 1) {
+       
+        if (userToDelete.getPosts() != null) {
+            List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
+            for (Post post : postsCopy) {
+                postService.deletePost(post);
             }
         }
-        // We finally delete the user
-        userRepository.deleteById(id);
-        return toDTO(userToDelete);
+    
+        if (userToDelete.getCollaboratedPosts() != null) {
+            for (Post post : userToDelete.getCollaboratedPosts()) {
+                post.getContributors().remove(userToDelete);
+                postService.saveForInit(post);
+            }
+        }
+        if (userToDelete.getFollowers() != null) {
+            for (User follower : userToDelete.getFollowers()) {
+                follower.getFollowings().remove(userToDelete);
+                userRepository.save(follower);
+            }
+        }
+        if (userToDelete.getFollowings() != null) {
+            for (User following : userToDelete.getFollowings()) {
+                following.getFollowers().remove(userToDelete);
+                userRepository.save(following);
+            }
+        }
     }
+    userRepository.deleteById(id);
+    return toDTO(userToDelete);
+}
 
 
     public UserDTO updateUser(long id, UserDTO updatedUserDTO) throws SQLException {
