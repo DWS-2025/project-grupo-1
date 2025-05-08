@@ -149,12 +149,10 @@ public class PostService {
         oldPost.setTitle(newTitle);
         oldPost.setContent(newContent);
 
-        
         oldPost.getSections().clear();
 
         oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
         addSections(oldPost, newSectionIds);
-
 
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
 
@@ -187,22 +185,18 @@ public class PostService {
         return toDTO(updatePost(toDomain(oldPost), toDomain(newPost), newSectionIds, newContributorsStrings, newImage));
     }
 
-
     public CommentService getCommentService() {
         return this.commentService;
     }
 
     public void setAverageRatingPost(long postId) {
         Post post = postRepository.findById(postId).get();
-        if (!post.getComments().isEmpty()) {
-                post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
-                postRepository.save(post);
-        } else {
-            post.setAverageRating(0);
-            postRepository.save(post);
-        }
-    }  
-    
+
+        post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
+        postRepository.save(post);
+
+    }
+
     public void addSections(Post post, List<Long> sectionIds) {
         if (!sectionIds.isEmpty()) {
             for (long sectionId : sectionIds) {
@@ -232,69 +226,69 @@ public class PostService {
 
     public PostDTO replacePost(long id, PostDTO updatedPostDTO) throws SQLException {
 
-		Post oldPost = postRepository.findById(id).orElseThrow();
-		Post updatedPost = toDomain(updatedPostDTO);
-		updatedPost.setId(id);
+        Post oldPost = postRepository.findById(id).orElseThrow();
+        Post updatedPost = toDomain(updatedPostDTO);
+        updatedPost.setId(id);
 
-		if (oldPost.getImage() != null) {
+        if (oldPost.getImage() != null) {
 
-			//Set the image in the updated post
-			updatedPost.setImageFile(BlobProxy.generateProxy(oldPost.getImageFile().getBinaryStream(), oldPost.getImageFile().length()));
-			updatedPost.setImage(oldPost.getImage());
-            
-		}
+            //Set the image in the updated post
+            updatedPost.setImageFile(BlobProxy.generateProxy(oldPost.getImageFile().getBinaryStream(), oldPost.getImageFile().length()));
+            updatedPost.setImage(oldPost.getImage());
 
-		postRepository.save(updatedPost);
+        }
 
-		return toDTO(updatedPost);
-	}
-    
+        postRepository.save(updatedPost);
+
+        return toDTO(updatedPost);
+    }
+
     public void createPostImage(long id, URI location, InputStream inputStream, long size) {
         Post post = postRepository.findById(id).orElseThrow();
         post.setImage(location.toString());
         post.setImageFile(BlobProxy.generateProxy(inputStream, size));
-    
+
         postRepository.save(post);
     }
 
     public Resource getImageFile(long id) throws SQLException {
 
-		Post post = postRepository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow();
 
-		if (post.getImageFile() != null) {
-			return new InputStreamResource(post.getImageFile().getBinaryStream());
-		} else {
-			throw new NoSuchElementException();
-		}
-	}
+        if (post.getImageFile() != null) {
+            return new InputStreamResource(post.getImageFile().getBinaryStream());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
 
     public void replacePostImage(long id, InputStream inputStream, long size) {
 
-		Post post = postRepository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow();
 
-		if(post.getImage() == null){
-			throw new NoSuchElementException();
-		}
+        if (post.getImage() == null) {
+            throw new NoSuchElementException();
+        }
 
-		post.setImageFile(BlobProxy.generateProxy(inputStream, size));
+        post.setImageFile(BlobProxy.generateProxy(inputStream, size));
 
-		postRepository.save(post);
-	}
+        postRepository.save(post);
+    }
 
-	public void deletePostImage(long id) {
+    public void deletePostImage(long id) {
 
-		Post post = postRepository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow();
 
-		if(post.getImage() == null){
-			throw new NoSuchElementException();
-		}
+        if (post.getImage() == null) {
+            throw new NoSuchElementException();
+        }
 
-		post.setImageFile(null);
-		post.setImage(null);
+        post.setImageFile(null);
+        post.setImage(null);
 
-		postRepository.save(post);
-	}
-    
+        postRepository.save(post);
+    }
+
     public void simpleSave(Post post) {
         postRepository.save(post);
     }

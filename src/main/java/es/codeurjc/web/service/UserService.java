@@ -60,15 +60,15 @@ public class UserService {
      */
 
     public UserDTO getLoggedUser() {
-        return toDTO(userRepository.findByUserName("mainUser"));
+        return toDTO(userRepository.findByUserName("Admin"));
     }
     
     public User getLoggedUserDomain() {
-        return userRepository.findByUserName("mainUser");
+        return userRepository.findByUserName("Admin");
     }
 
     public UserBasicDTO getLoggedUserBasic() {
-        return toBasicDTO(userRepository.findByUserName("mainUser"));
+        return toBasicDTO(userRepository.findByUserName("Admin"));
     }
 
     public Collection<UserDTO> findAllUsers() {

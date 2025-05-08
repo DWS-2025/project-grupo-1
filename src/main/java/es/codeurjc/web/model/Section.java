@@ -122,20 +122,28 @@ public class Section {
 	}
 
     public void calculateAverageRating() {
-     List<Post> posts = getPosts();
-        //Index for counting the posts with comments
-        int index = 0;
-        setAverageRating(0);
+        List<Post> posts = getPosts();
+        if (posts.isEmpty()) {
+            setAverageRating(0); 
+            return;
+        }
+    
+        float totalRating = 0;
+        int ratedPostsCount = 0;
+    
         for (Post post : posts) {
-            if (!post.getComments().isEmpty()) {
-                averageRating += post.getAverageRating();
-                index++;
+            if (post.getAverageRating() > 0) { // Check if the post has a rating
+                totalRating += post.getAverageRating();
+                ratedPostsCount++;
             }
         }
-        if (index != 0) {
-            setAverageRating(averageRating / index);
+    
+        if (ratedPostsCount > 0) {
+            setAverageRating(totalRating / ratedPostsCount); 
+        } else {
+            setAverageRating(0); 
         }
-     }
+    }
 
      // Overriding equals and hashCode methods to compare sections by their id
      @Override

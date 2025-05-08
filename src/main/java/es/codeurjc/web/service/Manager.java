@@ -29,7 +29,7 @@ public class Manager {
     public void init() {
 
         // Default user 
-        User mainUser = new User("mainUser", "1234", "mainUser@gmail.com");
+        User mainUser = new User("Admin", "1234", "Admin@gmail.com");
         // Other users
         User user2 = new User("user2", "Pass2", "user2@gmail.com");
         User user3 = new User("user3", "Pass3", "user3@gmail.com");
@@ -44,6 +44,7 @@ public class Manager {
         user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
         user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
         user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
+        user7.setUserImage(localImageToBlob("images/users/image-7.jpeg"));
 
         mainUser.setImage("/api/users/1/image");
         user2.setImage("/api/users/2/image");
@@ -51,6 +52,7 @@ public class Manager {
         user4.setImage("/api/users/4/image");
         user5.setImage("/api/users/5/image");
         user6.setImage("/api/users/6/image");
+        user7.setImage("/api/users/7/image");
 
 
         // Some examples of posts and comments
@@ -99,8 +101,9 @@ public class Manager {
         defaultSection10.setImageFile(localImageToBlob("images/sections/image-10.jpeg"));
         defaultSection11.setImageFile(localImageToBlob("images/sections/image-11.jpeg"));
 
-
-
+        // No tiene sentido que las valoraciones sean hasta 20, si lo unico que controlan los usuarios para valorar son los comentarios y van del 0 al 5.
+        // En todo caso se podria añadir comentarios por defecto con cierta valoracion
+        /* 
         defaultSection1.setAverageRating(10);
         defaultSection2.setAverageRating(9);
         defaultSection3.setAverageRating(8);
@@ -112,6 +115,7 @@ public class Manager {
         defaultSection9.setAverageRating(2);
         defaultSection10.setAverageRating(1);
         defaultSection11.setAverageRating(0);
+        */
                  
         userService.save(mainUser);
         userService.save(user2);
