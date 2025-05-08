@@ -141,6 +141,8 @@ public class UserService {
 
     User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
     long id = userToDelete.getId();
+    // Check if the user is the admin (id = 1)
+    // If the user is the admin, do not delete it
     if (id != 1) {
        
         if (userToDelete.getPosts() != null) {

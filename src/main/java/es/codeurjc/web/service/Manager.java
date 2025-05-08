@@ -135,6 +135,15 @@ public class Manager {
         post8.setImageFile(localImageToBlob("images/posts/image-7.jpeg"));
         post9.setImageFile(localImageToBlob("images/posts/image-8.jpeg"));
     
+        post1.setImage("/api/posts/1/image");
+        post2.setImage("/api/posts/2/image");
+        post3.setImage("/api/posts/3/image");
+        post4.setImage("/api/posts/4/image");
+        post5.setImage("/api/posts/5/image");
+        post6.setImage("/api/posts/6/image");
+        post7.setImage("/api/posts/7/image");
+        post8.setImage("/api/posts/8/image");
+        post9.setImage("/api/posts/9/image");
 
         postService.saveOtherUsersPost(post1, mainUser);
         postService.saveOtherUsersPost(post2, mainUser);
