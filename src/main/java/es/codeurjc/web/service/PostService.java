@@ -24,6 +24,7 @@ import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
+import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -127,19 +128,25 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(Post post) {
-        // for (Comment comment : post.getComments()) {
-        //     commentService.deleteCommentFromPost(post, comment.getId());
-        // }
-
-        // for (Section section : post.getSections()) {
-        //     section.deletePost(post);
-        // }
-        post.getContributors().clear();
-        post.getSections().clear();
-        postRepository.deleteById(post.getId());
-        // post.getComments().clear();
+   public void deletePost(Post post) {
+ 
+    for (Section section : post.getSections()) {
+        section.getPosts().remove(post);
+        sectionService.saveSection(section);
     }
+
+ 
+    List<Comment> commentsCopy = new ArrayList<>(post.getComments());
+    for (Comment comment : commentsCopy) {
+        commentService.deleteCommentFromPost(post.getId(), comment.getId());
+    }
+
+    post.getContributors().clear();
+    post.getSections().clear();
+    post.getComments().clear();
+
+    postRepository.deleteById(post.getId());
+}
 
     public void deletePost(PostDTO postDTO) {
         deletePost(toDomain(postDTO));
