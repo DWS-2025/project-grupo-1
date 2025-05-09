@@ -55,6 +55,12 @@ public class User {
     }
 
     public User() {
+        this.followedSections = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.posts = new ArrayList<>();
+        this.collaboratedPosts = new ArrayList<>();
+        this.followers = new ArrayList<>();
+        this.followings = new ArrayList<>();
     }
 
     // Delete the post from the user's posts if it exists
@@ -92,7 +98,7 @@ public class User {
         return this.userName;
     }
 
-    public void setName(String userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 

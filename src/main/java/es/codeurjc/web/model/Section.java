@@ -3,6 +3,7 @@ package es.codeurjc.web.model;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +20,8 @@ public class Section {
     private String title;
     private String description;
     private String image; // URL of the image
-
+    private float averageRating;
+    private int numberOfPublications;
 
     @Lob
     private Blob imageFile; // Blob for storing the image file
@@ -27,9 +29,7 @@ public class Section {
    @ManyToMany
     private List<Post> posts = new ArrayList<>();
 
-    private float averageRating;
-    private int numberOfPublications;
-
+   
     public Section() {
     }
 
@@ -122,19 +122,41 @@ public class Section {
 	}
 
     public void calculateAverageRating() {
-     List<Post> posts = getPosts();
-        //Index for counting the posts with comments
-        int index = 0;
-        setAverageRating(0);
+        List<Post> posts = getPosts();
+        if (posts.isEmpty()) {
+            setAverageRating(0); 
+            return;
+        }
+    
+        float totalRating = 0;
+        int ratedPostsCount = 0;
+    
         for (Post post : posts) {
-            if (!post.getComments().isEmpty()) {
-                averageRating += post.getAverageRating();
-                index++;
+            if (post.getAverageRating() > 0) { // Check if the post has a rating
+                totalRating += post.getAverageRating();
+                ratedPostsCount++;
             }
         }
-        if (index != 0) {
-            setAverageRating(averageRating / index);
+    
+        if (ratedPostsCount > 0) {
+            setAverageRating(totalRating / ratedPostsCount); 
+        } else {
+            setAverageRating(0); 
         }
-     }
+    }
+
+     // Overriding equals and hashCode methods to compare sections by their id
+     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Section section = (Section) o;
+        return Objects.equals(id, section.id); 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); 
+    }
 
 }

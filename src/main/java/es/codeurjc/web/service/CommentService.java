@@ -53,8 +53,6 @@ public class CommentService {
         
         commentRepository.save(comment);
         
-        // El rating va bien a la segunda vez que se ejecuta, por que al ejecutarse por primera vez, detecta que el post no tiene comentarios y le asigna un rating de 0
-
         // Calculates the rating of the post 
         postService.setAverageRatingPost(postToComment.getId());
         //Calculates the rating of the owner

@@ -50,8 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                             </div>
                                         </div>
                                         <div class="down-content">
-                                            <h4 style="text-align: center;">${item.title}</h4>
+                                            <h4 style="text-align: center;">${item.title}<br><span><i class="fa fa-star" style="color: yellow;"></i>${item.averageRating}</span></h4>
                                             <p style="text-align: center;">${item.description}</p>
+
                                         </div>
                                     </div>
                                 </div>

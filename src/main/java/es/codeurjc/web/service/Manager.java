@@ -29,7 +29,7 @@ public class Manager {
     public void init() {
 
         // Default user 
-        User mainUser = new User("mainUser", "1234", "mainUser@gmail.com");
+        User mainUser = new User("Admin", "1234", "Admin@gmail.com");
         // Other users
         User user2 = new User("user2", "Pass2", "user2@gmail.com");
         User user3 = new User("user3", "Pass3", "user3@gmail.com");
@@ -44,6 +44,7 @@ public class Manager {
         user4.setUserImage(localImageToBlob("images/users/image-4.jpeg"));
         user5.setUserImage(localImageToBlob("images/users/image-5.jpeg"));
         user6.setUserImage(localImageToBlob("images/users/image-6.jpeg"));
+        user7.setUserImage(localImageToBlob("images/users/image-7.jpeg"));
 
         mainUser.setImage("/api/users/1/image");
         user2.setImage("/api/users/2/image");
@@ -51,6 +52,7 @@ public class Manager {
         user4.setImage("/api/users/4/image");
         user5.setImage("/api/users/5/image");
         user6.setImage("/api/users/6/image");
+        user7.setImage("/api/users/7/image");
 
 
         // Some examples of posts and comments
@@ -92,6 +94,28 @@ public class Manager {
         defaultSection3.setImageFile(localImageToBlob("images/sections/image-3.jpeg"));
         defaultSection4.setImageFile(localImageToBlob("images/sections/image-4.jpeg"));
         defaultSection5.setImageFile(localImageToBlob("images/sections/image-5.jpeg"));
+        defaultSection6.setImageFile(localImageToBlob("images/sections/image-6.jpeg"));
+        defaultSection7.setImageFile(localImageToBlob("images/sections/image-7.jpeg"));
+        defaultSection8.setImageFile(localImageToBlob("images/sections/image-8.jpeg"));
+        defaultSection9.setImageFile(localImageToBlob("images/sections/image-9.jpeg"));
+        defaultSection10.setImageFile(localImageToBlob("images/sections/image-10.jpeg"));
+        defaultSection11.setImageFile(localImageToBlob("images/sections/image-11.jpeg"));
+
+        // No tiene sentido que las valoraciones sean hasta 20, si lo unico que controlan los usuarios para valorar son los comentarios y van del 0 al 5.
+        // En todo caso se podria añadir comentarios por defecto con cierta valoracion
+        /* 
+        defaultSection1.setAverageRating(10);
+        defaultSection2.setAverageRating(9);
+        defaultSection3.setAverageRating(8);
+        defaultSection4.setAverageRating(7);
+        defaultSection5.setAverageRating(20);
+        defaultSection6.setAverageRating(5);
+        defaultSection7.setAverageRating(4);
+        defaultSection8.setAverageRating(3);
+        defaultSection9.setAverageRating(2);
+        defaultSection10.setAverageRating(1);
+        defaultSection11.setAverageRating(0);
+        */
                  
         userService.save(mainUser);
         userService.save(user2);
@@ -110,6 +134,16 @@ public class Manager {
         post7.setImageFile(localImageToBlob("images/posts/image-6.jpeg"));
         post8.setImageFile(localImageToBlob("images/posts/image-7.jpeg"));
         post9.setImageFile(localImageToBlob("images/posts/image-8.jpeg"));
+    
+        post1.setImage("/api/posts/1/image");
+        post2.setImage("/api/posts/2/image");
+        post3.setImage("/api/posts/3/image");
+        post4.setImage("/api/posts/4/image");
+        post5.setImage("/api/posts/5/image");
+        post6.setImage("/api/posts/6/image");
+        post7.setImage("/api/posts/7/image");
+        post8.setImage("/api/posts/8/image");
+        post9.setImage("/api/posts/9/image");
 
         postService.saveOtherUsersPost(post1, mainUser);
         postService.saveOtherUsersPost(post2, mainUser);

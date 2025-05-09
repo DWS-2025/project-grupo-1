@@ -48,7 +48,7 @@ public class UserController {
 
         } else {
             User user = new User();
-            user.setName("Invitado");
+            user.setUserName("Invitado");
             model.addAttribute("user", user);
             model.addAttribute("session", false);
         }

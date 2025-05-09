@@ -103,22 +103,8 @@ public class SectionService {
         return sectionRepository.findAll(sort);
     }
     
-    public Collection<SectionDTO> getOrderSections (String orderBy){
-        Sort sort;
-
-        switch (orderBy) {
-            case "title":
-                sort = Sort.by(Sort.Direction.ASC, "title");
-                break;
-            
-            case "rating":
-                sort = Sort.by(Sort.Direction.DESC, "averageRating");
-                break;
-
-            default:
-                sort = Sort.unsorted();
-        }
-        return toDTOs(sectionRepository.findAll(sort));
+    public Collection<SectionDTO> getAllSections(){
+        return toDTOs(sectionRepository.findAll());
     }
 
     protected void saveSection(Section section) {
@@ -304,6 +290,14 @@ public class SectionService {
 
     public SectionDTO getSection (Long id) {
         return toDTO(sectionRepository.findById(id).orElseThrow());
+    }
+
+    public Collection<SectionDTO> getSectionByTitltesASC() {
+        return toDTOs(sectionRepository.findSectionByTitleASC());
+    }
+
+    public Collection<SectionDTO> getSectionByAverageRatingDESC(){
+        return toDTOs(sectionRepository.findSectionByAverageRatingDESC());
     }
 
 }
