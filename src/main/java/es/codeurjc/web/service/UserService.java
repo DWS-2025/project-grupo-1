@@ -272,7 +272,7 @@ public class UserService {
 
         user.followSection(section);
         userRepository.save(user);
-        sectionService.saveSection(section);
+        
 
         return sectionDTO;
     }
@@ -283,7 +283,7 @@ public class UserService {
 
         user.unfollowSection(section);
         userRepository.save(user);
-        sectionService.saveSection(section);
+      
 
         return sectionDTO;
     }

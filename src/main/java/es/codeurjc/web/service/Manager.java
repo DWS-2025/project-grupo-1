@@ -185,11 +185,14 @@ public class Manager {
 
         defaultSection5.addPost(post8);
 
+        defaultSection6.addPost(post9);
+
         sectionService.saveSection(defaultSection1);
         sectionService.saveSection(defaultSection2);
         sectionService.saveSection(defaultSection3);
         sectionService.saveSection(defaultSection4);
         sectionService.saveSection(defaultSection5);
+        sectionService.saveSection(defaultSection6);
 
         // Follow users
         mainUser.follow(user2);
