@@ -94,6 +94,7 @@ public class PostController {
                 post.addContributor(user);
             }
         }
+
         postService.save(post, newImage);
         return "redirect:/post";
     }
@@ -206,22 +207,6 @@ public class PostController {
         } else {
             model.addAttribute("message", "No se ha encontrado un post con ese nombre");
             return "error";
-        }
-    }
-
-    @GetMapping("/post/{postId}/image")
-    public ResponseEntity<Object> downloadPostImage(@PathVariable long postId) throws SQLException {
-        Optional<Post> op = postService.findById(postId);
-        
-        if (op.isPresent() && op.get().getImageFile() != null) {
-            Blob image = op.get().getImageFile();
-            Resource file = new InputStreamResource(image.getBinaryStream());
-
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
-        
-        } else {
-            return ResponseEntity.notFound().build();
-
         }
     }
 
