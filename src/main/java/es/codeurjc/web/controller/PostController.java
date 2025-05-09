@@ -119,6 +119,21 @@ public class PostController {
         }
     }
 
+    @GetMapping("/post/{id}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+        Optional<Post> op = postService.findById(id);
+
+
+        if (op.isPresent() && op.get().getImageFile() != null) {
+            Blob image = op.get().getImageFile();
+            Resource file = new InputStreamResource(image.getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @GetMapping("/post/{id}/edit")
     public String updatePost(Model model, @PathVariable long id) {

@@ -78,6 +78,7 @@ public class PostService {
 
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+            post.setImage("/api/posts/" + post.getId() + "/image");
         }
 
         return save(post);
