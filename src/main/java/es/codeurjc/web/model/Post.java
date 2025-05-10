@@ -84,10 +84,6 @@ public class Post {
 
     }
 
-    public void addContributor(UserDTO userDTO) {
-        
-    }
-
     public long getId() {
         return this.id;
     }

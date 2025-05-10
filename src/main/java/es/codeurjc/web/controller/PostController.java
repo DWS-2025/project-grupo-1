@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
+import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Post;
@@ -83,19 +84,14 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
+    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
         
-        postService.addSections(post, sectionIds);
+        postService.addSections(createPostDTO, sectionIds);
         
         String[] contributorsArray = newContributors.split(",");
-        for (String colaborator : contributorsArray) {
-            UserDTO user = userService.findByUserName(colaborator);
-            if (user != null) {
-                post.addContributor(user);
-            }
-        }
+        postService.addContributors(createPostDTO, contributorsArray);
 
-        postService.save(post, newImage);
+        postService.save(createPostDTO, newImage);
         return "redirect:/post";
     }
 
@@ -182,19 +178,10 @@ public class PostController {
     public String updatePost(Model model, @PathVariable long id, @RequestParam String title, @RequestParam String content,
             @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
-        Optional<Post> op = postService.findById(id);
 
-        if (op.isPresent()) {
-
-
-
-            postService.updatePost(op.get(), title, content, newSectionIds, newContributorsStrings.split(","), newImage);
+            postService.updatePost(id, title, content, newSectionIds, newContributorsStrings.split(","), newImage);
             return "redirect:/post/" + id;
 
-        } else {
-            model.addAttribute("message", "No se ha encontrado un post con ese nombre");
-            return "error";
-        }
     }
 
     @PostMapping("/post/{id}/delete")
