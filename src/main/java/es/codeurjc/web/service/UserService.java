@@ -267,7 +267,7 @@ public class UserService {
     }
 
     public SectionDTO followSection(UserDTO userDTO, SectionDTO sectionDTO) {
-        User user = toDomain(userDTO);
+        User user = userRepository.findById(userDTO.id()).orElseThrow();
         Section section = sectionService.toDomain(sectionDTO);
 
         user.followSection(section);
@@ -278,7 +278,7 @@ public class UserService {
     }
 
     public SectionDTO unfollowSection(UserDTO userDTO, SectionDTO sectionDTO) {
-        User user = toDomain(userDTO);
+       User user = userRepository.findById(userDTO.id()).orElseThrow();
         Section section = sectionService.toDomain(sectionDTO);
 
         user.unfollowSection(section);
