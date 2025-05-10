@@ -123,6 +123,10 @@ public class UserService {
         return toDTO(userRepository.findByUserName(userName));
     }
 
+    public UserBasicDTO findByUserNameBasicDTO(String userName) {
+        return toBasicDTO(userRepository.findByUserName(userName));
+    }
+
     public Boolean isLogged(UserDTO userDTO) {
         User user = toDomain(userDTO);
         return userRepository.findAll().get(0).equals(user);

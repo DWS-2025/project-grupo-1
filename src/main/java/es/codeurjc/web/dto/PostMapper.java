@@ -16,7 +16,9 @@ public interface PostMapper {
 
     CreatePostDTO toCreatePostDTO(Post post);
 
-    Post toDomain(PostDTO postDTO); 
+    Post toDomain(PostDTO postDTO);
+
+    Post toDomain(CreatePostDTO postDTO);
 
     Collection<PostDTO> toDTOs(Collection<Post> posts); 
 
