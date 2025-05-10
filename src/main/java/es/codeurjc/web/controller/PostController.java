@@ -31,7 +31,6 @@ import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
-import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
@@ -90,32 +89,10 @@ public class PostController {
         
         String[] contributorsArray = newContributors.split(",");
         postService.addContributors(createPostDTO, contributorsArray);
-
         postService.save(createPostDTO, newImage);
         return "redirect:/post";
     }
     
-    // sanitize the input (commented to avoid problems with merge)
-    /*
-     *  @PostMapping("/post/new")
-    public String createPost(Model model, Post post, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
-        
-        postService.addSections(post, sectionIds);
-        
-        String[] contributorsArray = newContributors.split(",");
-        for (String colaborator : contributorsArray) {
-            UserDTO user = userService.findByUserName(colaborator);
-            if (user != null) {
-                post.addContributor(user);
-            }
-        }
-
-        post.setContent(postService.sanitizeContent(post.getContent()));    
-
-        postService.save(post, newImage);
-        return "redirect:/post";
-    }
-     */
 
     @GetMapping("/post/{id}")
     public String viewPost(Model model, @PathVariable long id) {//, @RequestParam(defaultValue = "0") int page) {

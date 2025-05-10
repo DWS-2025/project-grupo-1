@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -23,15 +25,12 @@ import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserBasicDTO;
-import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
 
 @Service
 public class PostService {
@@ -83,7 +82,8 @@ public class PostService {
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
         return save(post);
 
     }
@@ -101,6 +101,8 @@ public class PostService {
         User currentUser = userMapper.toDomain(userService.getLoggedUser());
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
 
         List<Section> sections = post.getSections();
         for (Section section : sections) {
@@ -133,6 +135,8 @@ public class PostService {
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
         post.setOwnerName(user.getUserName());
+        post.setTitle(sanitizeHtml(post.getTitle()));
+        post.setContent(sanitizeHtml(post.getContent()));
         postRepository.save(post);
     }
 
@@ -168,8 +172,8 @@ public class PostService {
         
         Post oldPost = oldPostOptional.get();
 
-        oldPost.setTitle(newTitle);
-        oldPost.setContent(newContent);
+        oldPost.setTitle(sanitizeHtml(newTitle));
+        oldPost.setContent(sanitizeHtml(newContent));
 
         oldPost.getSections().clear();
 
@@ -188,8 +192,8 @@ public class PostService {
     }
 
     public Post updatePost(Post oldPost, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        oldPost.setTitle(newPost.getTitle());
-        oldPost.setContent(newPost.getContent());
+        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+        oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
         oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
