@@ -29,6 +29,8 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 
 @Service
 public class PostService {
@@ -282,6 +284,10 @@ public class PostService {
 
         postRepository.save(post);
     }
+    public String sanitizeHtml(String htmlContent) {
+    // Use a predefined safelist to allow only basic HTML tags
+    return Jsoup.clean(htmlContent, Safelist.basic());
+}
 
     public void deletePostImage(long id) {
 
