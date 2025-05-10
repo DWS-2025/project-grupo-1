@@ -1,71 +1,89 @@
 {{>Common/header}}
+
+<!-- Include Quill.js styles and scripts -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<link href="/assets/css/cssCustom.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+
+
 {{>Common/top_container}}
 
 {{#isEditing}}
 <h2>Edit post</h2>
-<!-- Form to edit a post-->
+<!-- Form to edit an existing post -->
 <form action="/post/{{post.id}}/edit" method="post" enctype="multipart/form-data">
 {{/isEditing}}
 {{^isEditing}}
 <h2>Create post</h2>
-<!-- Form to create a new post-->
+<!-- Form to create a new post -->
 <form action="/post/new" method="post" enctype="multipart/form-data">
-  {{/isEditing}}
+{{/isEditing}}
 
-  <div class="form-group">
-    <label for="title">Título:</label>
-    <input type="text" class="form-control" id="title" name="title" value="{{#isEditing}}{{title}}{{/isEditing}}"
-      required />
-  </div>
+<!-- Title input -->
+<div class="form-group">
+  <label for="title">Title:</label>
+  <input type="text" class="form-control" id="title" name="title" value="{{#isEditing}}{{title}}{{/isEditing}}" required />
+</div>
 
-  <div class="form-group">
-    <label for="content">Contenido:</label>
-    <textarea class="form-control" id="content" name="content" rows="10"
-      required>{{#isEditing}}{{content}}{{/isEditing}}</textarea>
-  </div>
+<!-- Content input with Quill.js -->
+<div class="form-group">
+  <label for="content">Content:</label>
+  <!-- Div for the rich text editor -->
+  <div id="editor-container">{{#isEditing}}{{content}}{{/isEditing}}</div>
+  <!-- Hidden input to send the HTML content to the server -->
+  <input type="hidden" id="content" name="content">
+</div>
 
-  <div class="form-group">
-    <label for="contributors">Colaboradores:</label>
-    <br />
-    <em>Nota: Escriba el nombre de usuario de los colaboradores
-      separados por comas</em>
-    <input type="text" class="form-control" id="newContributors" name="newContributors" value="{{#isEditing}}{{contributors}}{{/isEditing}}" />
-  </div>
+<!-- Contributors input -->
+<div class="form-group">
+  <label for="contributors">Contributors:</label>
+  <br />
+  <em>Note: Enter the usernames of contributors separated by commas</em>
+  <input type="text" class="form-control" id="newContributors" name="newContributors" value="{{#isEditing}}{{contributors}}{{/isEditing}}" />
+</div>
 
-  <!-- <div class="form-group">
-    <form onsubmit="event.preventDefault();" role="search">
-      <label for="search">Search for stuff</label>
-      <input id="search" type="search" placeholder="Search..." autofocus required />
-      <button type="submit">Go</button>    
-    </form>
-  </div> -->
+<!-- Image upload input -->
+<div class="form-group">
+  <label for="postImage">Cover image:</label>
+  <input type="file" id="newImage" name="newImage" />
+</div>
 
-  <div class="form-group">
-    <label for="postImage">Imagen para la carátula:</label>
-    <input type="file" id="newImage" name="newImage" />
-  </div>
-
-  <p class="checkbox-select">Selecciona categorías</p>
-
-  <div class="form-group">
-
-    <div class="options-container" id="optionsContainer">
-
-      {{#sections}}
-      <div class="option">
-        <label><input type="checkbox" value="{{id}}" name="sections" {{#selected}} checked {{/selected}} />{{title}}</label>
-      </div>
-      {{/sections}}
-
+<!-- Categories selection -->
+<p class="checkbox-select">Select categories</p>
+<div class="form-group">
+  <div class="options-container" id="optionsContainer">
+    {{#sections}}
+    <div class="option">
+      <label><input type="checkbox" value="{{id}}" name="sections" {{#selected}} checked {{/selected}} />{{title}}</label>
     </div>
-
+    {{/sections}}
   </div>
+</div>
 
-  <br>
-  <button type="submit" class="btn btn-primary">
-    Publicar
-  </button>
+<!-- Submit button -->
+<br>
+<button type="submit" class="btn btn-primary">
+  Publish
+</button>
 
 </form>
 {{>Common/bottom_container}}
+
+<script>
+  // Initialize Quill.js
+  var quill = new Quill('#editor-container', {
+    theme: 'snow'
+  });
+
+  // If editing, load the existing content into the editor
+  var existingContent = document.querySelector('#editor-container').innerHTML;
+  quill.root.innerHTML = existingContent;
+
+  // On form submission, copy the editor's content to the hidden input
+  document.querySelector('form').onsubmit = function() {
+    document.querySelector('#content').value = quill.root.innerHTML;
+  };
+</script>
+
 {{>Common/footer}}
