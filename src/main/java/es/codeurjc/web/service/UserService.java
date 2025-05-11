@@ -1,5 +1,7 @@
 package es.codeurjc.web.service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -16,6 +18,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +31,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class UserService {
@@ -46,6 +51,18 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
+    private static final String BASE_DIRECTORY = System.getProperty("user.dir");
+    private static final String CV_DIRECTORY = "/uploads/cvs/";
+
+    @PostConstruct
+    public void init() {
+        // Create the directory if it doesn't exist
+        File directory = new File(CV_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+    }
+
     /*
      * private User loggedUser; THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT
      * 
@@ -58,11 +75,10 @@ public class UserService {
      * return loggedUser;
      * }
      */
-
     public UserDTO getLoggedUser() {
         return toDTO(userRepository.findByUserName("Admin"));
     }
-    
+
     public User getLoggedUserDomain() {
         return userRepository.findByUserName("Admin");
     }
@@ -107,6 +123,8 @@ public class UserService {
         this.save(user);
     }
 
+  
+
     public UserDTO getUserById(long id) {
         return toDTO(userRepository.findById(id).get());
     }
@@ -143,42 +161,41 @@ public class UserService {
 
     public UserDTO deleteUser(UserDTO userDTO) {
 
-    User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
-    long id = userToDelete.getId();
-    // Check if the user is the admin (id = 1)
-    // If the user is the admin, do not delete it
-    if (id != 1) {
-       
-        if (userToDelete.getPosts() != null) {
-            List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
-            for (Post post : postsCopy) {
-                postService.deletePost(post);
-            }
-        }
-    
-        if (userToDelete.getCollaboratedPosts() != null) {
-            for (Post post : userToDelete.getCollaboratedPosts()) {
-                post.getContributors().remove(userToDelete);
-                postService.saveForInit(post);
-            }
-        }
-        if (userToDelete.getFollowers() != null) {
-            for (User follower : userToDelete.getFollowers()) {
-                follower.getFollowings().remove(userToDelete);
-                userRepository.save(follower);
-            }
-        }
-        if (userToDelete.getFollowings() != null) {
-            for (User following : userToDelete.getFollowings()) {
-                following.getFollowers().remove(userToDelete);
-                userRepository.save(following);
-            }
-        }
-    }
-    userRepository.deleteById(id);
-    return toDTO(userToDelete);
-}
+        User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
+        long id = userToDelete.getId();
+        // Check if the user is the admin (id = 1)
+        // If the user is the admin, do not delete it
+        if (id != 1) {
 
+            if (userToDelete.getPosts() != null) {
+                List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
+                for (Post post : postsCopy) {
+                    postService.deletePost(post);
+                }
+            }
+
+            if (userToDelete.getCollaboratedPosts() != null) {
+                for (Post post : userToDelete.getCollaboratedPosts()) {
+                    post.getContributors().remove(userToDelete);
+                    postService.saveForInit(post);
+                }
+            }
+            if (userToDelete.getFollowers() != null) {
+                for (User follower : userToDelete.getFollowers()) {
+                    follower.getFollowings().remove(userToDelete);
+                    userRepository.save(follower);
+                }
+            }
+            if (userToDelete.getFollowings() != null) {
+                for (User following : userToDelete.getFollowings()) {
+                    following.getFollowers().remove(userToDelete);
+                    userRepository.save(following);
+                }
+            }
+        }
+        userRepository.deleteById(id);
+        return toDTO(userToDelete);
+    }
 
     public UserDTO updateUser(long id, UserDTO updatedUserDTO) throws SQLException {
         User oldUser = userRepository.findById(id).orElseThrow();
@@ -276,18 +293,16 @@ public class UserService {
 
         user.followSection(section);
         userRepository.save(user);
-        
 
         return sectionDTO;
     }
 
     public SectionDTO unfollowSection(UserDTO userDTO, SectionDTO sectionDTO) {
-       User user = userRepository.findById(userDTO.id()).orElseThrow();
+        User user = userRepository.findById(userDTO.id()).orElseThrow();
         Section section = sectionService.toDomain(sectionDTO);
 
         user.unfollowSection(section);
         userRepository.save(user);
-      
 
         return sectionDTO;
     }
@@ -324,6 +339,36 @@ public class UserService {
         }
         user.setUserImage(null);
         user.setImage(null);
+        userRepository.save(user);
+    }
+
+    public ResponseEntity<Resource> downloadCV(long id) throws IOException{
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+                
+
+        if (user.getCvFilePath() == null) {
+            throw new NoSuchElementException("CV not found for this user");
+        }
+
+        File file = new File(BASE_DIRECTORY + user.getCvFilePath());
+        Resource resource = new InputStreamResource(new FileInputStream(file));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .body(resource);
+    }
+      public void uploadCv(Long userId, MultipartFile file) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        // Save the file with its original name in the CV directory
+        String filePath =  BASE_DIRECTORY +  CV_DIRECTORY + file.getOriginalFilename();
+        File destinationFile = new File(filePath);
+        file.transferTo(destinationFile);
+
+        // Update the user's CV file path
+        user.setCvFilePath(CV_DIRECTORY + file.getOriginalFilename());
         userRepository.save(user);
     }
 }

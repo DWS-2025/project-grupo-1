@@ -6,6 +6,7 @@ public record UserDTO(
         Long id,
         String userName,
         String description,
+        String cvFilePath,
         String email,
         String image,
         List<PostBasicDTO> posts,
