@@ -123,8 +123,6 @@ public class UserService {
         this.save(user);
     }
 
-  
-
     public UserDTO getUserById(long id) {
         return toDTO(userRepository.findById(id).get());
     }
@@ -234,16 +232,16 @@ public class UserService {
     }
 
     public void unfollowUser(UserDTO userToUnfollowDTO) {
-        User userToUnfollow = toDomain(userToUnfollowDTO);
-        User loggedUser = toDomain(this.getLoggedUser());
+        User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
+        User loggedUser = getLoggedUserDomain();
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
 
     public void followUser(UserDTO userToFollowDTO) {
-        User userToFollow = toDomain(userToFollowDTO);
-        User loggedUser = toDomain(this.getLoggedUser());
+        User userToFollow = userRepository.findById(userToFollowDTO.id()).orElseThrow();
+        User loggedUser = getLoggedUserDomain();
         loggedUser.follow(userToFollow);
         userRepository.save(loggedUser);
         userRepository.save(userToFollow);
@@ -342,10 +340,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ResponseEntity<Resource> downloadCV(long id) throws IOException{
+    public ResponseEntity<Resource> downloadCV(long id) throws IOException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
-                
 
         if (user.getCvFilePath() == null) {
             throw new NoSuchElementException("CV not found for this user");
@@ -358,17 +355,28 @@ public class UserService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .body(resource);
     }
-      public void uploadCv(Long userId, MultipartFile file) throws IOException {
+
+    public void uploadCv(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         // Save the file with its original name in the CV directory
-        String filePath =  BASE_DIRECTORY +  CV_DIRECTORY + file.getOriginalFilename();
+        String filePath = BASE_DIRECTORY + CV_DIRECTORY + file.getOriginalFilename();
         File destinationFile = new File(filePath);
         file.transferTo(destinationFile);
 
         // Update the user's CV file path
         user.setCvFilePath(CV_DIRECTORY + file.getOriginalFilename());
         userRepository.save(user);
+    }
+
+    public boolean checkIfTheUserIsFollowed(UserDTO userToCheck) {
+        User user = getLoggedUserDomain();
+        User userToCheckDomain = userRepository.findById(userToCheck.id()).orElseThrow();
+        if (user.getFollowings().contains(userToCheckDomain)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -152,7 +152,7 @@ public class UserController {
             else{
                 model.addAttribute("notSameUser", false);
             }
-            if (userService.getLoggedUser().followings().contains(user)) {
+            if (userService.checkIfTheUserIsFollowed(user)) {
                 model.addAttribute("followed", true);
             }
             if (user.equals(userService.getLoggedUser())) {
