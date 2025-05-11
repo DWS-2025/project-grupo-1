@@ -341,32 +341,70 @@ public class UserService {
     }
 
     public ResponseEntity<Resource> downloadCV(long id) throws IOException {
+        // Find the user by ID or throw an exception if not found
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
+        // Check if the user has a CV file path
         if (user.getCvFilePath() == null) {
             throw new NoSuchElementException("CV not found for this user");
         }
 
-        File file = new File(BASE_DIRECTORY + user.getCvFilePath());
+        // Build the file path using the base directory and the relative path from the database
+        File file = new File(BASE_DIRECTORY, user.getCvFilePath());
+
+        // Canonicalize the file path and verify it is within the allowed directory
+        String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
+        String fileCanonicalPath = file.getCanonicalPath();
+        System.out.println("Expected base path: " + expectedBasePath);
+        System.out.println("File canonical path: " + fileCanonicalPath);
+
+        if (!fileCanonicalPath.startsWith(expectedBasePath)) {
+            throw new SecurityException("Invalid file path detected");
+        }
+
+        // Check if the file exists
+        if (!file.exists()) {
+            throw new NoSuchElementException("CV file not found at: " + fileCanonicalPath);
+        }
+
+        // Create a resource for the file
         Resource resource = new InputStreamResource(new FileInputStream(file));
 
+        // Return the file as a downloadable response
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .body(resource);
     }
 
     public void uploadCv(Long userId, MultipartFile file) throws IOException {
+        // Find the user by ID or throw an exception if not found
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        // Save the file with its original name in the CV directory
-        String filePath = BASE_DIRECTORY + CV_DIRECTORY + file.getOriginalFilename();
-        File destinationFile = new File(filePath);
+        // Sanitize the file name to remove any potentially dangerous characters
+        String sanitizedFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-\\_\\(\\)]", "_");
+        // Build the file path using the base directory and the sanitized file name
+        File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, sanitizedFileName);
+
+        // Canonicalize the expected base path
+        String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
+        System.out.println("Expected base path: " + expectedBasePath);
+        System.out.println("Destination file canonical path: " + destinationFile.getCanonicalPath());
+
+        // Verify that the canonical path of the destination file starts with the expected base path
+        if (!destinationFile.getCanonicalPath().startsWith(expectedBasePath)) {
+            throw new SecurityException("Invalid file path detected");
+        }
+
+        // Create the directories if they do not exist
+        destinationFile.getParentFile().mkdirs();
+
+        // Save the file to the destination
         file.transferTo(destinationFile);
 
-        // Update the user's CV file path
-        user.setCvFilePath(CV_DIRECTORY + file.getOriginalFilename());
+        // Save only the relative path of the file in the database
+        user.setCvFilePath(CV_DIRECTORY + sanitizedFileName);
         userRepository.save(user);
     }
 
