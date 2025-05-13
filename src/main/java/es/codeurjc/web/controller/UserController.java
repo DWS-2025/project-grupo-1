@@ -3,6 +3,7 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -38,7 +39,8 @@ public class UserController {
 
     private static final String USERS_FOLDER = "users";
 
-    @GetMapping({ "/home", "/" }) /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
+    @GetMapping({"/home", "/"})
+    /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
     public String index(Model model) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -86,7 +88,7 @@ public class UserController {
     public String login(Model model, @RequestParam String userName, @RequestParam String password/*
                                                                                                   * , HttpSession
                                                                                                   * session
-                                                                                                  */) {
+     */) {
         UserDTO logingUser = userService.findByUserName(userName);
         // this needs to be moved to the service layer
         /*
@@ -95,7 +97,7 @@ public class UserController {
          * return "/login";
          * }
          */
-        /* userService.setLoggedUser(session, logingUser); */
+ /* userService.setLoggedUser(session, logingUser); */
         return "redirect:/";
     }
 
@@ -144,10 +146,13 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("id", user.id());
 
-            if (user != userService.getLoggedUser()) {
+            if (!Objects.equals(user.id(), userService.getLoggedUser().id())) {
                 model.addAttribute("notSameUser", true);
             }
-            if (userService.getLoggedUser().followings().contains(user)) {
+            else{
+                model.addAttribute("notSameUser", false);
+            }
+            if (userService.checkIfTheUserIsFollowed(user)) {
                 model.addAttribute("followed", true);
             }
             if (user.equals(userService.getLoggedUser())) {
@@ -185,21 +190,20 @@ public class UserController {
         return "redirect:/profile/" + user.id();
     }
 
-    
     @GetMapping("/user/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
-    UserDTO userDTO = userService.findById(id);
-    
-    if (userDTO != null) {
-    Blob image = userService.getImage(id);
-    Resource file = new InputStreamResource(image.getBinaryStream());
-    
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE,"image/jpeg").contentLength(image.length()).body(file);
-    } else {
-    return ResponseEntity.notFound().build();
+        UserDTO userDTO = userService.findById(id);
+
+        if (userDTO != null) {
+            Blob image = userService.getImage(id);
+            Resource file = new InputStreamResource(image.getBinaryStream());
+
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-    }
-    
+
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
         if (userService.findById(userId) != null) {
@@ -275,4 +279,20 @@ public class UserController {
         }
     }
 
+    @PostMapping("/users/{id}/upload-cv")
+    public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model) {
+        try {
+            userService.uploadCv(id, file);
+        } catch (IOException e) {
+            model.addAttribute("message", "Error subiendo el CV: " + e.getMessage());
+            return "error";
+        }
+        return "redirect:/profile/" + id; 
+    }
+
+    @GetMapping("users/{id}/download-cv")
+    public ResponseEntity<Resource> downloadCv(@PathVariable Long id) throws IOException {
+     return userService.downloadCV(id);
+
+}
 }

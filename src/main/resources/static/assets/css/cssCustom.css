@@ -128,3 +128,37 @@ input[type="checkbox"] {
   background-color: #fff;
   color: #ff0000;
 }
+
+
+/* White background for the editor */
+#editor-container {
+  background-color: white;
+  /* White background */
+  color: black;
+  /* Black text */
+  min-height: 200px;
+  /* Minimum height for the editor */
+  border: 1px solid #ccc;
+  /* Border for better visibility */
+  padding: 10px;
+  /* Internal padding */
+}
+
+/* White background for the toolbar */
+.ql-toolbar {
+  background-color: white;
+  /* White background */
+  border: 1px solid #ccc;
+  /* Border for better visibility */
+}
+
+/* Black color for toolbar icons and buttons */
+.ql-toolbar button {
+  color: black;
+}
+
+/* Black color for selected text in the editor */
+.ql-editor {
+  color: black;
+  /* Black text */
+}

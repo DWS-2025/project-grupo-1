@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -22,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
-import es.codeurjc.web.dto.UserDTO;
+import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -47,6 +49,7 @@ public class PostService {
 
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     PostMapper postMapper;
 
@@ -79,7 +82,8 @@ public class PostService {
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
-
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
         return save(post);
 
     }
@@ -89,7 +93,7 @@ public class PostService {
     }
 
     public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile) throws IOException {
-        return toDTO(save(toDomain(toDTO(postDTO)), imagFile));
+        return toDTO(save(toDomain(postDTO), imagFile));
     }
 
     public Post save(Post post) { // Swapped from Post to void
@@ -97,6 +101,8 @@ public class PostService {
         User currentUser = userMapper.toDomain(userService.getLoggedUser());
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
 
         List<Section> sections = post.getSections();
         for (Section section : sections) {
@@ -107,6 +113,10 @@ public class PostService {
         for (User contributor : contributors) {
             contributor.addCollaboratedPosts(post);
         }
+
+        post = postRepository.save(post);
+
+        post.setImage("/api/posts/" + post.getId() + "/image");
 
         postRepository.save(post);
 
@@ -125,6 +135,8 @@ public class PostService {
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
         post.setOwnerName(user.getUserName());
+        post.setTitle(sanitizeHtml(post.getTitle()));
+        post.setContent(sanitizeHtml(post.getContent()));
         postRepository.save(post);
     }
 
@@ -152,14 +164,21 @@ public class PostService {
         deletePost(toDomain(postDTO));
     }
 
-    public Post updatePost(Post oldPost, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        oldPost.setTitle(newTitle);
-        oldPost.setContent(newContent);
+    public CreatePostDTO updatePost(Long oldPostId, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        Optional<Post> oldPostOptional = postRepository.findById(oldPostId);
+        if (!oldPostOptional.isPresent()) {
+            throw new NoSuchElementException("Post not found");
+        }
+        
+        Post oldPost = oldPostOptional.get();
+
+        oldPost.setTitle(sanitizeHtml(newTitle));
+        oldPost.setContent(sanitizeHtml(newContent));
 
         oldPost.getSections().clear();
 
         oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
-        addSections(oldPost, newSectionIds);
+        addSections(toCreatePostDTO(oldPost), newSectionIds);
 
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
 
@@ -169,12 +188,12 @@ public class PostService {
 
         postRepository.save(oldPost);
 
-        return oldPost;
+        return toCreatePostDTO(oldPost);
     }
 
     public Post updatePost(Post oldPost, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        oldPost.setTitle(newPost.getTitle());
-        oldPost.setContent(newPost.getContent());
+        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+        oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
         oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
@@ -204,20 +223,29 @@ public class PostService {
 
     }
 
-    public void addSections(Post post, List<Long> sectionIds) {
+    public void addSections(CreatePostDTO postDTO, List<Long> sectionIds) {
         if (!sectionIds.isEmpty()) {
+            Post post = toDomain(postDTO);
             for (long sectionId : sectionIds) {
                 post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));
             }
+            postDTO = toCreatePostDTO(post);
         }
     }
 
-    public void addContributors(Post post, String[] contributorNames) {
-        UserDTO user;
+    public CreatePostDTO addContributor(CreatePostDTO createPostDTO, UserBasicDTO userBasicDTO) {
+        Post post = toDomain(createPostDTO);
+        User user = userMapper.toBasicDomain(userBasicDTO);
+        post.addContributor(user);
+        return toCreatePostDTO(post);
+    }
+
+    public void addContributors(CreatePostDTO createPostDTO, String[] contributorNames) {
+        UserBasicDTO userBasicDTO;
         for (String colaborator : contributorNames) {
-            user = userService.findByUserName(colaborator);
-            if (user != null) {
-                post.addContributor(user);
+            userBasicDTO = userService.findByUserNameBasicDTO(colaborator);
+            if (userBasicDTO != null) {
+                createPostDTO = addContributor(createPostDTO, userBasicDTO);
             }
         }
     }
@@ -281,6 +309,10 @@ public class PostService {
 
         postRepository.save(post);
     }
+    public String sanitizeHtml(String htmlContent) {
+    // Use a predefined safelist to allow only basic HTML tags
+    return Jsoup.clean(htmlContent, Safelist.basic());
+}
 
     public void deletePostImage(long id) {
 
@@ -304,15 +336,15 @@ public class PostService {
         return postMapper.toDTO(post);
     }
 
-    private PostDTO toDTO(CreatePostDTO postDTO) {
-        return postMapper.toDTO(postDTO);
-    }
-
     private CreatePostDTO toCreatePostDTO(Post post) {
         return postMapper.toCreatePostDTO(post);
     }
 
     private Post toDomain(PostDTO postDTO) {
+        return postMapper.toDomain(postDTO);
+    }
+
+    private Post toDomain(CreatePostDTO postDTO) {
         return postMapper.toDomain(postDTO);
     }
 

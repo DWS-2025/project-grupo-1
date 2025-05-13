@@ -40,6 +40,8 @@ public class User {
     @ManyToMany(mappedBy = "contributors")
     private List<Post> collaboratedPosts;
 
+    private String cvFilePath;
+
     // Constructor with the information that the user provides when registering
     public User(String userName, String password, String email) {
         this.userName = userName;
@@ -190,6 +192,13 @@ public class User {
 
     public void addCollaboratedPosts(Post collaboratedPost) {
         this.collaboratedPosts.add(collaboratedPost);
+    }
+    public String getCvFilePath() {
+        return cvFilePath;
+    }
+
+    public void setCvFilePath(String cvFilePath) {
+        this.cvFilePath = cvFilePath;
     }
 
     public void calculateUserRate() {

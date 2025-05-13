@@ -1,5 +1,7 @@
 package es.codeurjc.web.service;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -16,6 +18,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +31,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class UserService {
@@ -46,6 +51,18 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
+    private static final String BASE_DIRECTORY = System.getProperty("user.dir");
+    private static final String CV_DIRECTORY = "/uploads/cvs/";
+
+    @PostConstruct
+    public void init() {
+        // Create the directory if it doesn't exist
+        File directory = new File(CV_DIRECTORY);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+    }
+
     /*
      * private User loggedUser; THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT
      * 
@@ -58,11 +75,10 @@ public class UserService {
      * return loggedUser;
      * }
      */
-
     public UserDTO getLoggedUser() {
         return toDTO(userRepository.findByUserName("Admin"));
     }
-    
+
     public User getLoggedUserDomain() {
         return userRepository.findByUserName("Admin");
     }
@@ -123,6 +139,10 @@ public class UserService {
         return toDTO(userRepository.findByUserName(userName));
     }
 
+    public UserBasicDTO findByUserNameBasicDTO(String userName) {
+        return toBasicDTO(userRepository.findByUserName(userName));
+    }
+
     public Boolean isLogged(UserDTO userDTO) {
         User user = toDomain(userDTO);
         return userRepository.findAll().get(0).equals(user);
@@ -139,62 +159,43 @@ public class UserService {
 
     public UserDTO deleteUser(UserDTO userDTO) {
 
-    User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
-    long id = userToDelete.getId();
-    // Check if the user is the admin (id = 1)
-    // If the user is the admin, do not delete it
-    if (id != 1) {
-       
-        if (userToDelete.getPosts() != null) {
-            List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
-            for (Post post : postsCopy) {
-                postService.deletePost(post);
-            }
-        }
-    
-        if (userToDelete.getCollaboratedPosts() != null) {
-            for (Post post : userToDelete.getCollaboratedPosts()) {
-                post.getContributors().remove(userToDelete);
-                postService.saveForInit(post);
-            }
-        }
-        if (userToDelete.getFollowers() != null) {
-            for (User follower : userToDelete.getFollowers()) {
-                follower.getFollowings().remove(userToDelete);
-                userRepository.save(follower);
-            }
-        }
-        if (userToDelete.getFollowings() != null) {
-            for (User following : userToDelete.getFollowings()) {
-                following.getFollowers().remove(userToDelete);
-                userRepository.save(following);
-            }
-        }
-    }
-    userRepository.deleteById(id);
-    return toDTO(userToDelete);
-}
+        User userToDelete = userRepository.findById(userDTO.id()).orElseThrow();
+        long id = userToDelete.getId();
+        // Check if the user is the admin (id = 1)
+        // If the user is the admin, do not delete it
+        if (id != 1) {
 
-    public void updateWebUser(long id, String userName, String description, MultipartFile image){
-        User user = userRepository.findById(id).orElseThrow();
-        if (userName != null && !userName.isEmpty()) {
-            user.setUserName(userName);
-        }
-        if (description != null && !description.isEmpty()) {
-            user.setDescription(description);
-        }
-        if (image != null && !image.isEmpty()) {
-            try {
-                user.setUserImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
-                user.setImage(image.getOriginalFilename());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (userToDelete.getPosts() != null) {
+                List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
+                for (Post post : postsCopy) {
+                    postService.deletePost(post);
+                }
             }
-        } 
-        userRepository.save(user);
+
+            if (userToDelete.getCollaboratedPosts() != null) {
+                for (Post post : userToDelete.getCollaboratedPosts()) {
+                    post.getContributors().remove(userToDelete);
+                    postService.saveForInit(post);
+                }
+            }
+            if (userToDelete.getFollowers() != null) {
+                for (User follower : userToDelete.getFollowers()) {
+                    follower.getFollowings().remove(userToDelete);
+                    userRepository.save(follower);
+                }
+            }
+            if (userToDelete.getFollowings() != null) {
+                for (User following : userToDelete.getFollowings()) {
+                    following.getFollowers().remove(userToDelete);
+                    userRepository.save(following);
+                }
+            }
+        }
+        userRepository.deleteById(id);
+        return toDTO(userToDelete);
     }
 
-    public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
+    public UserDTO updateUser(long id, UserDTO updatedUserDTO) throws SQLException {
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
         updatedUser.setId(id);
@@ -231,16 +232,16 @@ public class UserService {
     }
 
     public void unfollowUser(UserDTO userToUnfollowDTO) {
-        User userToUnfollow = toDomain(userToUnfollowDTO);
-        User loggedUser = toDomain(this.getLoggedUser());
+        User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
+        User loggedUser = getLoggedUserDomain();
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
 
     public void followUser(UserDTO userToFollowDTO) {
-        User userToFollow = toDomain(userToFollowDTO);
-        User loggedUser = toDomain(this.getLoggedUser());
+        User userToFollow = userRepository.findById(userToFollowDTO.id()).orElseThrow();
+        User loggedUser = getLoggedUserDomain();
         loggedUser.follow(userToFollow);
         userRepository.save(loggedUser);
         userRepository.save(userToFollow);
@@ -285,23 +286,21 @@ public class UserService {
     }
 
     public SectionDTO followSection(UserDTO userDTO, SectionDTO sectionDTO) {
-        User user = toDomain(userDTO);
+        User user = userRepository.findById(userDTO.id()).orElseThrow();
         Section section = sectionService.toDomain(sectionDTO);
 
         user.followSection(section);
         userRepository.save(user);
-        
 
         return sectionDTO;
     }
 
     public SectionDTO unfollowSection(UserDTO userDTO, SectionDTO sectionDTO) {
-        User user = toDomain(userDTO);
+        User user = userRepository.findById(userDTO.id()).orElseThrow();
         Section section = sectionService.toDomain(sectionDTO);
 
         user.unfollowSection(section);
         userRepository.save(user);
-      
 
         return sectionDTO;
     }
@@ -339,5 +338,83 @@ public class UserService {
         user.setUserImage(null);
         user.setImage(null);
         userRepository.save(user);
+    }
+
+    public ResponseEntity<Resource> downloadCV(long id) throws IOException {
+        // Find the user by ID or throw an exception if not found
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        // Check if the user has a CV file path
+        if (user.getCvFilePath() == null) {
+            throw new NoSuchElementException("CV not found for this user");
+        }
+
+        // Build the file path using the base directory and the relative path from the database
+        File file = new File(BASE_DIRECTORY, user.getCvFilePath());
+
+        // Canonicalize the file path and verify it is within the allowed directory
+        String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
+        String fileCanonicalPath = file.getCanonicalPath();
+        System.out.println("Expected base path: " + expectedBasePath);
+        System.out.println("File canonical path: " + fileCanonicalPath);
+
+        if (!fileCanonicalPath.startsWith(expectedBasePath)) {
+            throw new SecurityException("Invalid file path detected");
+        }
+
+        // Check if the file exists
+        if (!file.exists()) {
+            throw new NoSuchElementException("CV file not found at: " + fileCanonicalPath);
+        }
+
+        // Create a resource for the file
+        Resource resource = new InputStreamResource(new FileInputStream(file));
+
+        // Return the file as a downloadable response
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .body(resource);
+    }
+
+    public void uploadCv(Long userId, MultipartFile file) throws IOException {
+        // Find the user by ID or throw an exception if not found
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        // Sanitize the file name to remove any potentially dangerous characters
+        String sanitizedFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-\\_\\(\\)]", "_");
+        // Build the file path using the base directory and the sanitized file name
+        File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, sanitizedFileName);
+
+        // Canonicalize the expected base path
+        String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
+        System.out.println("Expected base path: " + expectedBasePath);
+        System.out.println("Destination file canonical path: " + destinationFile.getCanonicalPath());
+
+        // Verify that the canonical path of the destination file starts with the expected base path
+        if (!destinationFile.getCanonicalPath().startsWith(expectedBasePath)) {
+            throw new SecurityException("Invalid file path detected");
+        }
+
+        // Create the directories if they do not exist
+        destinationFile.getParentFile().mkdirs();
+
+        // Save the file to the destination
+        file.transferTo(destinationFile);
+
+        // Save only the relative path of the file in the database
+        user.setCvFilePath(CV_DIRECTORY + sanitizedFileName);
+        userRepository.save(user);
+    }
+
+    public boolean checkIfTheUserIsFollowed(UserDTO userToCheck) {
+        User user = getLoggedUserDomain();
+        User userToCheckDomain = userRepository.findById(userToCheck.id()).orElseThrow();
+        if (user.getFollowings().contains(userToCheckDomain)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
