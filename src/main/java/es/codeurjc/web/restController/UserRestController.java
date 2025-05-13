@@ -69,7 +69,8 @@ public class UserRestController {
         if (oldUser == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        return UserService.updateUser(id, newUserDTO);
+        
+        return UserService.updateApiUser(id, newUserDTO);
         
     }
 

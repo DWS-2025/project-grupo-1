@@ -180,7 +180,7 @@ public class UserController {
             model.addAttribute("message", "No se ha encontrado ese usuario");
             return "error";
         }
-        userService.updateUser(userId, user);
+        userService.updateWebUser(userId, newUserName, description, userImage);
 
         return "redirect:/profile/" + user.id();
     }
