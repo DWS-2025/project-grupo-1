@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import es.codeurjc.web.model.Section;
 
@@ -16,6 +17,29 @@ public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpec
 
     @Query("SELECT s FROM Section s ORDER BY s.averageRating DESC")
     List<Section> findSectionByAverageRatingDESC();
+
+    @Query("SELECT s FROM Section s WHERE s.averageRating >= 5")
+    List<Section> findSectionGT5();
+
+    @Query("SELECT s FROM Section s WHERE s.numberOfPublications >= 5")
+    List<Section> findSectionGT5Publications();
+
+    @Query("""
+            SELECT s FROM Section s
+            WHERE (:minPosts IS NULL OR s.numberOfPublications >= :minPosts) 
+            AND (:minRating IS NULL OR s.averageRating >= :minRating)
+
+            ORDER BY
+                CASE WHEN :orderBy = "title" THEN s.title END ASC,
+                CASE WHEN :orderBy = "averageRating" THEN s.averageRating END DESC,
+                CASE WHEN :orderBy = "numberOfPublications" THEN s.numberOfPublications END DESC
+            """)
+
+    List<Section> findFilteredSecions (
+        @Param("minPosts") int minPosts,
+        @Param("minRating") float minRating,
+        @Param("orderBy") String orderBy);
+
 
     /* 
 

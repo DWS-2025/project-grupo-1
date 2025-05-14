@@ -13,7 +13,29 @@
     </select>
     <button type="submit">Buscar</button>
   </form>
-</div>
+</div> 
+
+<form method="get" action="/section/search">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <input class="form-check-input" type="checkbox" name="filters" value="title" id="firstCheckbox">
+      <label class="form-check-label" for="firstCheckbox">Titulo</label>
+    </li>
+    <li class="list-group-item">
+      <input class="form-check-input" type="checkbox" name="filters" value="averageRating" id="secondCheckbox">
+      <label class="form-check-label" for="secondCheckbox">Rating</label>
+    </li>
+    <li class="list-group-item">
+      <input class="form-check-input" type="checkbox" name="filters" value="minPosts" id="thirdCheckbox">
+      <label class="form-check-label" for="thirdCheckbox">5 posts</label>
+    </li>
+    <li class="list-group-item">
+      <input class="form-check-input" type="checkbox" name="filters" value="minRating" id="fourthCheckbox">
+      <label class="form-check-label" for="fourthCheckbox">5 RAITNG</label>
+    </li>
+  </ul>
+  <button type="submit">Aplicar</button>
+</form>
 
 
 {{#successMessage}}

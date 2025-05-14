@@ -300,4 +300,15 @@ public class SectionService {
         return toDTOs(sectionRepository.findSectionByAverageRatingDESC());
     }
 
+    public Collection<SectionDTO> getSectionGT5() {
+        return toDTOs(sectionRepository.findSectionGT5());
+    }
+
+    public Collection<SectionDTO> getSectionGT5Publications() {
+        return toDTOs(sectionRepository.findSectionGT5Publications());
+    }
+
+    public Collection<SectionDTO> getFilteredSections(int minPosts, float minRating, String orderBy) {
+        return toDTOs(sectionRepository.findFilteredSecions(minPosts, minRating, orderBy));
+    }
 }
