@@ -15,31 +15,23 @@ public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpec
     @Query("SELECT s FROM Section s ORDER BY s.title ASC")
     List<Section> findSectionByTitleASC();
 
-    @Query("SELECT s FROM Section s ORDER BY s.averageRating DESC")
-    List<Section> findSectionByAverageRatingDESC();
-
     @Query("SELECT s FROM Section s WHERE s.averageRating >= 5")
-    List<Section> findSectionGT5();
+    List<Section> findSectionAverageRatingGT5();
 
-    @Query("SELECT s FROM Section s WHERE s.numberOfPublications >= 5")
-    List<Section> findSectionGT5Publications();
+    @Query("SELECT s FROM Section s WHERE s.numberOfPublications >= 2")
+    List<Section> findSectionPublicationsGT2();
 
-    @Query("""
-            SELECT s FROM Section s
-            WHERE (:minPosts IS NULL OR s.numberOfPublications >= :minPosts) 
-            AND (:minRating IS NULL OR s.averageRating >= :minRating)
+    @Query("SELECT s FROM Section s WHERE s.numberOfPublications >= 2 ORDER BY s.title ASC")
+    List<Section> findSectionPostsGTE2ByTitle();
 
-            ORDER BY
-                CASE WHEN :orderBy = "title" THEN s.title END ASC,
-                CASE WHEN :orderBy = "averageRating" THEN s.averageRating END DESC,
-                CASE WHEN :orderBy = "numberOfPublications" THEN s.numberOfPublications END DESC
-            """)
+    @Query("SELECT s FROM Section s WHERE s.numberOfPublications >= 2 AND s.averageRating >= 5 ORDER BY s.title")
+    List<Section> findSectionPostsGTE2AverageRatingGT5();
 
-    List<Section> findFilteredSecions (
-        @Param("minPosts") int minPosts,
-        @Param("minRating") float minRating,
-        @Param("orderBy") String orderBy);
-
+    @Query("SELECT s FROM Section s WHERE s.averageRating >= 5 ORDER BY s.title ASC")
+    List<Section> findSectionAverageRatingGTE5ByTitle();
+   
+    @Query("SELECT s FROM Section s WHERE s.averageRating >= 5 AND s.numberOfPublications >= 2")
+    List<Section> findSectionAverageRatingGT5PublicationsGTE2();
 
     /* 
 

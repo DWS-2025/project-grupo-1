@@ -297,7 +297,24 @@ public class SectionController {
         if (filters == null || filters.isEmpty()) {
             sections = sectionService.getAllSections();
         } else {
-            sections = sectionService.getFilteredSections(5, 5, "title");
+            if (filters.contains("title") && !filters.contains("minPosts") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionByTitltesASC();
+            } else if (filters.contains("minPosts") && !filters.contains("title") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionPublicationsGT2();
+            } else if (filters.contains("minRating") && !filters.contains("minPosts") && !filters.contains("title")) {
+                sections = sectionService.getSectionAverageRatingGT5();
+            } 
+            else if (filters.contains("minRating") && filters.contains("minPosts") && !filters.contains("title")) {
+                sections = sectionService.getSectionAverageRatingGT5PublicationsGTE2();
+            } else if (filters.contains("title") && filters.contains("minPosts") && filters.contains("minRating")) {
+                sections = sectionService.getSectionPostsGTE2AverageRatingGT5();
+            } else if (filters.contains("title") && filters.contains("minRating") && !filters.contains("minPosts")) {
+                sections = sectionService.getSectionAverageRatingGTE5ByTitle(); 
+            } else if (filters.contains("title") && filters.contains("minPosts") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionPostsGTE2ByTitle();
+            } else {
+                sections = sectionService.getAllSections();
+            }
         }
 
         model.addAttribute("sections", sections);

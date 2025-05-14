@@ -3,39 +3,29 @@
 <script src="/assets/js/ajaxRequest.js"></script>
 <h1 style="text-align: center;">Descubre las secciones</h1><br>
 
-<div style="display: flex; justify-content: center; margin-top: 20px;">
-  <form method="GET" action="/section/search">
-    <input type="text" name="title" placeholder="Buscar por título">
-    <select name="orderBy">
-      <option value="title">Ordenar por título (A-Z)</option>
-      <option value="rating">Ordenar por rating (alto a bajo)</option>
-      <option value="none">Sin orden</option>
-    </select>
-    <button type="submit">Buscar</button>
+<details>
+  <summary style="width: 300px; margin: auto;"><strong>APLICAR FILTROS</strong></summary>
+  <form method="get" action="/section/search">
+    <ul class="list-group" style="width: 300px; margin: auto;">
+      <li class="list-group-item">
+        <input class="form-check-input" type="checkbox" name="filters" value="title" id="firstCheckbox">
+        <label class="form-check-label" for="firstCheckbox">Título (A-Z)</label>
+      </li>
+      <li class="list-group-item">
+        <input class="form-check-input" type="checkbox" name="filters" value="minRating" id="secondCheckbox">
+        <label class="form-check-label" for="secondCheckbox">Rating (mayor de 5)</label>
+      </li>
+      <li class="list-group-item">
+        <input class="form-check-input" type="checkbox" name="filters" value="minPosts" id="thirdCheckbox">
+        <label class="form-check-label" for="thirdCheckbox">Más de 2 posts</label>
+      </li>
+    </ul>
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+      <button type="submit">Aplicar</button>
+    </div>
   </form>
-</div> 
+</details>
 
-<form method="get" action="/section/search">
-  <ul class="list-group">
-    <li class="list-group-item">
-      <input class="form-check-input" type="checkbox" name="filters" value="title" id="firstCheckbox">
-      <label class="form-check-label" for="firstCheckbox">Titulo</label>
-    </li>
-    <li class="list-group-item">
-      <input class="form-check-input" type="checkbox" name="filters" value="averageRating" id="secondCheckbox">
-      <label class="form-check-label" for="secondCheckbox">Rating</label>
-    </li>
-    <li class="list-group-item">
-      <input class="form-check-input" type="checkbox" name="filters" value="minPosts" id="thirdCheckbox">
-      <label class="form-check-label" for="thirdCheckbox">5 posts</label>
-    </li>
-    <li class="list-group-item">
-      <input class="form-check-input" type="checkbox" name="filters" value="minRating" id="fourthCheckbox">
-      <label class="form-check-label" for="fourthCheckbox">5 RAITNG</label>
-    </li>
-  </ul>
-  <button type="submit">Aplicar</button>
-</form>
 
 
 {{#successMessage}}
