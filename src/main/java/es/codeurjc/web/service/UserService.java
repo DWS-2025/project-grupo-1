@@ -405,7 +405,7 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         // Sanitize the file name to remove any potentially dangerous characters
-        String sanitizedFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-\\_\\(\\)]", "_");
+        String sanitizedFileName = file.getOriginalFilename();
         // Build the file path using the base directory and the sanitized file name
         File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, sanitizedFileName);
 
