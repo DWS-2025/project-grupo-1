@@ -58,12 +58,7 @@ public class PostRestController {
 
     @GetMapping("/{id}")
     public PostDTO getPost(@PathVariable long id) {
-        Optional<PostDTO> op = postService.findByIdDTO(id);
-        if (op.isPresent()) {
-            return op.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found");
-        }
+        return postService.findByIdAsDTO(id);
     }
 
     @PostMapping("/")
@@ -76,13 +71,13 @@ public class PostRestController {
 
     @PutMapping("/{id}")
     public PostDTO updatePost(@PathVariable long id, @RequestBody PostDTO oldPostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings) throws IOException {
-        PostDTO newPostDTO = postService.findByIdDTO(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
+        PostDTO newPostDTO = postService.findByIdAsDTO(id);
         return postService.updatePost(oldPostDTO, newPostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile); // Update the post and image
     }
 
     @DeleteMapping("/{id}")
     public PostDTO deletePost(@PathVariable long id) {
-        PostDTO postToDelete = postService.findByIdDTO(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found"));
+        PostDTO postToDelete = postService.findByIdAsDTO(id);
         postService.deletePost(postToDelete); // Delete the post
         return postToDelete;
     }
@@ -143,7 +138,8 @@ public class PostRestController {
             @PathVariable long postId,
             @PathVariable long commentId) {
 
-        CommentDTO comment = commentService.findCommentById(commentId, postId);
+        CommentDTO comment = commentService.findCommentByIdDTO(commentId);
+        // CommentDTO comment = commentService.findCommentById(commentId, postId);
         return ResponseEntity.ok(comment);
     }
 

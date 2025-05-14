@@ -126,13 +126,13 @@ public class CommentService {
     public Optional<Comment> findCommentById(Long id) {
         return commentRepository.findById(id);
     }
-    public Optional<CommentDTO> findCommentByIdDTO(Long id) {
-        return commentRepository.findById(id).map(this::toDTO);
+    public CommentDTO findCommentByIdDTO(Long id) {
+        return toDTO(commentRepository.findById(id).orElseThrow());
     }
 
-    public CommentDTO findCommentById(Long id, Long postId) {
-       return toDTO(commentRepository.findById(id).orElseThrow());
-    }
+    // public CommentDTO findCommentById(Long id, Long postId) {
+    //    return toDTO(commentRepository.findById(id).orElseThrow());
+    // }
 
     private CommentDTO toDTO(Comment comment) {
         return mapper.toDTO(comment);
