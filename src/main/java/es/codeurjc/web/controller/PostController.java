@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -139,27 +141,37 @@ public class PostController {
             Collection<Section> allSections = sectionService.findAll();
             List<Section> postSections = post.getSections();
 
-            // Create a List<Section> with "selected" property
-            List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
-            for (Section section : allSections) {
+            Set<Long> postSectionIds = postSections.stream().map(Section::getId).collect(Collectors.toSet());
+
+            List<Map<String, Object>> markedSections = allSections.stream().map(section -> {
                 Map<String, Object> sectionData = new HashMap<>();
                 sectionData.put("id", section.getId());
                 sectionData.put("title", section.getTitle());
+                sectionData.put("selected", postSectionIds.contains(section.getId()));
+                return sectionData;
+            }).toList();
 
-                // Verify if the section is in the post using its id
-                boolean isSelected = postSections.stream()
-                        .anyMatch(s -> s.getId() == section.getId());
+            // Create a List<Section> with "selected" property
+            // List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
+            // for (Section section : allSections) {
+            //     Map<String, Object> sectionData = new HashMap<>();
+            //     sectionData.put("id", section.getId());
+            //     sectionData.put("title", section.getTitle());
 
-                sectionData.put("selected", isSelected);
-                sectionsWithSelection.add(sectionData);
-            }
+            //     // Verify if the section is in the post using its id
+            //     boolean isSelected = postSections.stream()
+            //             .anyMatch(s -> s.getId() == section.getId());
+
+            //     sectionData.put("selected", isSelected);
+            //     sectionsWithSelection.add(sectionData);
+            // }
 
             String contributors = "";
             for (User user : post.getContributors()) {
                 contributors += user.getUserName() + ",";
             }
 
-            model.addAttribute("sections", sectionsWithSelection);
+            model.addAttribute("sections", markedSections);
             model.addAttribute("post", post);
             model.addAttribute("title", post.getTitle());
             model.addAttribute("content", post.getContent());
@@ -174,11 +186,11 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/edit")
-    public String updatePost(Model model, @PathVariable long id, @RequestParam String title, @RequestParam String content,
+    public String updatePost(Model model, @PathVariable CreatePostDTO createPostDTO,
             @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
 
-            postService.updatePost(id, title, content, newSectionIds, newContributorsStrings.split(","), newImage);
+            postService.updatePost(createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
             return "redirect:/post/" + id;
 
     }

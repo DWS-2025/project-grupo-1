@@ -164,20 +164,24 @@ public class PostService {
         deletePost(toDomain(postDTO));
     }
 
-    public CreatePostDTO updatePost(Long oldPostId, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+    public CreatePostDTO updatePost(Long oldPostId, CreatePostDTO createPostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
         Optional<Post> oldPostOptional = postRepository.findById(oldPostId);
         if (!oldPostOptional.isPresent()) {
             throw new NoSuchElementException("Post not found");
         }
         
         Post oldPost = oldPostOptional.get();
+        Post newPost = toDomain(createPostDTO);
 
-        oldPost.setTitle(sanitizeHtml(newTitle));
-        oldPost.setContent(sanitizeHtml(newContent));
+        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+        oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
         oldPost.getSections().clear();
 
-        oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
+        if (newSectionIds != null && !newSectionIds.isEmpty()) {
+            oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
+        }
+
         addSections(toCreatePostDTO(oldPost), newSectionIds);
 
         oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
@@ -224,7 +228,7 @@ public class PostService {
     }
 
     public void addSections(CreatePostDTO postDTO, List<Long> sectionIds) {
-        if (!sectionIds.isEmpty()) {
+        if (sectionIds != null && !sectionIds.isEmpty()) {
             Post post = toDomain(postDTO);
             for (long sectionId : sectionIds) {
                 post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));

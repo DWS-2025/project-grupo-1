@@ -231,6 +231,28 @@ public class UserService {
         return toDTO(updatedUser);
     }
 
+    public UserDTO updateApiUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setUserName(userDTO.userName());
+        user.setDescription(userDTO.description());
+        user.setEmail(userDTO.email());
+        return toDTO(userRepository.save(user));
+    }
+
+    public void updateWebUser(Long userId, String newUserName, String description, MultipartFile userImage) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setUserName(newUserName);
+        user.setDescription(description);
+        if (!userImage.isEmpty()) {
+            try {
+                user.setUserImage(BlobProxy.generateProxy(userImage.getInputStream(), userImage.getSize()));
+            } catch (IOException e) {
+                throw new RuntimeException("Error while processing the image", e);
+            }
+        }
+        userRepository.save(user);
+    }
+
     public void unfollowUser(UserDTO userToUnfollowDTO) {
         User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
         User loggedUser = getLoggedUserDomain();
@@ -417,4 +439,5 @@ public class UserService {
             return false;
         }
     }
+
 }
