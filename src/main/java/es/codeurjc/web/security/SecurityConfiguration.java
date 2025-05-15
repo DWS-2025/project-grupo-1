@@ -38,16 +38,56 @@ public class SecurityConfiguration {
 	}
 
 	
-	
+	@Bean
+	@Order(1)
+	public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+		http.authenticationProvider(authenticationProvider());
+
+		http
+				.securityMatcher("/api/**")
+				.authorizeHttpRequests(authorize -> authorize
+				// PRIVATE ENDPOINTS
+				.requestMatchers(HttpMethod.GET, "/api/sections/*").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.POST, "/api/sections/*/").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/sections/*/").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
+
+				// PUBLIC ENDPOINTS
+				.anyRequest().permitAll());
+
+		// Disable Form login Authentication
+		http.formLogin(formLogin -> formLogin.disable());
+
+		// Disable CSRF protection (it is difficult to implement in REST APIs)
+		http.csrf(csrf -> csrf.disable());
+
+		// Disable Basic Authentication
+		http.httpBasic(httpBasic -> httpBasic.disable());
+
+		// Stateless session
+		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		// Add JWT Token filter SE DEBE IMPLEMENTAR
+		// http.addFilterBefore(jwtRequestFilter,
+		// UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+
+	}
 	
 
 	@Bean
-	//@Order(2)
+	@Order(2)
 	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
 		http.authenticationProvider(authenticationProvider());
 
-		http
+		http	
+				.securityMatcher("/**")
 				.authorizeHttpRequests(authorize -> authorize
 						// PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
 						.requestMatchers("/", "/assets/**", "/vendor/**").permitAll()
