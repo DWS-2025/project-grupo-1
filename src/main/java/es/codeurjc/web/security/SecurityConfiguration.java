@@ -42,7 +42,7 @@ public class SecurityConfiguration {
 		http
 			.authorizeHttpRequests(authorize -> authorize
 					// PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
-					.requestMatchers("/", "/assets/**", "/vendor/bootstrap/css/bootstrap.min.css").permitAll()
+					.requestMatchers("/", "/assets/**", "/vendor/**").permitAll()
 					// PRIVATE PAGES
 					.anyRequest().authenticated())
 			.formLogin(formLogin -> formLogin
