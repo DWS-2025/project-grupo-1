@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -54,7 +56,6 @@ public class SectionService {
     @Autowired
     private UserService userService;
 
-
     SectionService(CommentRepository commentRepository, CommentService commentService) {
         this.commentRepository = commentRepository;
         this.commentService = commentService;
@@ -86,11 +87,11 @@ public class SectionService {
 
     public Optional<SectionDTO> findById(long id) {
         return toDTO(sectionRepository.findById(id));
-    } 
+    }
+
     public Optional<Section> findSectionById(long id) {
         return sectionRepository.findById(id);
-    } 
-
+    }
 
     public Page<SectionDTO> findAllAsDTO(Pageable pageable) {
         return sectionRepository.findAll(pageable).map(this::toDTO);
@@ -103,34 +104,42 @@ public class SectionService {
     public List<Section> findAll(Sort sort) {
         return sectionRepository.findAll(sort);
     }
-    
-    public Collection<SectionDTO> getAllSections(){
+
+    public Collection<SectionDTO> getAllSections() {
         return toDTOs(sectionRepository.findAll());
+    }
+
+    public String sanitizeHtml(String htmlContent) {
+        // Use a predefined safelist to allow only basic HTML tags
+        return Jsoup.clean(htmlContent, Safelist.relaxed());
     }
 
     protected void saveSection(Section section) {
         sectionRepository.save(section);
     }
 
-    public SectionDTO saveSection(SectionDTO sectionDTO){
+    public SectionDTO saveSection(SectionDTO sectionDTO) {
         Section section = toDomain(sectionDTO);
-        // sectionRepository.save(section);
+        section.setTitle(sanitizeHtml(section.getTitle()));
+        section.setDescription(sanitizeHtml(section.getDescription()));
+
         saveSection(section);
 
         return toDTO(section);
     }
 
     public void saveSectionWithImageSection(CreateSectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        //Section section = toDomain(sectionDTO);
-        Section section = new Section(sectionDTO.title(), sectionDTO.description());
+        // Section section = toDomain(sectionDTO);
+        String sanitizedDescription = sanitizeHtml(sectionDTO.description());
+        Section section = new Section(sectionDTO.title(), sanitizedDescription);
 
         if (!imageFile.isEmpty()) {
-            section.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize())); 
+            section.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         this.saveSection(section);
     }
 
-    public void createSectionImage(long id, URI location, InputStream inputStream, long size){
+    public void createSectionImage(long id, URI location, InputStream inputStream, long size) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         section.setImage(location.toString()); // Set the image URL or path here
@@ -148,10 +157,10 @@ public class SectionService {
         }
     }
 
-    public void replaceSectionImage(long id, InputStream inputStream, long size){
+    public void replaceSectionImage(long id, InputStream inputStream, long size) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
-        if (section.getImage() == null){
+        if (section.getImage() == null) {
             throw new NoSuchElementException();
         }
 
@@ -160,41 +169,42 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public void deleteSectionImage (long id) {
+    public void deleteSectionImage(long id) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
-        if (section.getImage() == null){
+        if (section.getImage() == null) {
             throw new NoSuchElementException();
-        } 
+        }
 
         section.setImageFile(null); // Set the image URL or path here
         section.setImage(null); // Set the image URL or path here
 
     }
 
-
-
-    /* public void deleteSection(Section sectionToDelete) {
-   
-        List<User> users = userRepository.findAll();
-        Section section = sectionRepository.findById(sectionToDelete.getId()).get();
-
-        for (User user : users) { //delete section from followed sections of all users
-            if (user.getFollowedSections().contains(section)) {
-                user.getFollowedSections().remove(section);
-            }
-        }
-        sectionRepository.delete(sectionToDelete);
-
-    } */
+    /*
+     * public void deleteSection(Section sectionToDelete) {
+     * 
+     * List<User> users = userRepository.findAll();
+     * Section section = sectionRepository.findById(sectionToDelete.getId()).get();
+     * 
+     * for (User user : users) { //delete section from followed sections of all
+     * users
+     * if (user.getFollowedSections().contains(section)) {
+     * user.getFollowedSections().remove(section);
+     * }
+     * }
+     * sectionRepository.delete(sectionToDelete);
+     * 
+     * }
+     */
     public SectionDTO deleteSection(SectionDTO sectionDTO) {
-        
+
         Section sectionToDelete = toDomain(sectionDTO);
 
         List<User> users = userRepository.findAll();
         Section section = sectionRepository.findById(sectionToDelete.getId()).get();
 
-        for (User user : users) { //delete section from followed sections of all users
+        for (User user : users) { // delete section from followed sections of all users
             if (user.getFollowedSections().contains(section)) {
                 user.getFollowedSections().remove(section);
             }
@@ -202,7 +212,6 @@ public class SectionService {
         sectionRepository.delete(sectionToDelete);
         return toDTO(sectionToDelete);
     }
-
 
     public void addPost(Section section, Post post) {
         section.addPost(post);
@@ -212,15 +221,18 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) throws IOException {
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
+            throws IOException {
         Section oldSection = toDomain(oldSectionDTO);
         Section updatedSection = toDomain(updatedSectionDTO);
-        
+
         oldSection.setTitle(updatedSection.getTitle());
-        oldSection.setDescription(updatedSection.getDescription());
+        oldSection.setDescription(sanitizeHtml(updatedSection.getDescription()));
 
         if (!newImage.isEmpty()) {
-            Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts MultipartFile to Blob
+            Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts
+                                                                                                        // MultipartFile
+                                                                                                        // to Blob
             oldSection.setImageFile(updatedImage);
         }
 
@@ -231,10 +243,10 @@ public class SectionService {
     public Collection<Section> getSectionsFromIdsList(List<Long> sectionIds) {
         Collection<Section> sections = new ArrayList<>();
         SectionDTO sectionDTO;
-        
+
         for (Long sectionId : sectionIds) {
             sectionDTO = findById(sectionId).orElse(null);
-            if (sectionDTO != null) { 
+            if (sectionDTO != null) {
                 sections.add(toDomain(sectionDTO));
             }
         }
@@ -248,27 +260,35 @@ public class SectionService {
 
     public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
+<<<<<<< HEAD
         List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
         // El error esta en que, al usar un UserDTO, followed sections es null, al usar un usuario domain (sin haber pasado por conversion), las coge bien (habria que cambiar este comportamiento)
         // List<Section> followedSections = userService.getLoggedUserDomain().getFollowedSections();
+=======
+        List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser()).getFollowedSections();
+        // El error esta en que, al usar un UserDTO, followed sections es null, al usar
+        // un usuario domain (sin haber pasado por conversion), las coge bien (habria
+        // que cambiar este comportamiento)
+        // List<Section> followedSections =
+        // userService.getLoggedUserDomain().getFollowedSections();
+>>>>>>> fa588ebf1fc6f19c959286a7f52a23cf36fc8634
         // Filter only the sections that are NOT in the list of followed sections
-        if(followedSections != null){
+        if (followedSections != null) {
             List<Section> notFollowedSections = allSections.stream()
-            .filter(section -> !followedSections.contains(section))
-            .collect(Collectors.toList());            
+                    .filter(section -> !followedSections.contains(section))
+                    .collect(Collectors.toList());
             return toDTOs(notFollowedSections);
-        }
-        else {
+        } else {
             return toDTOs(allSections);
         }
-       
+
     }
 
     private SectionDTO toDTO(Section section) {
         return mapper.toDTO(section);
     }
 
-    private Optional<SectionDTO> toDTO(Optional<Section> section){
+    private Optional<SectionDTO> toDTO(Optional<Section> section) {
         return section.map(this::toDTO); // if present, convert to DTO
     }
 
@@ -285,11 +305,11 @@ public class SectionService {
 
     }
 
-    public Collection<SectionDTO> getSections(){
+    public Collection<SectionDTO> getSections() {
         return toDTOs(sectionRepository.findAll());
     }
 
-    public SectionDTO getSection (Long id) {
+    public SectionDTO getSection(Long id) {
         return toDTO(sectionRepository.findById(id).orElseThrow());
     }
 
@@ -312,7 +332,7 @@ public class SectionService {
     public Collection<SectionDTO> getSectionPostsGTE2AverageRatingGT5() {
         return toDTOs(sectionRepository.findSectionPostsGTE2AverageRatingGT5());
     }
-    
+
     public Collection<SectionDTO> getSectionAverageRatingGTE5ByTitle() {
         return toDTOs(sectionRepository.findSectionAverageRatingGTE5ByTitle());
     }
@@ -321,6 +341,4 @@ public class SectionService {
         return toDTOs(sectionRepository.findSectionAverageRatingGT5PublicationsGTE2());
     }
 
-
-    
 }

@@ -89,7 +89,7 @@ public class PostService {
 
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
-        }
+        } 
         post.setContent(sanitizeHtml(post.getContent()));
         post.setTitle(sanitizeHtml(post.getTitle()));
         return save(post,request);

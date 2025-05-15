@@ -57,10 +57,13 @@
           <img src="/section/{{id}}/image" alt="" class="section-image">
           <div class="hover-effect">
             <ul>
+              {{#logged}}
               <li>
                 <a href="/section/{{id}}">Ver sección</a>
               </li>
+              {{/logged}}
               <li>
+                {{#admin}}
                 <a>
                   <form action="/section/{{id}}/delete" method="post" style="display:inline;">
                     <button type="submit"
@@ -72,6 +75,7 @@
               <li>
                 <a href="/section/{{id}}/edit">Editar</a>
               </li>
+              {{/admin}}
             </ul>
           </div>
         </div>
