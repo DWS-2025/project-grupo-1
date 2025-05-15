@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -149,6 +150,12 @@ public class UserService {
         User user = toDomain(userDTO);
         return userRepository.findAll().get(0).equals(user);
     }
+
+    public UserDTO findByUserNameAuth(String username) {
+    return userRepository.findByUserName(username)
+            .map(mapper::toDTO)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+}
 
     public Blob getImage(long id) throws SQLException {
         User user = userRepository.findById(id).orElseThrow();

@@ -260,18 +260,9 @@ public class SectionService {
 
     public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
-<<<<<<< HEAD
         List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
         // El error esta en que, al usar un UserDTO, followed sections es null, al usar un usuario domain (sin haber pasado por conversion), las coge bien (habria que cambiar este comportamiento)
         // List<Section> followedSections = userService.getLoggedUserDomain().getFollowedSections();
-=======
-        List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser()).getFollowedSections();
-        // El error esta en que, al usar un UserDTO, followed sections es null, al usar
-        // un usuario domain (sin haber pasado por conversion), las coge bien (habria
-        // que cambiar este comportamiento)
-        // List<Section> followedSections =
-        // userService.getLoggedUserDomain().getFollowedSections();
->>>>>>> fa588ebf1fc6f19c959286a7f52a23cf36fc8634
         // Filter only the sections that are NOT in the list of followed sections
         if (followedSections != null) {
             List<Section> notFollowedSections = allSections.stream()
