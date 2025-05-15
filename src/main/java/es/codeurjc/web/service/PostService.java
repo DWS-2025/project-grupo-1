@@ -3,12 +3,17 @@ package es.codeurjc.web.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.jsoup.Jsoup;
@@ -18,6 +23,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,8 +80,8 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public Optional<PostDTO> findByIdDTO(long id) {
-        return postRepository.findById(id).map(this::toDTO);
+    public PostDTO findByIdAsDTO(long id) {
+        return toDTO(findById(id).orElseThrow());
     }
 
     public Post save(Post post, MultipartFile imageFile) throws IOException { // Swapped from Post to void
@@ -140,63 +147,47 @@ public class PostService {
         postRepository.save(post);
     }
 
-   public void deletePost(Post post) {
+    public void deletePost(Post post) {
  
-    for (Section section : post.getSections()) {
-        section.getPosts().remove(post);
-        sectionService.saveSection(section);
+        for (Section section : post.getSections()) {
+            section.getPosts().remove(post);
+            sectionService.saveSection(section);
+        }
+
+    
+        List<Comment> commentsCopy = new ArrayList<>(post.getComments());
+        for (Comment comment : commentsCopy) {
+            commentService.deleteCommentFromPost(post.getId(), comment.getId());
+        }
+
+        post.getContributors().clear();
+        post.getSections().clear();
+        post.getComments().clear();
+
+        postRepository.deleteById(post.getId());
     }
-
- 
-    List<Comment> commentsCopy = new ArrayList<>(post.getComments());
-    for (Comment comment : commentsCopy) {
-        commentService.deleteCommentFromPost(post.getId(), comment.getId());
-    }
-
-    post.getContributors().clear();
-    post.getSections().clear();
-    post.getComments().clear();
-
-    postRepository.deleteById(post.getId());
-}
 
     public void deletePost(PostDTO postDTO) {
         deletePost(toDomain(postDTO));
     }
 
-    public CreatePostDTO updatePost(Long oldPostId, String newTitle, String newContent, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        Optional<Post> oldPostOptional = postRepository.findById(oldPostId);
-        if (!oldPostOptional.isPresent()) {
-            throw new NoSuchElementException("Post not found");
-        }
-        
-        Post oldPost = oldPostOptional.get();
-
-        oldPost.setTitle(sanitizeHtml(newTitle));
-        oldPost.setContent(sanitizeHtml(newContent));
-
-        oldPost.getSections().clear();
-
-        oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
-        addSections(toCreatePostDTO(oldPost), newSectionIds);
-
-        oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
-
-        if (!newImage.isEmpty()) {
-            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
-        }
-
-        postRepository.save(oldPost);
-
-        return toCreatePostDTO(oldPost);
-    }
-
     public Post updatePost(Post oldPost, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        
         oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
         oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
-        oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
-        oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
+        if (newSectionIds != null && !newSectionIds.isEmpty()) {
+            oldPost.getSections().clear();
+            addSections(oldPost, newSectionIds);
+        }
+
+        if (newContributorsStrings != null && newContributorsStrings.length > 0) {
+            oldPost.getContributors().clear();
+            addContributors(oldPost, newContributorsStrings);
+        }
+
+        // oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
+        // oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
 
         if (!newImage.isEmpty()) {
             oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
@@ -205,6 +196,10 @@ public class PostService {
         postRepository.save(oldPost);
 
         return oldPost;
+    }
+
+    public PostDTO updatePost(Long id, CreatePostDTO newPostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        return toDTO(updatePost(findById(id).orElseThrow(), toDomain(newPostDTO), newSectionIds, newContributorsStrings, newImage));
     }
 
     public PostDTO updatePost(PostDTO oldPost, PostDTO newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
@@ -223,31 +218,46 @@ public class PostService {
 
     }
 
-    public void addSections(CreatePostDTO postDTO, List<Long> sectionIds) {
-        if (!sectionIds.isEmpty()) {
-            Post post = toDomain(postDTO);
+    public void addSections(Post post, List<Long> sectionIds) {
+        
+        if (sectionIds != null && !sectionIds.isEmpty()) {
+        
             for (long sectionId : sectionIds) {
                 post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));
             }
-            postDTO = toCreatePostDTO(post);
+
         }
+
     }
 
-    public CreatePostDTO addContributor(CreatePostDTO createPostDTO, UserBasicDTO userBasicDTO) {
-        Post post = toDomain(createPostDTO);
-        User user = userMapper.toBasicDomain(userBasicDTO);
+    public void addSections(PostDTO postDTO, List<Long> sectionIds) {
+        addSections(toDomain(postDTO), sectionIds);
+    }
+
+    public void addSections(CreatePostDTO createPostDTO, List<Long> sectionIds) {
+        addSections(toDomain(createPostDTO), sectionIds);
+    }
+
+    public void addContributor(Post post, User user) {
         post.addContributor(user);
-        return toCreatePostDTO(post);
     }
 
-    public void addContributors(CreatePostDTO createPostDTO, String[] contributorNames) {
+    public void addContributor(CreatePostDTO createPostDTO, UserBasicDTO userBasicDTO) {
+        addContributor(toDomain(createPostDTO), userMapper.toBasicDomain(userBasicDTO));
+    }
+
+    public void addContributors(Post post, String[] contributorNames) {
         UserBasicDTO userBasicDTO;
         for (String colaborator : contributorNames) {
             userBasicDTO = userService.findByUserNameBasicDTO(colaborator);
             if (userBasicDTO != null) {
-                createPostDTO = addContributor(createPostDTO, userBasicDTO);
+                addContributor(post, userMapper.toBasicDomain(userBasicDTO));
             }
         }
+    }
+
+    public void addContributors(CreatePostDTO createPostDTO, String[] contributorNames) {
+        addContributors(toDomain(createPostDTO), contributorNames);
     }
 
     public void updateSections(Post post, List<Section> oldSections, List<Section> newSections) {
@@ -259,26 +269,12 @@ public class PostService {
         }
     }
 
-    public PostDTO replacePost(long id, PostDTO updatedPostDTO) throws SQLException {
-
-        Post oldPost = postRepository.findById(id).orElseThrow();
-        Post updatedPost = toDomain(updatedPostDTO);
-        updatedPost.setId(id);
-
-        if (oldPost.getImage() != null) {
-
-            //Set the image in the updated post
-            updatedPost.setImageFile(BlobProxy.generateProxy(oldPost.getImageFile().getBinaryStream(), oldPost.getImageFile().length()));
-            updatedPost.setImage(oldPost.getImage());
-
-        }
-
-        postRepository.save(updatedPost);
-
-        return toDTO(updatedPost);
+    public void updateSections(PostDTO postDTO, List<Section> oldSections, List<Section> newSections) {
+        updateSections(toDomain(postDTO), oldSections, newSections);
     }
 
     public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+        
         Post post = postRepository.findById(id).orElseThrow();
         post.setImage(location.toString());
         post.setImageFile(BlobProxy.generateProxy(inputStream, size));
@@ -309,10 +305,11 @@ public class PostService {
 
         postRepository.save(post);
     }
+
     public String sanitizeHtml(String htmlContent) {
-    // Use a predefined safelist to allow only basic HTML tags
-    return Jsoup.clean(htmlContent, Safelist.basic());
-}
+        // Use a predefined safelist to allow only basic HTML tags
+        return Jsoup.clean(htmlContent, Safelist.relaxed());
+    }
 
     public void deletePostImage(long id) {
 
@@ -326,6 +323,51 @@ public class PostService {
         post.setImage(null);
 
         postRepository.save(post);
+    }
+
+    public List<Map<String, Object>> preparePostSectionsForForm(Post post) {
+        Collection<Section> allSections = sectionService.findAll();
+        List<Section> postSections = post.getSections();
+
+        Set<Long> postSectionIds = postSections.stream().map(Section::getId).collect(Collectors.toSet());
+
+        List<Map<String, Object>> markedSections = allSections.stream().map(section -> {
+            Map<String, Object> sectionData = new HashMap<>();
+            sectionData.put("id", section.getId());
+            sectionData.put("title", section.getTitle());
+            sectionData.put("selected", postSectionIds.contains(section.getId()));
+            return sectionData;
+        }).toList();
+
+        return markedSections;
+    }
+
+    public List<Map<String, Object>> preparePostSectionsForForm(PostDTO postDTO) {
+        return preparePostSectionsForForm(toDomain(postDTO));
+    }
+
+    public String contributorsToString(Post post) {
+
+        String contributors = "";
+        for (User user : post.getContributors()) {
+            contributors += user.getUserName() + ", ";
+        }
+
+        return contributors;
+
+    }
+
+    public String contributorsToString(PostDTO postDTO) {
+        
+        return contributorsToString(toDomain(postDTO));
+
+    }
+
+    public ResponseEntity<Object> getImageFileFromId(Long id) throws SQLException {
+        Post post = findById(id).orElseThrow();
+        Blob image = post.getImageFile();
+        Resource file = new InputStreamResource(image.getBinaryStream());
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
     }
 
     public void simpleSave(Post post) {

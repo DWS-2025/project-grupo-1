@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,13 +276,47 @@ public class SectionController {
     */
 
     @GetMapping("/section/search")
-    public String searchSection(Model model){
-        Collection<SectionDTO> sectionsTitleASC = sectionService.getSectionByTitltesASC();
-        Collection<SectionDTO> sectionsAverageRatingDESC = sectionService.getSectionByAverageRatingDESC();
-        Collection<SectionDTO> sections = sectionService.getAllSections();
+    public String searchSection(Model model, @RequestParam(required = false) List<String> filters){
+        Collection<SectionDTO> sections;
 
-        model.addAttribute("sections", sectionsTitleASC);
-        model.addAttribute("sections", sectionsAverageRatingDESC);
+        /*if (filters == null || filters.isEmpty()) {
+            sections = sectionService.getAllSections();
+        } else {
+            if (filters.contains("title")) {
+                sections = sectionService.getSectionByTitltesASC();
+            } else if (filters.contains("averageRating")) {
+                sections = sectionService.getSectionByAverageRatingDESC();
+            } else if (filters.contains("minRating")) {
+                sections = sectionService.getSectionGT5();
+            } else if (filters.contains("minPosts")) {
+                sections = sectionService.getSectionGT5Publications();
+            } else {
+                sections = sectionService.getAllSections();
+            }
+        }*/
+        if (filters == null || filters.isEmpty()) {
+            sections = sectionService.getAllSections();
+        } else {
+            if (filters.contains("title") && !filters.contains("minPosts") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionByTitltesASC();
+            } else if (filters.contains("minPosts") && !filters.contains("title") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionPublicationsGT2();
+            } else if (filters.contains("minRating") && !filters.contains("minPosts") && !filters.contains("title")) {
+                sections = sectionService.getSectionAverageRatingGT5();
+            } 
+            else if (filters.contains("minRating") && filters.contains("minPosts") && !filters.contains("title")) {
+                sections = sectionService.getSectionAverageRatingGT5PublicationsGTE2();
+            } else if (filters.contains("title") && filters.contains("minPosts") && filters.contains("minRating")) {
+                sections = sectionService.getSectionPostsGTE2AverageRatingGT5();
+            } else if (filters.contains("title") && filters.contains("minRating") && !filters.contains("minPosts")) {
+                sections = sectionService.getSectionAverageRatingGTE5ByTitle(); 
+            } else if (filters.contains("title") && filters.contains("minPosts") && !filters.contains("minRating")) {
+                sections = sectionService.getSectionPostsGTE2ByTitle();
+            } else {
+                sections = sectionService.getAllSections();
+            }
+        }
+
         model.addAttribute("sections", sections);
         return "section";
     }

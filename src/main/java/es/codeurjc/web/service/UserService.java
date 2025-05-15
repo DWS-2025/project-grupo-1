@@ -250,6 +250,28 @@ public class UserService {
         return toDTO(updatedUser);
     }
 
+    public UserDTO updateApiUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setUserName(userDTO.userName());
+        user.setDescription(userDTO.description());
+        user.setEmail(userDTO.email());
+        return toDTO(userRepository.save(user));
+    }
+
+    public void updateWebUser(Long userId, String newUserName, String description, MultipartFile userImage) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setUserName(newUserName);
+        user.setDescription(description);
+        if (!userImage.isEmpty()) {
+            try {
+                user.setUserImage(BlobProxy.generateProxy(userImage.getInputStream(), userImage.getSize()));
+            } catch (IOException e) {
+                throw new RuntimeException("Error while processing the image", e);
+            }
+        }
+        userRepository.save(user);
+    }
+
     public void unfollowUser(UserDTO userToUnfollowDTO) {
         User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
         User loggedUser = getLoggedUserDomain();
@@ -402,7 +424,7 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         // Sanitize the file name to remove any potentially dangerous characters
-        String sanitizedFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-\\_\\(\\)]", "_");
+        String sanitizedFileName = file.getOriginalFilename();
         // Build the file path using the base directory and the sanitized file name
         File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, sanitizedFileName);
 
@@ -436,4 +458,5 @@ public class UserService {
             return false;
         }
     }
+
 }

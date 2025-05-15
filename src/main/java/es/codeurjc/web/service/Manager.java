@@ -103,10 +103,10 @@ public class Manager {
 
         // No tiene sentido que las valoraciones sean hasta 20, si lo unico que controlan los usuarios para valorar son los comentarios y van del 0 al 5.
         // En todo caso se podria añadir comentarios por defecto con cierta valoracion
-        /* 
+        
         defaultSection1.setAverageRating(10);
         defaultSection2.setAverageRating(9);
-        defaultSection3.setAverageRating(8);
+        defaultSection3.setAverageRating(2);
         defaultSection4.setAverageRating(7);
         defaultSection5.setAverageRating(20);
         defaultSection6.setAverageRating(5);
@@ -115,7 +115,7 @@ public class Manager {
         defaultSection9.setAverageRating(2);
         defaultSection10.setAverageRating(1);
         defaultSection11.setAverageRating(0);
-        */
+        
                  
         userService.save(mainUser);
         userService.save(user2);

@@ -296,8 +296,30 @@ public class SectionService {
         return toDTOs(sectionRepository.findSectionByTitleASC());
     }
 
-    public Collection<SectionDTO> getSectionByAverageRatingDESC(){
-        return toDTOs(sectionRepository.findSectionByAverageRatingDESC());
+    public Collection<SectionDTO> getSectionAverageRatingGT5() {
+        return toDTOs(sectionRepository.findSectionAverageRatingGT5());
     }
 
+    public Collection<SectionDTO> getSectionPublicationsGT2() {
+        return toDTOs(sectionRepository.findSectionPublicationsGT2());
+    }
+
+    public Collection<SectionDTO> getSectionPostsGTE2ByTitle() {
+        return toDTOs(sectionRepository.findSectionPostsGTE2ByTitle());
+    }
+
+    public Collection<SectionDTO> getSectionPostsGTE2AverageRatingGT5() {
+        return toDTOs(sectionRepository.findSectionPostsGTE2AverageRatingGT5());
+    }
+    
+    public Collection<SectionDTO> getSectionAverageRatingGTE5ByTitle() {
+        return toDTOs(sectionRepository.findSectionAverageRatingGTE5ByTitle());
+    }
+
+    public Collection<SectionDTO> getSectionAverageRatingGT5PublicationsGTE2() {
+        return toDTOs(sectionRepository.findSectionAverageRatingGT5PublicationsGTE2());
+    }
+
+
+    
 }
