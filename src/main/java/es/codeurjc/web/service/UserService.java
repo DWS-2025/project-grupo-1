@@ -195,7 +195,26 @@ public class UserService {
         return toDTO(userToDelete);
     }
 
-    public UserDTO updateUser(long id, UserDTO updatedUserDTO) throws SQLException {
+    public void updateWebUser(long id, String userName, String description, MultipartFile image) {
+        User user = userRepository.findById(id).orElseThrow();
+        if (userName != null && !userName.isEmpty()) {
+            user.setUserName(userName);
+        }
+        if (description != null && !description.isEmpty()) {
+            user.setDescription(description);
+        }
+        if (image != null && !image.isEmpty()) {
+            try {
+                user.setUserImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
+                user.setImage(image.getOriginalFilename());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        userRepository.save(user);
+    }
+
+    public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
         updatedUser.setId(id);
