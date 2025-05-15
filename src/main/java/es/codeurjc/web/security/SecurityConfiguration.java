@@ -1,5 +1,5 @@
-package security;
-/* 
+package es.codeurjc.web.security;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@Configuration 
 @EnableWebSecurity
 public class SecurityConfiguration {
 
@@ -55,7 +55,7 @@ public class SecurityConfiguration {
 			.formLogin(formLogin -> formLogin
 					.loginPage("/login")
 					.failureUrl("/loginerror")
-					.defaultSuccessUrl("/private")
+					.defaultSuccessUrl("/")
 					.permitAll()
 			)
 			.logout(logout -> logout
@@ -71,4 +71,3 @@ public class SecurityConfiguration {
 	}
 
 }
-    */
