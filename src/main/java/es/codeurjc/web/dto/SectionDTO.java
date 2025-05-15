@@ -8,7 +8,7 @@ public record SectionDTO(
         String title,
         String description,
         // Blob sectionImage,
-        float  averageRating,
-        int numberOfPublications,
+        Float  averageRating,
+        Integer numberOfPublications,
         List<PostBasicDTO> posts) {
 }

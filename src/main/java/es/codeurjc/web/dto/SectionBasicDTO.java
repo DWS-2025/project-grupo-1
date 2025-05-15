@@ -4,7 +4,7 @@ public record SectionBasicDTO(
         Long id,
         String title,
         String description,
-        float  averageRating,
-        int numberOfPublications
+        Float  averageRating,
+        Integer numberOfPublications
         ) {
 }
