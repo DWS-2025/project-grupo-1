@@ -1,6 +1,7 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class SectionController {
@@ -41,6 +43,21 @@ public class SectionController {
     @Autowired
     private UserService userService;
 
+    @ModelAttribute
+	public void addAttributes(Model model, HttpServletRequest request) {
+
+		Principal principal = request.getUserPrincipal();
+
+		if(principal != null) {
+		
+			model.addAttribute("logged", true);		
+			model.addAttribute("userName", principal.getName());
+			model.addAttribute("admin", request.isUserInRole("ADMIN"));
+			
+		} else {
+			model.addAttribute("logged", false);
+		}
+    }
 
     @GetMapping("/section")
     public String showSections(Model model, @RequestParam(defaultValue = "0") int page) {
