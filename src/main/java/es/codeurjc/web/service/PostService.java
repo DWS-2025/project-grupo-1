@@ -248,11 +248,20 @@ public class PostService {
 
     public void addContributors(Post post, String[] contributorNames) {
         UserBasicDTO userBasicDTO;
-        for (String colaborator : contributorNames) {
-            userBasicDTO = userService.findByUserNameBasicDTO(colaborator);
-            if (userBasicDTO != null) {
-                addContributor(post, userMapper.toBasicDomain(userBasicDTO));
+        if (contributorNames != null && contributorNames.length > 0) {
+            
+            for (String colaborator : contributorNames) {
+                try {
+                    userBasicDTO = userService.findByUserNameBasicDTO(colaborator);
+                    if (userBasicDTO != null) {
+                        addContributor(post, userMapper.toBasicDomain(userBasicDTO));
+                    }
+                } catch (NoSuchElementException e) {
+                    // Handle the case where the user is not found
+                    System.out.println("User not found: " + colaborator);
+                }
             }
+
         }
     }
 

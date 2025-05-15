@@ -20,6 +20,11 @@
 						<a href="/profile/{{id}}">{{userName}}</a>
 						{{/contributors}}
 					</span>
+					<span>Secciones:
+						{{#sections}}
+						<a href="/section/{{id}}">{{title}}</a>
+						{{/sections}}
+					</span>
 					<ul>
 						<li><i class="fa fa-star"></i> {{averageRating}}</li>
 					</ul>
@@ -28,7 +33,7 @@
 			{{/posts}}
 
 			{{^posts}}
-			<p>No hay posts. Animaté y sé el primero :)</p>
+			<p>No hay posts. Anímate y sé el primero :)</p>
 			{{/posts}}
 
 			<br>
