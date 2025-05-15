@@ -76,15 +76,15 @@ public class UserService {
      * }
      */
     public UserDTO getLoggedUser() {
-        return toDTO(userRepository.findByUserName("Admin"));
+        return toDTO(userRepository.findByUserName("Admin").get());
     }
 
     public User getLoggedUserDomain() {
-        return userRepository.findByUserName("Admin");
+        return userRepository.findByUserName("Admin").get();
     }
 
     public UserBasicDTO getLoggedUserBasic() {
-        return toBasicDTO(userRepository.findByUserName("Admin"));
+        return toBasicDTO(userRepository.findByUserName("Admin").get());
     }
 
     public Collection<UserDTO> findAllUsers() {
@@ -136,11 +136,11 @@ public class UserService {
     }
 
     public UserDTO findByUserName(String userName) {
-        return toDTO(userRepository.findByUserName(userName));
+        return toDTO(userRepository.findByUserName(userName).get());
     }
 
     public UserBasicDTO findByUserNameBasicDTO(String userName) {
-        return toBasicDTO(userRepository.findByUserName(userName));
+        return toBasicDTO(userRepository.findByUserName(userName).get());
     }
 
     public Boolean isLogged(UserDTO userDTO) {
@@ -317,7 +317,7 @@ public class UserService {
         User user;
 
         for (String colaborator : contributorNames) {
-            user = userRepository.findByUserName(colaborator);
+            user = userRepository.findByUserName(colaborator).get();
             if (user != null) {
                 users.add(user);
             }

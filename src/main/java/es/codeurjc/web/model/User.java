@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import jakarta.persistence.OneToMany;
 
 @Entity(name = "UserTable")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -28,11 +30,11 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> followers;
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> followings;
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Section> followedSections;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,8 +44,11 @@ public class User {
 
     private String cvFilePath;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> rols = new ArrayList<>();
+
     // Constructor with the information that the user provides when registering
-    public User(String userName, String password, String email) {
+    public User(String userName, String password, String email, String... rols) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -54,6 +59,7 @@ public class User {
         this.followedSections = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.userRate = 0;
+        this.rols = List.of(rols);
     }
 
     public User() {
@@ -73,9 +79,9 @@ public class User {
     // Follow a user
     public void follow(User user) {
         if (!this.followings.contains(user) && !user.followers.contains(this)) {
-        this.followings.add(user);
-        user.followers.add(this);
-    }
+            this.followings.add(user);
+            user.followers.add(this);
+        }
     }
 
     // Unfollow a user
@@ -108,6 +114,10 @@ public class User {
         return this.password;
     }
 
+    public List<String> getRols() {
+        return this.rols;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -126,7 +136,7 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
-    }  
+    }
 
     public Blob getUserImage() {
         return this.userImage;
@@ -174,7 +184,7 @@ public class User {
 
     public void followSection(Section section) {
         this.followedSections.add(section);
-        
+
     }
 
     public List<Comment> getComments() {
@@ -193,6 +203,7 @@ public class User {
     public void addCollaboratedPosts(Post collaboratedPost) {
         this.collaboratedPosts.add(collaboratedPost);
     }
+
     public String getCvFilePath() {
         return cvFilePath;
     }
@@ -212,7 +223,7 @@ public class User {
 
         for (Post post : posts) {
             if (!post.getComments().isEmpty()) {
-              userRate += post.getAverageRating();
+                userRate += post.getAverageRating();
                 index++;
             }
         }
