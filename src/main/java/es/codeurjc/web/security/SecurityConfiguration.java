@@ -37,43 +37,12 @@ public class SecurityConfiguration {
 		return authProvider;
 	}
 
-	@Bean
-	@Order(1)
-	public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-		http.authenticationProvider(authenticationProvider());
-
-		http.authorizeHttpRequests(authorize -> authorize
-				// PRIVATE ENDPOINTS
-				.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
-				.requestMatchers(HttpMethod.POST, "/api/**").hasRole("USER")
-				.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("USER")
-				.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-
-				// PUBLIC ENDPOINTS
-				.anyRequest().permitAll());
-
-		// Disable Form login Authentication
-		http.formLogin(formLogin -> formLogin.disable());
-
-		// Disable CSRF protection (it is difficult to implement in REST APIs)
-		http.csrf(csrf -> csrf.disable());
-
-		// Disable Basic Authentication
-		http.httpBasic(httpBasic -> httpBasic.disable());
-
-		// Stateless session
-		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-		// Add JWT Token filter SE DEBE IMPLEMENTAR
-		// http.addFilterBefore(jwtRequestFilter,
-		// UsernamePasswordAuthenticationFilter.class);
-
-		return http.build();
-
-	}
+	
+	
+	
 
 	@Bean
-	@Order(2)
+	//@Order(2)
 	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
 		http.authenticationProvider(authenticationProvider());
