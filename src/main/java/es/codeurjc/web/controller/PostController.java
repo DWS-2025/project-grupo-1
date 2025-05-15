@@ -1,24 +1,14 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +23,6 @@ import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
-import es.codeurjc.web.model.Post;
-import es.codeurjc.web.model.Section;
-import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
@@ -92,7 +79,7 @@ public class PostController {
         String[] contributorsArray = newContributors.split(",");
         postService.addContributors(createPostDTO, contributorsArray);
         postService.save(createPostDTO, newImage);
-        return "redirect:/post";
+        return "redirect:https://localhost:8443/post";
     }
     
 

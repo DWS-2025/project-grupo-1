@@ -140,7 +140,7 @@ public class UserService {
     }
 
     public UserBasicDTO findByUserNameBasicDTO(String userName) {
-        return toBasicDTO(userRepository.findByUserName(userName).get());
+        return toBasicDTO(userRepository.findByUserName(userName).orElseThrow());
     }
 
     public Boolean isLogged(UserDTO userDTO) {
