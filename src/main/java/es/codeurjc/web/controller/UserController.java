@@ -84,11 +84,13 @@ public class UserController {
         return "login";
     }
 
+    // spring implements the login process
+    /* 
     @PostMapping("/login")
     public String login(Model model, @RequestParam String userName, @RequestParam String password/*
                                                                                                   * , HttpSession
                                                                                                   * session
-     */) {
+     ) {
         UserDTO logingUser = userService.findByUserName(userName);
         // this needs to be moved to the service layer
         /*
@@ -96,10 +98,12 @@ public class UserController {
          * model.addAttribute("Error", false);
          * return "/login";
          * }
-         */
- /* userService.setLoggedUser(session, logingUser); */
+         
+  userService.setLoggedUser(session, logingUser); 
         return "redirect:/";
     }
+        */
+    
 
     @GetMapping("/register")
     public String register(Model model) {
