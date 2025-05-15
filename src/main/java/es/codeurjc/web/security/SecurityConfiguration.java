@@ -6,11 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import es.codeurjc.web.service.RepositoryUserDetailsService;
@@ -36,15 +33,6 @@ public class SecurityConfiguration {
 		return authProvider;
 	}
 
-	@Bean
-	public InMemoryUserDetailsManager userDetailsService() {
-		UserDetails user = User.builder()
-				.username("user")
-				.password(passwordEncoder().encode("pass"))
-				.roles("USER")
-				.build();
-		return new InMemoryUserDetailsManager(user);
-	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,19 +41,19 @@ public class SecurityConfiguration {
 		
 		http
 			.authorizeHttpRequests(authorize -> authorize
-					// PUBLIC PAGES
-					.requestMatchers("/").permitAll()
+					// PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
+					.requestMatchers("/", "/assets/**", "/vendor/bootstrap/css/bootstrap.min.css").permitAll()
 					// PRIVATE PAGES
 					.anyRequest().authenticated())
 			.formLogin(formLogin -> formLogin
 					.loginPage("/login")
 					.failureUrl("/loginerror")
-					.defaultSuccessUrl("/")
+					.defaultSuccessUrl("/home")
 					.permitAll()
 			)
 			.logout(logout -> logout
 					.logoutUrl("/logout")
-					.logoutSuccessUrl("/")
+					.logoutSuccessUrl("/login")
 					.permitAll()
 			);
 		
