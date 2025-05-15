@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import es.codeurjc.web.security.jwt.JwtRequestFilter;
 import es.codeurjc.web.service.RepositoryUserDetailsService;
 
 @Configuration
@@ -21,6 +22,9 @@ import es.codeurjc.web.service.RepositoryUserDetailsService;
 public class SecurityConfiguration {
 	@Autowired
 	public RepositoryUserDetailsService userDetailsService;
+
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -37,9 +41,9 @@ public class SecurityConfiguration {
 		return authProvider;
 	}
 
-	
+	// ¡¡¡¡HAY QUE CONFIRMAR LOS ROLES DE CADA UNO!!!!!
 	@Bean
-	@Order(1)
+	@Order(1) 
 	public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
 		http.authenticationProvider(authenticationProvider());
 
@@ -47,14 +51,45 @@ public class SecurityConfiguration {
 				.securityMatcher("/api/**")
 				.authorizeHttpRequests(authorize -> authorize
 				// PRIVATE ENDPOINTS
+				// SECTIONS
+				.requestMatchers(HttpMethod.GET, "/api/sections/").hasAnyRole("USER", "ADMIN")
 				.requestMatchers(HttpMethod.GET, "/api/sections/*").hasAnyRole("USER", "ADMIN")
 				.requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
-				.requestMatchers(HttpMethod.POST, "/api/sections/*/").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("USER")
 				.requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
-				.requestMatchers(HttpMethod.PUT, "/api/sections/*/").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("USER")
 				.requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("USER")
 				.requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
 				.requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
+				// USERS
+				.requestMatchers(HttpMethod.GET, "/api/users/").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.POST, "/api/users").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("ADMIN")
+				// POSTS
+				.requestMatchers(HttpMethod.GET, "/api/posts/").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/posts/*").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/posts/*/image").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/posts/comments").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.GET, "/api/posts/*/comments").hasRole("USER")
+				.requestMatchers(HttpMethod.GET, "/api/posts/*/comments/*").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/posts/").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/posts/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.POST, "/api/posts/*/comments").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/posts/*").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/posts/*/image").hasRole("USER")
+				.requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").hasRole("USER")
+				.requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/posts/*/image").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").hasRole("ADMIN")
+				
 
 				// PUBLIC ENDPOINTS
 				.anyRequest().permitAll());
@@ -71,9 +106,9 @@ public class SecurityConfiguration {
 		// Stateless session
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		// Add JWT Token filter SE DEBE IMPLEMENTAR
-		// http.addFilterBefore(jwtRequestFilter,
-		// UsernamePasswordAuthenticationFilter.class);
+		
+		// Add JWT Token filter
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 
