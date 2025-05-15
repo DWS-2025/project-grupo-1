@@ -28,6 +28,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/users")
@@ -81,17 +82,17 @@ public class UserRestController {
     }
 
     @PostMapping("/{id}/followings")
-    public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO) {
+    public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO, HttpServletRequest request) {
         UserDTO userDTO = UserService.getUserById(id);
-        UserService.followUser(userToFollowDTO);
+        UserService.followUser(userToFollowDTO, request);
         return userDTO;
     }
 
     @DeleteMapping("/{id}/followings")
-    public UserDTO unfollowUser(@PathVariable long id, @RequestBody UserDTO userToUnFollowDTO) {
+    public UserDTO unfollowUser(@PathVariable long id, @RequestBody UserDTO userToUnFollowDTO, HttpServletRequest request) {
         UserDTO userDTO = UserService.getUserById(id);
         if (UserService.existsById(userToUnFollowDTO.id()) && userDTO.followings().contains(userToUnFollowDTO)) {
-            UserService.unfollowUser(userToUnFollowDTO);
+            UserService.unfollowUser(userToUnFollowDTO, request);
         return userDTO;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");    

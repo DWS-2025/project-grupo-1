@@ -27,6 +27,7 @@ import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @Controller
@@ -72,13 +73,13 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds) throws IOException {  
+    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {  
         
         postService.addSections(createPostDTO, sectionIds);
         
         String[] contributorsArray = newContributors.split(",");
         postService.addContributors(createPostDTO, contributorsArray);
-        postService.save(createPostDTO, newImage);
+        postService.save(createPostDTO, newImage, request);
         return "redirect:https://localhost:8443/post";
     }
     
@@ -166,7 +167,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, CreateCommentDTO newComment) {
+    public String newPostComment(Model model, @PathVariable long postId, CreateCommentDTO newComment, HttpServletRequest request) {
         postService.findByIdAsDTO(postId);
             
         if (newComment.content().isEmpty()) {
@@ -178,7 +179,7 @@ public class PostController {
             return "error";
         }
 
-        commentService.saveCommentInPost(postId, newComment);
+        commentService.saveCommentInPost(postId, newComment, request);
         return "redirect:/post/" + postId;
 
     }

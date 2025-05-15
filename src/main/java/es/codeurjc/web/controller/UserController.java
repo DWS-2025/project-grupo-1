@@ -23,6 +23,7 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -41,11 +42,11 @@ public class UserController {
 
     @GetMapping({"/home", "/"})
     /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
-    public String index(Model model) {
+    public String index(Model model,HttpServletRequest request) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
-        if (userService.getLoggedUser() != null) {
-            model.addAttribute("user", userService.getLoggedUser());
+        if (userService.getLoggedUser(request.getUserPrincipal().getName()) != null) {
+            model.addAttribute("user", userService.getLoggedUser(request.getUserPrincipal().getName()));
             model.addAttribute("session", true);
 
         } else {
@@ -59,19 +60,19 @@ public class UserController {
     }
 
     @GetMapping("/following")
-    public String following(Model model) {
-        model.addAttribute("sections", userService.getLoggedUser().followedSections());
+    public String following(Model model, HttpServletRequest request) {
+        model.addAttribute("sections", userService.getLoggedUser(request.getUserPrincipal().getName()).followedSections());
         model.addAttribute("followed", true);
-        model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser()));
-        model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser()));
+        model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
+        model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
 
         return "following";
     }
 
     @GetMapping("/discover")
-    public String discover(Model model, HttpSession session) {
+    public String discover(Model model, HttpServletRequest request) {
 
-        model.addAttribute("sections", sectionService.findNotFollowedSections());
+        model.addAttribute("sections", sectionService.findNotFollowedSections(request));
         model.addAttribute("topUsers", rankingService.topUsersApp());
         model.addAttribute("topPosts", rankingService.topPostsApp());
 
@@ -140,7 +141,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/{userId}")
-    public String showProfile(Model model, @PathVariable Long userId) {
+    public String showProfile(Model model, @PathVariable Long userId, HttpServletRequest request) {
         UserDTO user = userService.getUserById(userId);
         if (user != null) {
             model.addAttribute("numberOfPublications", user.posts().size());
@@ -150,16 +151,16 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("id", user.id());
 
-            if (!Objects.equals(user.id(), userService.getLoggedUser().id())) {
+            if (!Objects.equals(user.id(), userService.getLoggedUser(request.getUserPrincipal().getName()).id())) {
                 model.addAttribute("notSameUser", true);
             }
             else{
                 model.addAttribute("notSameUser", false);
             }
-            if (userService.checkIfTheUserIsFollowed(user)) {
+            if (userService.checkIfTheUserIsFollowed(user, request)) {
                 model.addAttribute("followed", true);
             }
-            if (user.equals(userService.getLoggedUser())) {
+            if (user.equals(userService.getLoggedUser(request.getUserPrincipal().getName()))) {
                 model.addAttribute("hideDeleteButton", true);
             }
 
@@ -234,10 +235,10 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/unfollow")
-    public String unfollowUser(Model model, @PathVariable long userId) {
+    public String unfollowUser(Model model, @PathVariable long userId, HttpServletRequest request) {
         UserDTO userToUnfollow = userService.getUserById(userId);
         if (userToUnfollow != null) {
-            userService.unfollowUser(userToUnfollow);
+            userService.unfollowUser(userToUnfollow, request);
             return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");
@@ -246,10 +247,10 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/follow")
-    public String followUser(Model model, @PathVariable long userId) {
+    public String followUser(Model model, @PathVariable long userId, HttpServletRequest request) {
         UserDTO userTofollow = userService.getUserById(userId);
         if (userTofollow != null) {
-            userService.followUser(userTofollow);
+            userService.followUser(userTofollow, request);
             return "redirect:/profile/" + userId;
         } else {
             model.addAttribute("message", "no se ha encontrado ese usuario");

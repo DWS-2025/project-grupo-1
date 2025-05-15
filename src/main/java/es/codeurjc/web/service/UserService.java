@@ -32,6 +32,8 @@ import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class UserService {
@@ -75,16 +77,16 @@ public class UserService {
      * return loggedUser;
      * }
      */
-    public UserDTO getLoggedUser() {
-        return toDTO(userRepository.findByUserName("Admin").get());
+    public UserDTO getLoggedUser(String userName) {
+        return toDTO(userRepository.findByUserName(userName).get());
     }
 
-    public User getLoggedUserDomain() {
-        return userRepository.findByUserName("Admin").get();
+    public User getLoggedUserDomain(String userName) {
+        return userRepository.findByUserName(userName).get();
     }
 
-    public UserBasicDTO getLoggedUserBasic() {
-        return toBasicDTO(userRepository.findByUserName("Admin").get());
+    public UserBasicDTO getLoggedUserBasic(String userName) {
+        return toBasicDTO(userRepository.findByUserName(userName).get());
     }
 
     public Collection<UserDTO> findAllUsers() {
@@ -272,17 +274,17 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void unfollowUser(UserDTO userToUnfollowDTO) {
+    public void unfollowUser(UserDTO userToUnfollowDTO, HttpServletRequest request) {
         User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
-        User loggedUser = getLoggedUserDomain();
+        User loggedUser = getLoggedUserDomain(request.getUserPrincipal().getName());
         loggedUser.unfollow(userToUnfollow);
         userRepository.save(loggedUser);
         userRepository.save(userToUnfollow);
     }
 
-    public void followUser(UserDTO userToFollowDTO) {
+    public void followUser(UserDTO userToFollowDTO, HttpServletRequest request) {
         User userToFollow = userRepository.findById(userToFollowDTO.id()).orElseThrow();
-        User loggedUser = getLoggedUserDomain();
+        User loggedUser = getLoggedUserDomain(request.getUserPrincipal().getName());
         loggedUser.follow(userToFollow);
         userRepository.save(loggedUser);
         userRepository.save(userToFollow);
@@ -449,8 +451,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean checkIfTheUserIsFollowed(UserDTO userToCheck) {
-        User user = getLoggedUserDomain();
+    public boolean checkIfTheUserIsFollowed(UserDTO userToCheck, HttpServletRequest request) {
+        User user = getLoggedUserDomain(request.getUserPrincipal().getName());
         User userToCheckDomain = userRepository.findById(userToCheck.id()).orElseThrow();
         if (user.getFollowings().contains(userToCheckDomain)) {
             return true;

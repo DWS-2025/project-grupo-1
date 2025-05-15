@@ -31,6 +31,7 @@ import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class SectionController {
@@ -189,9 +190,9 @@ public class SectionController {
     }
 
     @GetMapping("/section/{id}/unfollow")
-    public String unfollowSection(Model model, @PathVariable long id) {
+    public String unfollowSection(Model model, @PathVariable long id, HttpServletRequest request) {
         Optional<SectionDTO> section = sectionService.findById(id);
-        UserDTO userDTO = userService.getLoggedUser();
+        UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
 
         if (section.isPresent()) {
             userService.unfollowSection(userDTO, section.get());
@@ -204,9 +205,9 @@ public class SectionController {
     }
 
     @GetMapping("/section/{id}/follow")
-    public String followSection(Model model, @PathVariable long id) {
+    public String followSection(Model model, @PathVariable long id,HttpServletRequest request) {
         Optional<SectionDTO> section = sectionService.findById(id);
-        UserDTO userDTO = userService.getLoggedUser();
+        UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
 
         if (section.isPresent()) {
             userService.followSection(userDTO, section.get());

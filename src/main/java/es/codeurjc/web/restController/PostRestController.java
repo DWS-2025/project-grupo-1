@@ -35,6 +35,7 @@ import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -62,9 +63,9 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@RequestBody CreatePostDTO createPostDTO, MultipartFile imageFile)
+    public ResponseEntity<PostDTO> createPost(@RequestBody CreatePostDTO createPostDTO, MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
-        PostDTO postDTO = postService.save(createPostDTO, imageFile); // Save the post and image
+        PostDTO postDTO = postService.save(createPostDTO, imageFile,request); // Save the post and image
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(postDTO.id()).toUri(); // URI for the new post
         return ResponseEntity.created(location).body(postDTO);
     }
@@ -147,9 +148,9 @@ public class PostRestController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(
             @PathVariable long postId,
-            @RequestBody CreateCommentDTO commentDTO) {
+            @RequestBody CreateCommentDTO commentDTO, HttpServletRequest request) {
 
-        CommentDTO savedComment = commentService.saveCommentInPost(postId, commentDTO);
+        CommentDTO savedComment = commentService.saveCommentInPost(postId, commentDTO, request);
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(savedComment.id()).toUri();
         return ResponseEntity.created(location).body(savedComment);
     }

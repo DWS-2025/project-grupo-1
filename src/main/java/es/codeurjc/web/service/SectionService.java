@@ -34,6 +34,7 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.CommentRepository;
 import es.codeurjc.web.repository.SectionRepository;
 import es.codeurjc.web.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class SectionService {
@@ -245,9 +246,9 @@ public class SectionService {
         return toDTOs(getSectionsFromIdsList(sectionIds));
     }
 
-    public Collection<SectionDTO> findNotFollowedSections() {
+    public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
-        List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser()).getFollowedSections();
+        List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
         // El error esta en que, al usar un UserDTO, followed sections es null, al usar un usuario domain (sin haber pasado por conversion), las coge bien (habria que cambiar este comportamiento)
         // List<Section> followedSections = userService.getLoggedUserDomain().getFollowedSections();
         // Filter only the sections that are NOT in the list of followed sections

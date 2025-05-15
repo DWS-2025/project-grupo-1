@@ -19,6 +19,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.CommentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class CommentService {
@@ -39,13 +40,13 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
-    public CommentDTO saveCommentInPost(Long postID, CreateCommentDTO commentDTO) {
+    public CommentDTO saveCommentInPost(Long postID, CreateCommentDTO commentDTO, HttpServletRequest request) {
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
 
         //Ocurre lo mismo que en el tema de el discover y el following, no se por que al hacer la conversión de userDTO a user no funciona correctamente.
         //User currentUser = userMapper.toDomain(userService.getLoggedUser());
-        User currentUser = userService.getLoggedUserDomain();
+        User currentUser = userService.getLoggedUserDomain(request.getUserPrincipal().getName());
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getUserName());
         comment.setCommentedPost(postToComment);

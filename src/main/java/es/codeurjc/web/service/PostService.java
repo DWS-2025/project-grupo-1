@@ -38,6 +38,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class PostService {
@@ -84,28 +85,28 @@ public class PostService {
         return toDTO(findById(id).orElseThrow());
     }
 
-    public Post save(Post post, MultipartFile imageFile) throws IOException { // Swapped from Post to void
+    public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException { // Swapped from Post to void
 
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         }
         post.setContent(sanitizeHtml(post.getContent()));
         post.setTitle(sanitizeHtml(post.getTitle()));
-        return save(post);
+        return save(post,request);
 
     }
 
-    public PostDTO save(PostDTO postDTO, MultipartFile imagFile) throws IOException {
-        return toDTO(save(toDomain(postDTO), imagFile));
+    public PostDTO save(PostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
+        return toDTO(save(toDomain(postDTO), imagFile, request));
     }
 
-    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile) throws IOException {
-        return toDTO(save(toDomain(postDTO), imagFile));
+    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
+        return toDTO(save(toDomain(postDTO), imagFile, request));
     }
 
-    public Post save(Post post) { // Swapped from Post to void
+    public Post save(Post post, HttpServletRequest request) { // Swapped from Post to void
 
-        User currentUser = userMapper.toDomain(userService.getLoggedUser());
+        User currentUser = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName()));
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
         post.setContent(sanitizeHtml(post.getContent()));
