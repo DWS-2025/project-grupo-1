@@ -74,7 +74,14 @@ https://templatemo.com/tm-579-cyborg-gaming
               <li><a href="/discover">Descubrir</a></li>
               <li><a href="/post">Publicaciones</a></li>
               <li><a href="/section">Secciones</a></li>
-              <li><a href="/profile/1">Perfil</a></li>
+              <li>
+                {{#loggedUser}}
+                <a href="/profile/{{loggedUser.id}}">Perfil</a>
+                {{/loggedUser}}
+                {{^loggedUser}}
+                <a href="/login">Iniciar sesión</a>
+                {{/loggedUser}}
+              </li>
             </ul>
             <a class='menu-trigger'>
               <span>Menu</span>

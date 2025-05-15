@@ -104,8 +104,7 @@ public class Manager {
         defaultSection10.setImageFile(localImageToBlob("images/sections/image-10.jpeg"));
         defaultSection11.setImageFile(localImageToBlob("images/sections/image-11.jpeg"));
 
-        // No tiene sentido que las valoraciones sean hasta 20, si lo unico que controlan los usuarios para valorar son los comentarios y van del 0 al 5.
-        // En todo caso se podria añadir comentarios por defecto con cierta valoracion
+        
         
         defaultSection1.setAverageRating(10);
         defaultSection2.setAverageRating(9);
@@ -267,61 +266,7 @@ public class Manager {
 
     }
 
-    /* 
-    // Not used yet due to issues with the database
-    public void followSectionAutomated() {
-        Random random = new Random();
-        List<Section> sections = sectionService.findAll();
-        for (int i = 1; i <= userService.findAllUsers().size(); i++) {
-            if (userService.getUserById(i) != null) {
-                int numberOfSectionsToFollow = random.nextInt(sections.size() - 1) + 1; // At least one section
-                Set<Section> followedSections = new HashSet<>();
-                for (int j = 0; j < numberOfSectionsToFollow; j++) {
-                    Section sectionToFollow;
-                    do {
-                        sectionToFollow = sections.get(random.nextInt(sections.size()));
-                    } while (userService.getUserById(i).getFollowers().contains(sectionToFollow)); // Ensure a user does
-                                                                                                   // not follow the
-                                                                                                   // same section more
-                                                                                                   // than once
-                    userService.getUserById(i).followSection(sectionToFollow);
-                    userService.save(userService.getUserById(i));
-                    followedSections.add(sectionToFollow);
-
-                }
-            }
-        }
-    }
-     */
-
-    // Not used yet due to issues with the database
-    /*  public void followUsersAutomated() {
-        Random random = new Random();
-        List<User> users = userService.findAllUsers();
-        for (int i = 1; i <= userService.findAllUsers().size(); i++) {
-            int numberOfUsersToFollow = random.nextInt(users.size() - 1) + 1;
-            Set<User> followedUsers = new HashSet<>();
-
-            for (int j = 0; j < numberOfUsersToFollow; j++) {
-                User userToFollow;
-                do {
-                    userToFollow = users.get(random.nextInt(users.size()));
-                } while (followedUsers.contains(userToFollow) || userService.getUserById(i).equals(userToFollow)); // Evitar
-                                                                                                                   // seguir
-                                                                                                                   // al
-                                                                                                                   // mismo
-                                                                                                                   // usuario
-
-                userService.getUserById(i).follow(userToFollow);
-                userService.save(userService.getUserById(i));
-                userService.save(userToFollow);
-                followedUsers.add(userToFollow);
-                
-
-            }
-        }
-    }
-     */
+   
     public Blob localImageToBlob(String localFilePath) {
         File imageFile = new File(localFilePath);
 
