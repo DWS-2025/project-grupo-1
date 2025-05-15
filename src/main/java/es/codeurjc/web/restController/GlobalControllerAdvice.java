@@ -21,19 +21,19 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute
     public void addUserToModel(Model model) {
-        // Obtén el usuario autenticado desde el SecurityContext
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
-            // El principal debe ser una instancia de User (Spring Security)
+          // Check if the principal is an instance of User
             User principal = (User) authentication.getPrincipal();
             String username = principal.getUsername();
 
-            // Obtén el usuario autenticado desde el servicio
+           // Fetch the user details using the username
             UserDTO user = userService.findByUserNameAuth(username);
             model.addAttribute("loggedUser", user);
         } else {
-            // Si no hay usuario autenticado, añade un valor nulo o vacío
+            // User is not authenticated or principal is not a User object
             model.addAttribute("loggedUser", null);
         }
     }

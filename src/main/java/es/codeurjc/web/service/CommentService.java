@@ -44,8 +44,6 @@ public class CommentService {
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
 
-        //Ocurre lo mismo que en el tema de el discover y el following, no se por que al hacer la conversión de userDTO a user no funciona correctamente.
-        //User currentUser = userMapper.toDomain(userService.getLoggedUser());
         User currentUser = userService.getLoggedUserDomain(request.getUserPrincipal().getName());
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getUserName());
@@ -130,10 +128,6 @@ public class CommentService {
     public CommentDTO findCommentByIdDTO(Long id) {
         return toDTO(commentRepository.findById(id).orElseThrow());
     }
-
-    // public CommentDTO findCommentById(Long id, Long postId) {
-    //    return toDTO(commentRepository.findById(id).orElseThrow());
-    // }
 
     private CommentDTO toDTO(Comment comment) {
         return mapper.toDTO(comment);
