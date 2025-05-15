@@ -31,7 +31,7 @@
     <div class="form-group">
       <label for="content">Content:</label>
       <!-- Div for the rich text editor -->
-      <div id="editor-container">{{#isEditing}}{{content}}{{/isEditing}}</div>
+      <div id="editor-container">{{#isEditing}}{{{content}}}{{/isEditing}}</div>
       <!-- Hidden input to send the HTML content to the server -->
       <input type="hidden" id="content" name="content">
     </div>

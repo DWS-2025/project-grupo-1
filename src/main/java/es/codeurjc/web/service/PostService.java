@@ -308,7 +308,7 @@ public class PostService {
 
     public String sanitizeHtml(String htmlContent) {
         // Use a predefined safelist to allow only basic HTML tags
-        return Jsoup.clean(htmlContent, Safelist.basic());
+        return Jsoup.clean(htmlContent, Safelist.relaxed());
     }
 
     public void deletePostImage(long id) {
