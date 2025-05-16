@@ -33,6 +33,7 @@
                         {{/hasImage}}
                       </div>
                     </div>
+                    {{#logged}}
                     <div class="col-lg-12">
                       <div class="main-button">
                         <a href="/post/{{post.id}}/comment/new">Comentar</a>
@@ -50,6 +51,13 @@
                         </form>
                       </div>
                     </div>
+                    {{/logged}}
+                    {{^logged}}
+                    <div class="col-lg-12">
+                      <div class="main-button">
+                        <a href="/login">Inicia sesión para comentar</a>
+                      </div>
+                    {{/logged}}
                     
                     <div class="col-lg-12">
                       <div class="secondary-button">

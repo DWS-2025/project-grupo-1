@@ -50,6 +50,7 @@ public class SecurityConfiguration {
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        
         http.authenticationProvider(authenticationProvider());
 
         http
@@ -123,6 +124,7 @@ public class SecurityConfiguration {
     @Order(2)
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
+
         http.authenticationProvider(authenticationProvider());
 
         http
@@ -130,6 +132,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                 // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
                 .requestMatchers("/", "/assets/**", "/vendor/**", "/home" , "/register", "/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/post", "/user/*/image", "/no-image.png", "/images/spinner.gif").permitAll()
+                .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}").permitAll()
+                // We should test the regex for the post id
+                
                 // PRIVATE PAGES
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin

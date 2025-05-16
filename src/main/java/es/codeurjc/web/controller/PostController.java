@@ -29,7 +29,6 @@ import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @Controller
 public class PostController {
 
@@ -68,33 +67,45 @@ public class PostController {
     public String createPost(Model model) {
         model.addAttribute("sections", sectionService.findAll());
         model.addAttribute("isEditing", false);
-        
+
         return "post_form";
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {  
-        
+    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+
         postService.addSections(createPostDTO, sectionIds);
-        
+
         String[] contributorsArray = newContributors.split(",");
         postService.addContributors(createPostDTO, contributorsArray);
         postService.save(createPostDTO, newImage, request);
         return "redirect:https://localhost:8443/post";
     }
-    
 
     @GetMapping("/post/{id}")
-    public String viewPost(Model model, @PathVariable long id) {//, @RequestParam(defaultValue = "0") int page) {
+    public String viewPost(Model model, @PathVariable long id, HttpServletRequest request) {//, @RequestParam(defaultValue = "0") int page) {
         PostDTO postDTO = postService.findByIdAsDTO(id);
-        //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
 
-        model.addAttribute("post", postDTO);
-        model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
-        //model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
-        model.addAttribute("currentPage", 0); //commentPage.getNumber());
-        model.addAttribute("hasImage", postDTO.image() != null);
-        return "view_post";
+        //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
+        if (request.getUserPrincipal() != null) {
+            model.addAttribute("post", postDTO);
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
+            //model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
+            model.addAttribute("currentPage", 0); //commentPage.getNumber());
+            model.addAttribute("hasImage", postDTO.image() != null);
+                        model.addAttribute("logged", true);
+
+            return "view_post";
+
+        } else {
+            model.addAttribute("post", postDTO);
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
+            model.addAttribute("currentPage", 0); //commentPage.getNumber());
+            model.addAttribute("hasImage", postDTO.image() != null);
+
+            model.addAttribute("logged", false);
+            return "view_post";
+        }
 
     }
 
@@ -102,32 +113,28 @@ public class PostController {
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
 
         return postService.getImageFileFromId(id);
-        
-    }
 
+    }
 
     @GetMapping("/post/{id}/edit")
     public String updatePost(Model model, @PathVariable long id) {
-        
+
         PostDTO postDTO = postService.findByIdAsDTO(id);
 
         List<Map<String, Object>> markedSections = postService.preparePostSectionsForForm(postDTO);
 
-            // Create a List<Section> with "selected" property
-            // List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
-            // for (Section section : allSections) {
-            //     Map<String, Object> sectionData = new HashMap<>();
-            //     sectionData.put("id", section.getId());
-            //     sectionData.put("title", section.getTitle());
-
-            //     // Verify if the section is in the post using its id
-            //     boolean isSelected = postSections.stream()
-            //             .anyMatch(s -> s.getId() == section.getId());
-
-            //     sectionData.put("selected", isSelected);
-            //     sectionsWithSelection.add(sectionData);
-            // }
-
+        // Create a List<Section> with "selected" property
+        // List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
+        // for (Section section : allSections) {
+        //     Map<String, Object> sectionData = new HashMap<>();
+        //     sectionData.put("id", section.getId());
+        //     sectionData.put("title", section.getTitle());
+        //     // Verify if the section is in the post using its id
+        //     boolean isSelected = postSections.stream()
+        //             .anyMatch(s -> s.getId() == section.getId());
+        //     sectionData.put("selected", isSelected);
+        //     sectionsWithSelection.add(sectionData);
+        // }
         String contributors = postService.contributorsToString(postDTO);
 
         model.addAttribute("sections", markedSections);
@@ -145,14 +152,14 @@ public class PostController {
             @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
 
-            postService.updatePost(id, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
-            return "redirect:/post/" + id;
+        postService.updatePost(id, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
+        return "redirect:/post/" + id;
 
     }
 
     @PostMapping("/post/{id}/delete")
     public String deletePost(@PathVariable long id, Model model) {
-        
+
         PostDTO postDTO = postService.findByIdAsDTO(id);
         postService.deletePost(postDTO);
         return "redirect:/post";
@@ -161,15 +168,15 @@ public class PostController {
 
     @GetMapping("/post/{postId}/comment/new")
     public String newPostCommentForm(Model model, @PathVariable long postId) {
-            model.addAttribute("post", postService.findByIdAsDTO(postId));
-            return "comment_form";
+        model.addAttribute("post", postService.findByIdAsDTO(postId));
+        return "comment_form";
 
     }
 
     @PostMapping("/post/{postId}/comment/new")
     public String newPostComment(Model model, @PathVariable long postId, CreateCommentDTO newComment, HttpServletRequest request) {
         postService.findByIdAsDTO(postId);
-            
+
         if (newComment.content().isEmpty()) {
             model.addAttribute("message", "El comentario no puede estar vacio");
             return "error";

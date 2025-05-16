@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -261,7 +260,7 @@ public class SectionService {
     public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
         List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
-        // El error esta en que, al usar un UserDTO, followed sections es null, al usar un usuario domain (sin haber pasado por conversion), las coge bien (habria que cambiar este comportamiento)
+       
         // List<Section> followedSections = userService.getLoggedUserDomain().getFollowedSections();
         // Filter only the sections that are NOT in the list of followed sections
         if (followedSections != null) {
