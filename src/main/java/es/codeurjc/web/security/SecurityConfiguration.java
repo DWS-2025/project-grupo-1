@@ -129,13 +129,13 @@ public class SecurityConfiguration {
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
                 // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
-                .requestMatchers("/", "/assets/**", "/vendor/**").permitAll()
+                .requestMatchers("/", "/assets/**", "/vendor/**", "/home" , "/register", "/login").permitAll()
                 // PRIVATE PAGES
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                 .loginPage("/login")
                 .failureUrl("/login")
-                .defaultSuccessUrl("/home")
+                .defaultSuccessUrl("/discover")
                 .permitAll())
                 .logout(logout -> logout
                 .logoutUrl("/logout")

@@ -57,7 +57,12 @@
               </div>
               <div class="col-lg-12">
                 <div class="main-button">
+                  {{#session}}
                   <a href="/profile/{{user.id}}">Ir a tu perfil</a>
+                  {{/session}}
+                  {{^session}}
+                  <a href="/login">Iniciar sesión</a>
+                  {{/session}}
                 </div>
               </div>
             </div>

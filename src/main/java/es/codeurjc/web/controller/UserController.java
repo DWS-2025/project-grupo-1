@@ -45,7 +45,7 @@ public class UserController {
     public String index(Model model,HttpServletRequest request) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
-        if (userService.getLoggedUser(request.getUserPrincipal().getName()) != null) {
+        if (request.getUserPrincipal() != null) {
             model.addAttribute("user", userService.getLoggedUser(request.getUserPrincipal().getName()));
             model.addAttribute("session", true);
 

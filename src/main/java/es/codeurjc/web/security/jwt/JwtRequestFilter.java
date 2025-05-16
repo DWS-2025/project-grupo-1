@@ -18,36 +18,40 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-	
-	private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-	private final UserDetailsService userDetailsService;
+    private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-	private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
-	public JwtRequestFilter(UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
-		this.userDetailsService = userDetailsService;
-		this.jwtTokenProvider = jwtTokenProvider;
-	}
+    private final JwtTokenProvider jwtTokenProvider;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+    public JwtRequestFilter(UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
+        this.userDetailsService = userDetailsService;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-		try {
-			var claims = jwtTokenProvider.validateToken(request, true);
-			var userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				
-			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-		} catch (Exception ex) {
-			log.error("Exception processing JWT Token: ", ex);
-		}
+        String path = request.getRequestURI();
+        if (path.equals("/login") || path.equals("/register") || path.equals("/home")
+                || path.startsWith("/assets") || path.startsWith("/vendor")) {
+        } else {
+            try {
+                var claims = jwtTokenProvider.validateToken(request, true);
+                var userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
-		filterChain.doFilter(request, response);
-	}	
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception ex) {
+                log.error("Exception processing JWT Token: ", ex);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
 
 }
