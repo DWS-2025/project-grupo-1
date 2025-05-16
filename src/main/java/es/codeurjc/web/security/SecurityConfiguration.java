@@ -154,7 +154,7 @@ public class SecurityConfiguration {
                 .logoutSuccessUrl("/login")
                 .permitAll());
 
-
+       
         return http.build();
     }
 }

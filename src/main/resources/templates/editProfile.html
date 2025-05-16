@@ -21,8 +21,7 @@
                                     <div class="form-group">
                                         <label for="description">Descripción:</label>
                                         {{#description}}
-                                        <textarea class="form-control" id="description" name="description" rows="10"
-                                            >{{description}}</textarea>
+                                        <textarea class="form-control" id="description" name="description" rows="10">{{description}}</textarea>
                                         {{/description}}
                                         {{^description}}
                                         <textarea class="form-control" id="description" name="description" rows="10"
@@ -38,7 +37,7 @@
                             <div class="d-flex justify-content-center">
                                 <button type="submit" class="btn btn-primary">Confirmar</button>
                             </div>
-                            <input type="hidden" name="_csrf" value="{{token}}"/>
+                            
                             </form>
                             {{/User}}
                         </div>

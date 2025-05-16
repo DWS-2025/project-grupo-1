@@ -222,7 +222,7 @@ public class SectionService {
 
     public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
             throws IOException {
-        Section oldSection = toDomain(oldSectionDTO);
+        Section oldSection =  sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
         Section updatedSection = toDomain(updatedSectionDTO);
 
         oldSection.setTitle(updatedSection.getTitle());
