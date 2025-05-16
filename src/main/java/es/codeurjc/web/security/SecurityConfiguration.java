@@ -72,8 +72,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("USER")
+                .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
                 // USERS
@@ -138,8 +138,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                 // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
                 .requestMatchers("/", "/assets/**", "/vendor/**", "/home" , "/register", "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/post", "/user/*/image", "/no-image.png", "/images/spinner.gif").permitAll()
+                .requestMatchers(HttpMethod.GET, "/post","/section", "/section/*/image", "/user/*/image", "/no-image.png", "/images/spinner.gif").permitAll()
                 .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}").permitAll()
+
+
                 // We should test the regex for the post id
                 
                 // PRIVATE PAGES

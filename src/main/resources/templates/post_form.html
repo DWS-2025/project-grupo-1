@@ -12,12 +12,12 @@
 {{#isEditing}}
 <h2>Edit post</h2>
 <!-- Form to edit an existing post -->
-<form action="https://localhost:8443/post/{{post.id}}/edit" method="post" enctype="multipart/form-data">
+<form id="postForm" action="https://localhost:8443/post/{{post.id}}/edit" method="post" enctype="multipart/form-data">
   {{/isEditing}}
   {{^isEditing}}
   <h2>Create post</h2>
   <!-- Form to create a new post -->
-  <form action="https://localhost:8443/post/new" method="post" enctype="multipart/form-data">
+  <form id="postForm" action="https://localhost:8443/post/new" method="post" enctype="multipart/form-data">
     {{/isEditing}}
 
     <!-- Title input -->
@@ -85,8 +85,8 @@
     quill.clipboard.dangerouslyPasteHTML(existingContent);
 
     // On form submission, copy the editor's content to the hidden input
-    document.querySelector('form').onsubmit = function () {
-      document.querySelector('#content').value = quill.root.innerHTML;
+    document.getElementById('postForm').onsubmit = function () {
+  document.getElementById('content').value = quill.root.innerHTML;
     };
   </script>
 
