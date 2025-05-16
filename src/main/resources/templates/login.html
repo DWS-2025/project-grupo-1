@@ -1,14 +1,10 @@
 {{>Common/header}}
 <div class="container d-flex justify-content-center align-items-center header-text" style="min-height: 100vh;">
   <div class="auth-box">
-    
-      <!--{{#redirected}}
-        <p class="text-light">Para ver tu perfil debes iniciar sesión</p>
-        {{/redirected}}
-        We will use it the next fase --> 
+
         <form action="/login" method="post">
           <div class="form-group mb-3">
-            {{^Error}}
+            {{#Error}}
             <p class="text-light" style="text-align: center; background-color: red;">Usuario o contraseña no válidos</p>
             {{/Error}}
             <label for="name" class="text-light">Nombre de Usuario</label>

@@ -16,7 +16,7 @@ import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import jakarta.annotation.PostConstruct;
 
-@Service
+ @Service
 public class Manager {
 
     @Autowired

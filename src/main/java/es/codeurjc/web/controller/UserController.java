@@ -81,30 +81,19 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("Error", true);
+        model.addAttribute("Error", false);
         return "login";
     }
 
-    // spring implements the login process
-    /* 
     @PostMapping("/login")
-    public String login(Model model, @RequestParam String userName, @RequestParam String password/*
-                                                                                                  * , HttpSession
-                                                                                                  * session
-     ) {
-        UserDTO logingUser = userService.findByUserName(userName);
-        // this needs to be moved to the service layer
-        /*
-         * if(logingUser == null || !(logingUser.getPassword().equals(password))){
-         * model.addAttribute("Error", false);
-         * return "/login";
-         * }
-         
-  userService.setLoggedUser(session, logingUser); 
-        return "redirect:/";
+    public String postMethodName(Model model, @RequestParam String userName, @RequestParam String password) {
+        if (userService.getLoggedUser(userName) == null) {
+            model.addAttribute("Error", true);
+            return "login";
+        } else {
+            return "redirect:/home";
+        }
     }
-        */
-    
 
     @GetMapping("/register")
     public String register(Model model) {

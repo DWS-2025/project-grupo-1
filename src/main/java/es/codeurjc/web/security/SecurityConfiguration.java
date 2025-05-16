@@ -130,7 +130,7 @@ public class SecurityConfiguration {
 						.anyRequest().authenticated())
 				.formLogin(formLogin -> formLogin
 						.loginPage("/login")
-						.failureUrl("/loginerror")
+						.failureUrl("/login")
 						.defaultSuccessUrl("/home")
 						.permitAll())
 				.logout(logout -> logout

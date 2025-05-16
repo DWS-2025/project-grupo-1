@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.NoSuchElementException; 
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,6 @@ import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -66,18 +65,6 @@ public class UserService {
         }
     }
 
-    /*
-     * private User loggedUser; THIS WILL BE USED IN THE NEXT PHASE OF THE PROJECT
-     * 
-     * public void setLoggedUser(HttpSession session, User user){
-     * session.setAttribute("User", user);
-     * loggedUser = user;
-     * }
-     * 
-     * public User getLoggedUser(){
-     * return loggedUser;
-     * }
-     */
     public UserDTO getLoggedUser(String userName) {
         return toDTO(userRepository.findByUserName(userName).get());
     }
