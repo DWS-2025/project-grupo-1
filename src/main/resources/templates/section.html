@@ -23,6 +23,7 @@
     <div style="display: flex; justify-content: center; margin-top: 10px;">
       <button type="submit">Aplicar</button>
     </div>
+    <input type="hidden" name="_csrf" value="{{token}}"/>
   </form>
 </details>
 
@@ -35,6 +36,7 @@
 {{#isSearch}}
 <form action="/section" method="get" style="text-align: center; margin-bottom: 20px;">
   <button type="submit" style="background-color: palevioletred; color: palevioletred; border: none; color: white; border-radius: 25px">Todas las secciones</button>
+<input type="hidden" name="_csrf" value="{{token}}"/>
 </form>
 {{/isSearch}}
 
@@ -69,6 +71,7 @@
                     <button type="submit"
                       style="background-color: palevioletred; color: palevioletred; border: none; color: white">Borrar
                       sección</button>
+                      <input type="hidden" name="_csrf" value="{{token}}"/>
                   </form>
                 </a>
               </li>

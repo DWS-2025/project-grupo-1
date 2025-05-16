@@ -48,6 +48,7 @@
                       <div class="main-button">
                         <form action="/post/{{post.id}}/delete" method="post">
                           <input type='submit' value='Eliminar Post' />
+                          <input type="hidden" name="_csrf" value="{{token}}"/>
                         </form>
                       </div>
                     </div>
@@ -101,6 +102,7 @@
                 <div class="main-border-button border-active">
                   <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
                     <input type='submit' value='Eliminar comentario' />
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
                   </form>
                 </div>
               </li>

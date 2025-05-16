@@ -154,8 +154,6 @@ public class SecurityConfiguration {
                 .logoutSuccessUrl("/login")
                 .permitAll());
 
-        // Disable CSRF at the moment
-        http.csrf(csrf -> csrf.disable());
 
         return http.build();
     }
