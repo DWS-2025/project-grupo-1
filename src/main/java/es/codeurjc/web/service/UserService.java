@@ -164,7 +164,7 @@ public class UserService {
             if (userToDelete.getPosts() != null) {
                 List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
                 for (Post post : postsCopy) {
-                    postService.deletePost(post);
+                    postService.deletePost(post.getId());
                 }
             }
 

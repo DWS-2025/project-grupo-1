@@ -77,12 +77,16 @@ public class PostService {
         return postRepository.findAll(pageable).map(this::toDTO);
     }
 
-    public Optional<Post> findById(long id) {
+    public Optional<Post> findById(Long id) {
         return postRepository.findById(id);
     }
 
-    public PostDTO findByIdAsDTO(long id) {
+    public PostDTO findByIdAsDTO(Long id) {
         return toDTO(findById(id).orElseThrow());
+    }
+
+    public boolean existsById(Long id) {
+        return postRepository.existsById(id);
     }
 
     public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException { // Swapped from Post to void
@@ -148,8 +152,10 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(Post post) {
+    public void deletePost(Long id) {
  
+        Post post = postRepository.findById(id).orElseThrow();
+
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
             sectionService.saveSection(section);
@@ -168,12 +174,13 @@ public class PostService {
         postRepository.deleteById(post.getId());
     }
 
-    public void deletePost(PostDTO postDTO) {
-        deletePost(toDomain(postDTO));
-    }
+    // public void deletePost(PostDTO postDTO) {
+    //     deletePost(toDomain(postDTO));
+    // }
 
-    public Post updatePost(Post oldPost, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
         
+        Post oldPost = postRepository.findById(id).orElseThrow();
         oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
         oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
@@ -199,19 +206,15 @@ public class PostService {
         return oldPost;
     }
 
-    public PostDTO updatePost(Long id, CreatePostDTO newPostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        return toDTO(updatePost(findById(id).orElseThrow(), toDomain(newPostDTO), newSectionIds, newContributorsStrings, newImage));
-    }
-
-    public PostDTO updatePost(PostDTO oldPost, PostDTO newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        return toDTO(updatePost(toDomain(oldPost), toDomain(newPost), newSectionIds, newContributorsStrings, newImage));
+    public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
     }
 
     public CommentService getCommentService() {
         return this.commentService;
     }
 
-    public void setAverageRatingPost(long postId) {
+    public void setAverageRatingPost(Long postId) {
         Post post = postRepository.findById(postId).get();
 
         post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
@@ -223,7 +226,7 @@ public class PostService {
         
         if (sectionIds != null && !sectionIds.isEmpty()) {
         
-            for (long sectionId : sectionIds) {
+            for (Long sectionId : sectionIds) {
                 post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));
             }
 
@@ -283,7 +286,7 @@ public class PostService {
         updateSections(toDomain(postDTO), oldSections, newSections);
     }
 
-    public void createPostImage(long id, URI location, InputStream inputStream, long size) {
+    public void createPostImage(Long id, URI location, InputStream inputStream, Long size) {
         
         Post post = postRepository.findById(id).orElseThrow();
         post.setImage(location.toString());
@@ -292,7 +295,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public Resource getImageFile(long id) throws SQLException {
+    public Resource getImageFile(Long id) throws SQLException {
 
         Post post = postRepository.findById(id).orElseThrow();
 
@@ -303,7 +306,7 @@ public class PostService {
         }
     }
 
-    public void replacePostImage(long id, InputStream inputStream, long size) {
+    public void replacePostImage(Long id, InputStream inputStream, Long size) {
 
         Post post = postRepository.findById(id).orElseThrow();
 
@@ -321,7 +324,7 @@ public class PostService {
         return Jsoup.clean(htmlContent, Safelist.relaxed());
     }
 
-    public void deletePostImage(long id) {
+    public void deletePostImage(Long id) {
 
         Post post = postRepository.findById(id).orElseThrow();
 
@@ -335,7 +338,9 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Map<String, Object>> preparePostSectionsForForm(Post post) {
+    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {
+        
+        Post post = findById(id).orElseThrow();
         Collection<Section> allSections = sectionService.findAll();
         List<Section> postSections = post.getSections();
 
@@ -352,24 +357,15 @@ public class PostService {
         return markedSections;
     }
 
-    public List<Map<String, Object>> preparePostSectionsForForm(PostDTO postDTO) {
-        return preparePostSectionsForForm(toDomain(postDTO));
-    }
+    public String contributorsToString(Long id) {
 
-    public String contributorsToString(Post post) {
-
+        Post post = findById(id).orElseThrow();
         String contributors = "";
         for (User user : post.getContributors()) {
             contributors += user.getUserName() + ", ";
         }
 
         return contributors;
-
-    }
-
-    public String contributorsToString(PostDTO postDTO) {
-        
-        return contributorsToString(toDomain(postDTO));
 
     }
 

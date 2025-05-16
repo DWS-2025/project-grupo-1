@@ -58,7 +58,7 @@ public class PostRestController {
 
 
     @GetMapping("/{id}")
-    public PostDTO getPost(@PathVariable long id) {
+    public PostDTO getPost(@PathVariable Long id) {
         return postService.findByIdAsDTO(id);
     }
 
@@ -71,27 +71,24 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public PostDTO updatePost(@PathVariable long id, @RequestBody PostDTO oldPostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings) throws IOException {
-        PostDTO newPostDTO = postService.findByIdAsDTO(id);
-        return postService.updatePost(oldPostDTO, newPostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile); // Update the post and image
+    public PostDTO updatePost(@PathVariable Long id, @RequestBody CreatePostDTO newCreatePostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings) throws IOException {
+        return postService.updatePost(id, newCreatePostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile); // Update the post and image
     }
 
     @DeleteMapping("/{id}")
-    public PostDTO deletePost(@PathVariable long id) {
-        PostDTO postToDelete = postService.findByIdAsDTO(id);
-        postService.deletePost(postToDelete); // Delete the post
-        return postToDelete;
+    public void deletePost(@PathVariable Long id) {
+        postService.deletePost(id); // Delete the post
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getImageFile(@PathVariable long id) throws SQLException, IOException {
+    public ResponseEntity<Object> getImageFile(@PathVariable Long id) throws SQLException, IOException {
         Resource postImage = postService.getImageFile(id);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(postImage);
     }
 
     @PostMapping("/{id}/image")
-	public ResponseEntity<Object> createPostImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+	public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
 
@@ -102,7 +99,7 @@ public class PostRestController {
 	}
 
     @PutMapping("/{id}/image")
-	public ResponseEntity<Object> replacePostImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+	public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
 
 		postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
 
@@ -110,7 +107,7 @@ public class PostRestController {
 	}
 
     @DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deletePostImage(@PathVariable long id) throws IOException {
+	public ResponseEntity<Object> deletePostImage(@PathVariable Long id) throws IOException {
 
 		postService.deletePostImage(id);
 
@@ -126,7 +123,7 @@ public class PostRestController {
     // Get all comments for a specific post
     @GetMapping("/{postId}/comments")
     public ResponseEntity<Page<CommentDTO>> getCommentsByPostId(
-            @PathVariable long postId,
+            @PathVariable Long postId,
             @RequestParam(defaultValue = "0") int page) {
 
         Page<CommentDTO> commentsPage = commentService.findAllCommentsByPostId(postId, page);
@@ -136,8 +133,8 @@ public class PostRestController {
     // Get a specific comment by ID
     @GetMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> getCommentById(
-            @PathVariable long postId,
-            @PathVariable long commentId) {
+            @PathVariable Long postId,
+            @PathVariable Long commentId) {
 
         CommentDTO comment = commentService.findCommentByIdDTO(commentId);
         // CommentDTO comment = commentService.findCommentById(commentId, postId);
@@ -147,7 +144,7 @@ public class PostRestController {
     // new comment for a specific post
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(
-            @PathVariable long postId,
+            @PathVariable Long postId,
             @RequestBody CreateCommentDTO commentDTO, HttpServletRequest request) {
 
         CommentDTO savedComment = commentService.saveCommentInPost(postId, commentDTO, request);
@@ -158,8 +155,8 @@ public class PostRestController {
     // update a specific comment in a post
     @PutMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(
-            @PathVariable long postId,
-            @PathVariable long commentId,
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
             @RequestBody CommentDTO updatedCommentDTO) {
 
         commentService.updateComment(commentId, updatedCommentDTO, postId);
@@ -168,7 +165,7 @@ public class PostRestController {
 
     // delete a specific comment from a post
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public void deleteCommentFromPost(@RequestParam long postId, @RequestParam long commentId) {
+    public void deleteCommentFromPost(@RequestParam Long postId, @RequestParam Long commentId) {
         commentService.deleteCommentFromPost(commentId, postId);
 
     }

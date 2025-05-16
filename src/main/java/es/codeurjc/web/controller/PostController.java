@@ -41,9 +41,6 @@ public class PostController {
     @Autowired
     private SectionService sectionService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
         int pageSize = 10; // Number of posts per page
@@ -82,24 +79,24 @@ public class PostController {
         return "redirect:https://localhost:8443/post";
     }
 
-    @GetMapping("/post/{id}")
-    public String viewPost(Model model, @PathVariable long id, HttpServletRequest request) {//, @RequestParam(defaultValue = "0") int page) {
-        PostDTO postDTO = postService.findByIdAsDTO(id);
+    @GetMapping("/post/{postId}")
+    public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {//, @RequestParam(defaultValue = "0") int page) {
+        PostDTO postDTO = postService.findByIdAsDTO(postId);
 
-        //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(id,page);
+        //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(postId,page);
         if (request.getUserPrincipal() != null) {
             model.addAttribute("post", postDTO);
-            model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
-            //model.addAttribute("comments", commentService.findAllCommentsByPostId(id,page).getContent());
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(postId));
+            //model.addAttribute("comments", commentService.findAllCommentsByPostId(postId,page).getContent());
             model.addAttribute("currentPage", 0); //commentPage.getNumber());
             model.addAttribute("hasImage", postDTO.image() != null);
-                        model.addAttribute("logged", true);
+            model.addAttribute("logged", true);
 
             return "view_post";
 
         } else {
             model.addAttribute("post", postDTO);
-            model.addAttribute("comments", commentService.findAllCommentsByPostId(id));
+            model.addAttribute("comments", commentService.findAllCommentsByPostId(postId));
             model.addAttribute("currentPage", 0); //commentPage.getNumber());
             model.addAttribute("hasImage", postDTO.image() != null);
 
@@ -109,33 +106,33 @@ public class PostController {
 
     }
 
-    @GetMapping("/post/{id}/image")
-    public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
+    @GetMapping("/post/{postId}/image")
+    public ResponseEntity<Object> downloadImage(@PathVariable Long postId) throws SQLException {
 
-        return postService.getImageFileFromId(id);
+        return postService.getImageFileFromId(postId);
 
     }
 
-    @GetMapping("/post/{id}/edit")
-    public String updatePost(Model model, @PathVariable long id) {
+    @GetMapping("/post/{postId}/edit")
+    public String updatePost(Model model, @PathVariable Long postId) {
 
-        PostDTO postDTO = postService.findByIdAsDTO(id);
+        PostDTO postDTO = postService.findByIdAsDTO(postId);
 
-        List<Map<String, Object>> markedSections = postService.preparePostSectionsForForm(postDTO);
+        List<Map<String, Object>> markedSections = postService.preparePostSectionsForForm(postId);
 
         // Create a List<Section> with "selected" property
         // List<Map<String, Object>> sectionsWithSelection = new ArrayList<>();
         // for (Section section : allSections) {
         //     Map<String, Object> sectionData = new HashMap<>();
-        //     sectionData.put("id", section.getId());
+        //     sectionData.put("postId", section.getId());
         //     sectionData.put("title", section.getTitle());
-        //     // Verify if the section is in the post using its id
+        //     // Verify if the section is in the post using its postId
         //     boolean isSelected = postSections.stream()
         //             .anyMatch(s -> s.getId() == section.getId());
         //     sectionData.put("selected", isSelected);
         //     sectionsWithSelection.add(sectionData);
         // }
-        String contributors = postService.contributorsToString(postDTO);
+        String contributors = postService.contributorsToString(postId);
 
         model.addAttribute("sections", markedSections);
         model.addAttribute("post", postDTO);
@@ -147,54 +144,57 @@ public class PostController {
 
     }
 
-    @PostMapping("/post/{id}/edit")
-    public String updatePost(Model model, @PathVariable Long id, CreatePostDTO createPostDTO,
+    @PostMapping("/post/{postId}/edit")
+    public String updatePost(Model model, @PathVariable Long postId, CreatePostDTO createPostDTO,
             @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings)
             throws IOException {
 
-        postService.updatePost(id, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
-        return "redirect:/post/" + id;
+        postService.updatePost(postId, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
+        return "redirect:/post/" + postId;
 
     }
 
-    @PostMapping("/post/{id}/delete")
-    public String deletePost(@PathVariable long id, Model model) {
-
-        PostDTO postDTO = postService.findByIdAsDTO(id);
-        postService.deletePost(postDTO);
+    @PostMapping("/post/{postId}/delete")
+    public String deletePost(@PathVariable Long postId, Model model) {
+        postService.deletePost(postId);
         return "redirect:/post";
 
     }
 
     @GetMapping("/post/{postId}/comment/new")
-    public String newPostCommentForm(Model model, @PathVariable long postId) {
+    public String newPostCommentForm(Model model, @PathVariable Long postId) {
         model.addAttribute("post", postService.findByIdAsDTO(postId));
         return "comment_form";
 
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable long postId, CreateCommentDTO newComment, HttpServletRequest request) {
-        postService.findByIdAsDTO(postId);
+    public String newPostComment(Model model, @PathVariable Long postId, CreateCommentDTO newComment, HttpServletRequest request) {
+        if (postService.existsById(postId)) {
 
-        if (newComment.content().isEmpty()) {
-            model.addAttribute("message", "El comentario no puede estar vacio");
-            return "error";
+            if (newComment.content().isEmpty()) {
+                model.addAttribute("message", "El comentario no puede estar vacio");
+                return "error";
 
-        } else if (newComment.rating() > 5 || newComment.rating() < 0) {
-            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+            } else if (newComment.rating() > 5 || newComment.rating() < 0) {
+                model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+                return "error";
+            }
+
+            commentService.saveCommentInPost(postId, newComment, request);
+            return "redirect:/post/" + postId;
+
+        } else {
+            model.addAttribute("message", "El post no existe");
             return "error";
         }
-
-        commentService.saveCommentInPost(postId, newComment, request);
-        return "redirect:/post/" + postId;
 
     }
 
     // this should work, but the user can delete a comment from a post that is not
     // on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
+    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
 
         model.addAttribute("post", postService.findByIdAsDTO(postId));
         model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
@@ -204,8 +204,9 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostCommentInfo(@PathVariable long postId, @PathVariable long commentId, Model model,
+    public String editPostCommentInfo(@PathVariable Long postId, @PathVariable Long commentId, Model model,
             CommentDTO updatedComment) {
+                
         postService.findByIdAsDTO(postId);
         commentService.findCommentByIdDTO(commentId);
 
@@ -223,7 +224,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
-    public String deletePostComment(@PathVariable long postId, @PathVariable long commentId, Model model) {
+    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
 
         PostDTO postDTO = postService.findByIdAsDTO(postId);
         commentService.findCommentByIdDTO(commentId);
