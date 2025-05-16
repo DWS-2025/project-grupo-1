@@ -220,8 +220,7 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
-            throws IOException {
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) throws IOException {
         Section oldSection = toDomain(oldSectionDTO);
         Section updatedSection = toDomain(updatedSectionDTO);
 
