@@ -2,6 +2,8 @@ package es.codeurjc.web.restController;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +32,12 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.security.jwt.AuthResponse;
+import es.codeurjc.web.security.jwt.LoginRequest;
 import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/users")
@@ -38,6 +45,9 @@ public class UserRestController {
 
     @Autowired
     private UserService UserService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public Page<UserBasicDTO> getUsers(@RequestParam(defaultValue = "0") int page) {
@@ -56,12 +66,18 @@ public class UserRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO UserDTO) {
-        UserDTO = UserService.save(UserDTO);
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO newUser, HttpServletResponse response) {
 
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(UserDTO.id()).toUri(); // URI for the new User
-
-        return ResponseEntity.created(location).body(UserDTO);
+        for (UserDTO user : UserService.findAllUsers()) {
+            if (user.email().equals(newUser.email()) || user.userName().equals(newUser.userName())) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            }
+        }
+        User user = new User(newUser.userName(), passwordEncoder.encode(newUser.password()), newUser.email(), "USER");
+        UserService.save(user);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(newUser.id()).toUri(); // URI for the new User
+        return ResponseEntity.created(location).body(newUser);
     }
 
     @PutMapping("/{id}")
@@ -82,6 +98,7 @@ public class UserRestController {
         UserDTO User = UserService.findById(id);
             return UserService.deleteUser(User);
     }
+
 
     @PostMapping("/{id}/followings")
     public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO, HttpServletRequest request) {
@@ -108,12 +125,27 @@ public class UserRestController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{id}/image")
+/*   @GetMapping("/{id}/image")
     public ResponseEntity<Object> getPostImage(@PathVariable long id) 
         throws SQLException, IOException {
         Resource postImage = UserService.getUserImage(id);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(postImage);
+    }*/
+
+    @GetMapping("/{id}/image")
+public ResponseEntity<Resource> getUserImage(@PathVariable long id) throws IOException, SQLException {
+    Resource imageResource = UserService.getUserImage(id);
+    
+    if (!imageResource.exists() || !imageResource.isReadable()) {
+        return ResponseEntity.notFound().build();
     }
+
+    String contentType = Files.probeContentType(Paths.get(imageResource.getURI()));
+    
+    return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(imageResource);
+}
 
     @PutMapping("/{id}/image")
     public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)

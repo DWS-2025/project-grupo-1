@@ -142,7 +142,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/post", "/section", "/section/*/image", "/user/*/image",
                                 "/no-image.png", "/images/spinner.gif")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image").permitAll()
 
                         // We should test the regex for the post id
 
