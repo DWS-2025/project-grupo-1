@@ -139,6 +139,7 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public String showProfile(Model model, @PathVariable Long userId, HttpServletRequest request) {
         UserDTO user = userService.getUserById(userId);
+        UserDTO loggedUser = userService.getLoggedUser(request.getUserPrincipal().getName());
         if (user != null) {
             model.addAttribute("numberOfPublications", user.posts().size());
             model.addAttribute("numberOfFollowers", user.followers().size());
@@ -147,7 +148,7 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("id", user.id());
 
-            if (!Objects.equals(user.id(), userService.getLoggedUser(request.getUserPrincipal().getName()).id())) {
+            if (!Objects.equals(user.id(), loggedUser.id())) {
                 model.addAttribute("notSameUser", true);
             } else {
                 model.addAttribute("notSameUser", false);
@@ -155,8 +156,8 @@ public class UserController {
             if (userService.checkIfTheUserIsFollowed(user, request)) {
                 model.addAttribute("followed", true);
             }
-            if (user.equals(userService.getLoggedUser(request.getUserPrincipal().getName()))) {
-                model.addAttribute("hideDeleteButton", true);
+            if (user.equals(loggedUser) || loggedUser.id() == 1) {
+                model.addAttribute("ShowButtons", true);
             }
 
             return "profile";

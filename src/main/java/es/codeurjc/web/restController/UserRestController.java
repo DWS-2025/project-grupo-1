@@ -2,6 +2,8 @@ package es.codeurjc.web.restController;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -122,12 +125,27 @@ public class UserRestController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{id}/image")
+/*   @GetMapping("/{id}/image")
     public ResponseEntity<Object> getPostImage(@PathVariable long id) 
         throws SQLException, IOException {
         Resource postImage = UserService.getUserImage(id);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(postImage);
+    }*/
+
+    @GetMapping("/{id}/image")
+public ResponseEntity<Resource> getUserImage(@PathVariable long id) throws IOException, SQLException {
+    Resource imageResource = UserService.getUserImage(id);
+    
+    if (!imageResource.exists() || !imageResource.isReadable()) {
+        return ResponseEntity.notFound().build();
     }
+
+    String contentType = Files.probeContentType(Paths.get(imageResource.getURI()));
+    
+    return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(imageResource);
+}
 
     @PutMapping("/{id}/image")
     public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
