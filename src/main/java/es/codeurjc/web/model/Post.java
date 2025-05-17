@@ -34,7 +34,6 @@ public class Post {
 
     @ManyToOne
     private User owner;
-    private String ownerName;
     private float  averageRating = 0; // [0.00, 5.00]
     
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -132,10 +131,6 @@ public class Post {
         return this.owner;
     }
 
-    public String getUsername() {
-        return this.ownerName;
-    }
-
     public float getAverageRating() {
         return this.averageRating;
     }
@@ -162,10 +157,6 @@ public class Post {
 
     public void setSections(List<Section> sections) {
         this.sections = sections;
-    }
-
-    public void setOwnerName(String name){
-        this.ownerName = name;
     }
 
     @Override

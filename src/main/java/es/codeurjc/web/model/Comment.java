@@ -21,7 +21,6 @@ public class Comment {
     // esto hay que quitarlo cuando tengamos BD 
     @ManyToOne
     private Post commentedPost;
-    private String commentOwnerName;
     private int rating;
 
     //Constructor for the comments made by the user
@@ -38,13 +37,8 @@ public class Comment {
     public Comment(String content, User owner, Post post, int rating) {
         this.content = content;
         this.owner = owner;
-        this.commentOwnerName = owner.getUserName();
         this.commentedPost = post;
         this.rating = rating;
-    }
-
-    public void setCommentOwnerName(String commentOwnerName) {
-        this.commentOwnerName = commentOwnerName;
     }
 
     public long getId() {
@@ -74,11 +68,6 @@ public class Comment {
     public Post getCommentedPost() {
         return this.commentedPost;
     }
-
-    public String getCommentOwnerName() {
-        return this.commentOwnerName;
-    }
-
 
     public int getRating() {
         return this.rating;

@@ -5,7 +5,6 @@ package es.codeurjc.web.dto;
         String content,
         UserBasicDTO owner,
         PostBasicDTO commentedPost,
-        String commentOwnerName,
         int rating) {
 }
     
