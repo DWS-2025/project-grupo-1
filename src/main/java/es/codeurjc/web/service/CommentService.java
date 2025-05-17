@@ -14,6 +14,8 @@ import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CommentMapper;
 import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.PostMapper;
+import es.codeurjc.web.dto.UserBasicDTO;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -29,7 +31,7 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     @Autowired
-    private PostService postService;	
+    private PostService postService;
 
     @Autowired
     UserService userService;
@@ -49,10 +51,9 @@ public class CommentService {
         comment.setOwner(currentUser);
         comment.setCommentOwnerName(currentUser.getUserName());
         comment.setCommentedPost(postToComment);
-    
-        
+
         commentRepository.save(comment);
-        
+
         // Calculates the rating of the post 
         postService.setAverageRatingPost(postToComment.getId());
         //Calculates the rating of the owner
@@ -61,12 +62,11 @@ public class CommentService {
         for (Section section : postToComment.getSections()) {
             section.calculateAverageRating();
         }
-            
 
         userService.save(postToComment.getOwner());
         userService.save(currentUser);
         return toDTO(comment);
-        
+
     }
 
     public Collection<CommentDTO> findAllCommentsByPostId(Long postId) {
@@ -75,14 +75,15 @@ public class CommentService {
     }
 
     public Page<CommentDTO> findAllCommentsByPostId(Long postId, int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, 10); 
-        Page<Comment> commentsPage = commentRepository.findByCommentedPost(postId, pageable); 
-        return commentsPage.map(this::toDTO); 
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Page<Comment> commentsPage = commentRepository.findByCommentedPost(postId, pageable);
+        return commentsPage.map(this::toDTO);
     }
+
     public Page<CommentDTO> findAllComments(int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, 10); 
-        Page<Comment> commentsPage = commentRepository.findAll(pageable); 
-        return commentsPage.map(this::toDTO); 
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Page<Comment> commentsPage = commentRepository.findAll(pageable);
+        return commentsPage.map(this::toDTO);
     }
 
     public void deleteCommentFromPost(Long commentedPostId, Long commentId) {
@@ -103,6 +104,24 @@ public class CommentService {
         commentRepository.delete(commentToDelete);
     }
 
+    public boolean checkIfCommentOwnerAndCommnetOnPost(HttpServletRequest request, Long postId, Long commentId) {
+        UserDTO loggedUser = userService.findByUserName(request.getUserPrincipal().getName());
+        UserBasicDTO ownerUser = findCommentByIdDTO(commentId).owner();
+
+        if (loggedUser.id().equals(ownerUser.id()) || loggedUser.userName().equals("Admin")) {
+
+            if (postService.findByIdAsDTO(postId).comments().contains(findCommentByIdBasicDTO(commentId))) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
+    }
+
     public void updateComment(Long commentId, CommentDTO updatedCommentDTO, Long postId) {
         if (commentRepository.findById(commentId).isPresent() && postService.findById(postId).isPresent()) {
             Comment updatedComment = toDomain(updatedCommentDTO);
@@ -116,7 +135,6 @@ public class CommentService {
                 section.calculateAverageRating();
             }
             userService.save(commentedPost.getOwner());
-            
 
         } else {
             // not found
@@ -126,28 +144,34 @@ public class CommentService {
     public Optional<Comment> findCommentById(Long id) {
         return commentRepository.findById(id);
     }
+
     public CommentBasicDTO findCommentByIdBasicDTO(Long id) {
         return toCommentBasicDTO(commentRepository.findById(id).orElseThrow());
     }
+
     public CommentDTO findCommentByIdDTO(Long id) {
         return toDTO(commentRepository.findById(id).orElseThrow());
     }
 
     private CommentDTO toDTO(Comment comment) {
         return mapper.toDTO(comment);
-        
+
     }
+
     private Comment toDomain(CommentDTO commentDTO) {
         return mapper.toDomain(commentDTO);
     }
+
     private Comment toDomain(CreateCommentDTO commentDTO) {
         return mapper.toDomain(commentDTO);
     }
+
     public Collection<CommentDTO> toDTOs(Collection<Comment> comments) {
         return mapper.toDTOs(comments);
     }
+
     public CommentBasicDTO toCommentBasicDTO(Comment comment) {
         return mapper.toCommentBasicDTO(comment);
     }
-  
+
 }
