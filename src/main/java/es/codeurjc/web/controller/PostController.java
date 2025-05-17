@@ -40,6 +40,8 @@ public class PostController {
 
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -191,48 +193,63 @@ public class PostController {
 
     }
 
-    // this should work, but the user can delete a comment from a post that is not
-    // on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request) {
 
-        model.addAttribute("post", postService.findByIdAsDTO(postId));
-        model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
-        model.addAttribute("isEditing", true);
-        return "comment_form";
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+            model.addAttribute("post", postService.findByIdAsDTO(postId));
+            model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
+            model.addAttribute("isEditing", true);
+            return "comment_form";
+        } else {
+            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
+            return "error";
+        }
 
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostCommentInfo(@PathVariable Long postId, @PathVariable Long commentId, Model model,
-            CommentDTO updatedComment) {
-                
-        postService.findByIdAsDTO(postId);
-        commentService.findCommentByIdDTO(commentId);
+            CommentDTO updatedComment, HttpServletRequest request) {
 
-        if (updatedComment.content().isEmpty()) {
-            model.addAttribute("message", "El comentario no puede estar vacio");
-            return "error";
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+            postService.findByIdAsDTO(postId);
+            commentService.findCommentByIdDTO(commentId);
 
-        } else if (updatedComment.rating() > 5 || updatedComment.rating() < 0) {
-            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+            if (updatedComment.content().isEmpty()) {
+                model.addAttribute("message", "El comentario no puede estar vacio");
+                return "error";
+
+            } else if (updatedComment.rating() > 5 || updatedComment.rating() < 0) {
+                model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+                return "error";
+            }
+            commentService.updateComment(commentId, updatedComment, postId);
+            return "redirect:/post/" + postId;
+
+        } else {
+            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
             return "error";
         }
-        commentService.updateComment(commentId, updatedComment, postId);
-        return "redirect:/post/" + postId;
 
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
-    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request
+    ) {
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+            PostDTO postDTO = postService.findByIdAsDTO(postId);
+            commentService.findCommentByIdDTO(commentId);
 
-        PostDTO postDTO = postService.findByIdAsDTO(postId);
-        commentService.findCommentByIdDTO(commentId);
+            commentService.deleteCommentFromPost(postId, commentId);
+            model.addAttribute("post", postDTO);
+            model.addAttribute("Comments", postDTO.comments());
+            return "redirect:/post/" + postId;
+        } else {
+            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando eliminar un comentario de otro post");
+            return "error";
 
-        commentService.deleteCommentFromPost(postId, commentId);
-        model.addAttribute("post", postDTO);
-        model.addAttribute("Comments", postDTO.comments());
-        return "redirect:/post/" + postId;
+        }
 
     }
 

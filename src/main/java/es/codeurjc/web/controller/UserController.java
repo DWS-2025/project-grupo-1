@@ -11,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,9 @@ public class UserController {
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private static final String USERS_FOLDER = "users";
 
@@ -128,7 +132,7 @@ public class UserController {
             model.addAttribute("PassError", true);
             return "/register";
         }
-        User newUser = new User(userName, password, email);
+        User newUser = new User(userName, passwordEncoder.encode(password), email, "USER" );
         userService.save(newUser);
         return "redirect:/login";
     }

@@ -146,9 +146,15 @@ public class SecurityConfiguration {
 
                         // We should test the regex for the post id
 
+                        // We should test the regex for the post id
+
                         // PRIVATE PAGES
                         .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+        				.requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("USER")
+				.requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
+                .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login")
