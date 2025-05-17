@@ -148,6 +148,10 @@ public class SecurityConfiguration {
                 
                 // PRIVATE PAGES
                 .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("USER")
+				.requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                 .loginPage("/login")
