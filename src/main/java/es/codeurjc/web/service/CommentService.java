@@ -13,10 +13,8 @@ import es.codeurjc.web.dto.CommentBasicDTO;
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CommentMapper;
 import es.codeurjc.web.dto.CreateCommentDTO;
-import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
-import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
@@ -38,10 +36,6 @@ public class CommentService {
 
     @Autowired
     private CommentMapper mapper;
-    @Autowired
-    private PostMapper postMapper;
-    @Autowired
-    private UserMapper userMapper;
 
     public CommentDTO saveCommentInPost(Long postID, CreateCommentDTO commentDTO, HttpServletRequest request) {
         Comment comment = toDomain(commentDTO);
@@ -126,7 +120,7 @@ public class CommentService {
     }
 
     public boolean checkIfCommentOwnerAndCommnetOnPost(HttpServletRequest request, Long postId, Long commentId) {
-        UserDTO loggedUser = userService.findByUserName(request.getUserPrincipal().getName());
+        UserDTO loggedUser = userService.findByUserNameDTO(request.getUserPrincipal().getName());
         UserBasicDTO ownerUser = findCommentByIdDTO(commentId).owner();
 
         if (loggedUser.id().equals(ownerUser.id()) || loggedUser.userName().equals("Admin")) {

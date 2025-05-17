@@ -1,5 +1,7 @@
 package es.codeurjc.web.restController;
 
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -24,13 +26,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
-import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,9 +41,6 @@ public class PostRestController {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private PostMapper postMapper;
 
     @Autowired
     private CommentService commentService;
@@ -68,13 +65,24 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public PostDTO updatePost(@PathVariable Long id, @RequestBody CreatePostDTO newCreatePostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings) throws IOException {
-        return postService.updatePost(id, newCreatePostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile); // Update the post and image
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody CreatePostDTO newCreatePostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
+
+        if (postService.checkIfUserIsTheOwner(id, request)) {
+            PostDTO updated = postService.updatePost(id, newCreatePostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile);
+            return ResponseEntity.ok(updated);
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deletePost(@PathVariable Long id) {
-        postService.deletePost(id); // Delete the post
+    public ResponseEntity<Void> deletePost(@PathVariable Long id, HttpServletRequest request) {
+        if (postService.checkIfUserIsTheOwner(id, request)) {
+            postService.deletePost(id); // Delete the post
+            return ResponseEntity.noContent().build(); // No content to return
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
     }
 
     @GetMapping("/{id}/image")
@@ -109,6 +117,11 @@ public class PostRestController {
         postService.deletePostImage(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}/edit")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
     }
 
     @GetMapping("/comments")

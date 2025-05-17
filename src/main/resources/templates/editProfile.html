@@ -33,13 +33,13 @@
                                         <input type="file" class="form-control file-input-small" id="userImage"
                                             name="userImage">
                                     </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                                    </div>
+                                    <input type="hidden" name="_csrf" value="{{token}}" />
+                                </form>
+                                {{/User}}
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary">Confirmar</button>
-                            </div>
-                               <input type="hidden" name="_csrf" value="{{token}}" />
-                            </form>
-                            {{/User}}
                         </div>
                     </div>
                 </div>

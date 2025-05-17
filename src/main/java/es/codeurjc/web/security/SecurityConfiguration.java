@@ -139,10 +139,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
                         .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register", "/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/post", "/section", "/section/*/image", "/user/*/image",
-                                "/no-image.png", "/images/spinner.gif")
+                        .requestMatchers(HttpMethod.GET, "/post", "/section", "/section/{id:[0-9]+}/image", "/user/*/image",
+                                "/no-image.png", "/images/spinner.gif", "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image").permitAll()
 
                         // We should test the regex for the post id
 
@@ -150,11 +149,15 @@ public class SecurityConfiguration {
 
                         // PRIVATE PAGES
                         .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
-        				.requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
-				.requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("USER")
-				.requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
-				.requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
-                .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/post/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/post/*/delete").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/post/*/delete").hasRole("USER")
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login")
@@ -162,7 +165,7 @@ public class SecurityConfiguration {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/")
                         .permitAll())
 
                 .exceptionHandling(exception -> exception

@@ -39,6 +39,7 @@ import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostService {
@@ -151,16 +152,16 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public void deletePost(Long id) {
- 
         Post post = postRepository.findById(id).orElseThrow();
 
+        // Elimina relaciones para evitar errores de integridad
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
             sectionService.saveSection(section);
         }
 
-    
         List<Comment> commentsCopy = new ArrayList<>(post.getComments());
         for (Comment comment : commentsCopy) {
             commentService.deleteCommentFromPost(post.getId(), comment.getId());
@@ -170,17 +171,18 @@ public class PostService {
         post.getSections().clear();
         post.getComments().clear();
 
-        postRepository.deleteById(post.getId());
+        postRepository.delete(post); // Mejor usar delete(post) que deleteById(post.getId())
     }
-
-    // public void deletePost(PostDTO postDTO) {
-    //     deletePost(toDomain(postDTO));
-    // }
 
    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
     Post oldPost = postRepository.findById(id).orElseThrow();
-    oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
-    oldPost.setContent(sanitizeHtml(newPost.getContent()));
+    if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {        
+        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+    }
+    
+    if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {        
+        oldPost.setContent(sanitizeHtml(newPost.getContent()));
+    }
 
     for (Section s : oldPost.getSections()) {
         s.getPosts().remove(oldPost);
@@ -257,19 +259,18 @@ public class PostService {
     }
 
     public void addContributor(CreatePostDTO createPostDTO, UserBasicDTO userBasicDTO) {
-        addContributor(toDomain(createPostDTO), userMapper.toBasicDomain(userBasicDTO));
+        addContributor(toDomain(createPostDTO), userMapper.toDomain(userBasicDTO));
     }
 
     public void addContributors(Post post, String[] contributorNames) {
-        UserBasicDTO userBasicDTO;
+        User user;
         if (contributorNames != null && contributorNames.length > 0) {
-            
             for (String colaborator : contributorNames) {
                 try {
-                    userBasicDTO = userService.findByUserNameBasicDTO(colaborator);
-                    if (userBasicDTO != null) {
-                        addContributor(post, userMapper.toBasicDomain(userBasicDTO));
-                    }
+
+                    user = userService.findByUserName(sanitizeHtml(colaborator));
+                    addContributor(post, user);
+
                 } catch (NoSuchElementException e) {
                     // Handle the case where the user is not found
                     System.out.println("User not found: " + colaborator);
@@ -277,6 +278,7 @@ public class PostService {
             }
 
         }
+
     }
 
     public void addContributors(CreatePostDTO createPostDTO, String[] contributorNames) {
@@ -372,7 +374,7 @@ public class PostService {
         Post post = findById(id).orElseThrow();
         String contributors = "";
         for (User user : post.getContributors()) {
-            contributors += user.getUserName() + ", ";
+            contributors += user.getUserName() + ",";
         }
 
         return contributors;
@@ -384,6 +386,20 @@ public class PostService {
         Blob image = post.getImageFile();
         Resource file = new InputStreamResource(image.getBinaryStream());
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+    }
+
+    public boolean checkIfUserIsTheOwner(Long postId, HttpServletRequest request) {
+        Post post = findById(postId).orElseThrow();
+        String loggedUsername = request.getUserPrincipal().getName();
+        String ownerUsername = post.getOwner().getUserName();
+
+        // Comprueba si es el owner
+        boolean isOwner = loggedUsername.equals(ownerUsername);
+
+        // Comprueba si es admin (puedes cambiar la lógica de admin según tu sistema)
+        boolean isAdmin = userService.getLoggedUser(loggedUsername).id() == 1;
+
+        return isOwner || isAdmin;
     }
 
     public void simpleSave(Post post) {

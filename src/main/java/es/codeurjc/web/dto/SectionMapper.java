@@ -15,7 +15,5 @@ public interface SectionMapper {
     Collection<SectionDTO> toDTOs(Collection<Section> sections); 
 
     Collection<Section> toDomains(Collection<SectionDTO> sectionDTOs); 
-
-
     
 }

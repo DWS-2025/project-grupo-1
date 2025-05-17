@@ -1,6 +1,5 @@
 package es.codeurjc.web.dto;
 
-import java.sql.Blob;
 import java.util.List;
 
 public record SectionDTO(

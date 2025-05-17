@@ -44,8 +44,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static final String USERS_FOLDER = "users";
-
     @GetMapping({"/home", "/"})
     /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
     public String index(Model model, HttpServletRequest request) {
@@ -230,11 +228,11 @@ public class UserController {
                 model.addAttribute("byPost", true);
                 return "user_delete";
             } else {
-                model.addAttribute("message", "No se ha encontrado ese usuario");
+                model.addAttribute("message", "You are not allowed to do this");
                 return "error";
             }
         } else {
-            model.addAttribute("message", "No puedes eliminar el perfil de otro usuario");
+            model.addAttribute("message", "You are not allowed to do this");
             return "error";
         }
     }
@@ -244,7 +242,7 @@ public class UserController {
         if (userService.findById(userId) != null) {
             return "user_delete";
         } else {
-            model.addAttribute("message", "no se ha encontrado ese usuario");
+            model.addAttribute("message", "This user does not exist");
             return "error";
         }
 
@@ -269,7 +267,7 @@ public class UserController {
             userService.followUser(userTofollow, request);
             return "redirect:/profile/" + userId;
         } else {
-            model.addAttribute("message", "no se ha encontrado ese usuario");
+            model.addAttribute("message", "This user does not exist");
             return "error";
         }
     }
@@ -282,7 +280,7 @@ public class UserController {
             model.addAttribute("message", "seguidos");
             return "view_followers";
         } else {
-            model.addAttribute("message", "no se ha encontrado ese usuario");
+            model.addAttribute("message", "This user does not exist");
             return "error";
         }
     }

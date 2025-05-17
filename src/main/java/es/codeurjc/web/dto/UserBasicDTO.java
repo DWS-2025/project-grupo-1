@@ -6,5 +6,5 @@ public record UserBasicDTO(
                 String description,
                 String email,
                 String image,
-                float averageRating) {
+                float userRate) {
 }
