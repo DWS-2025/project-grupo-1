@@ -21,19 +21,19 @@
                 <div class="heading-section">
                   <h4><em>Top 5</em> Usuarios</h4>
                 </div>
-                {{#topUsers}}
                 <ol>
-                  <li>
-                    <br>
-                    <h2> {{-index}}º</h2>
-                  </li>
-                  <li>
-                    <div class="avatar-05">
-                      <img src="/user/{{id}}/image" alt=""
-                        style="max-width: 46px; border-radius: 50%; float: left;">
+                  {{#topUsers}}
+                  <li style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center;">
+                      <div class="avatar-05" style="margin-right: 10px;">
+                        <img src="/user/{{id}}/image" alt="" style="width: 46px; height: 46px; border-radius: 50%;">
+                      </div>
+                      <a href="/profile/{{id}}"
+                        style="font-weight: bold; text-decoration: none; color: white;">{{userName}}</a>
                     </div>
-                    <a href="/profile/{{id}}">{{userName}}</a>
-                    <h6><i class="fa fa-star" style="color: yellow;"></i> {{averageRating}}</h6>
+                    <h6 style="margin: 0; color: #f1c40f; font-weight: normal;">
+                      <i class="fa fa-star"></i> {{averageRating}}
+                    </h6>
                   </li>
                   {{/topUsers}}
                 </ol>

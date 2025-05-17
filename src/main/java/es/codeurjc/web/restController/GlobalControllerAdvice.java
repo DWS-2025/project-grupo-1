@@ -21,15 +21,22 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute
     public void addUserToModel(Model model) {
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String)) {
-          // Check if the principal is an instance of User
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication.getPrincipal() instanceof String)) {
+            // Check if the principal is an instance of User
             User principal = (User) authentication.getPrincipal();
             String username = principal.getUsername();
 
-           // Fetch the user details using the username
+            if (username.equals("Admin")) {
+                model.addAttribute("admin", username.equals("Admin"));
+                UserDTO user = userService.findByUserNameAuth(username);
+                model.addAttribute("loggedUser", user);
+            }
+
+            // Fetch the user details using the username
             UserDTO user = userService.findByUserNameAuth(username);
             model.addAttribute("loggedUser", user);
         } else {

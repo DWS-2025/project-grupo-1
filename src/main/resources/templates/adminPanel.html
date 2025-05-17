@@ -1,0 +1,45 @@
+{{> Common/header }}
+{{> Common/top_container }}
+<div class="most-popular">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="heading-section">
+                <h4><em>Todos los</em> usuarios</h4>
+            </div>
+            {{#users}}
+            <div class="col-lg-12">
+                <div class="item d-flex align-items-center" style="display: flex; align-items: center; gap: 10px;">
+
+                    <div class="avatar-05">
+                        <img src="/user/{{id}}/image" alt="Profile picture"
+                            style="width: 46px; height: 46px; object-fit: cover; border-radius: 50%;">
+                    </div>
+
+                    <h4 style="margin: 0;">
+                        <a href="/profile/{{id}}" style="text-decoration: none; color: inherit;">
+                            {{userName}}
+                        </a>
+                    </h4>
+
+                </div>
+            </div>
+            {{/users}}
+
+            {{^users}}
+            <p>No se ha registrado ningún usuario.</p>
+            {{/users}}
+
+            <br>
+
+            <div class="col-lg-12">
+                <div class="main-button">
+                    <a href="/home">Volver al inicio</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{> Common/bottom_container }}
+{{> Common/footer }}
