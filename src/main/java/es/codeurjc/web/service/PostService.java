@@ -146,7 +146,6 @@ public class PostService {
 
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
-        post.setOwnerName(user.getUserName());
         post.setTitle(sanitizeHtml(post.getTitle()));
         post.setContent(sanitizeHtml(post.getContent()));
         postRepository.save(post);
@@ -220,12 +219,17 @@ public class PostService {
         return this.commentService;
     }
 
-    public void setAverageRatingPost(Long postId) {
-        Post post = postRepository.findById(postId).get();
-
-        post.setAverageRating(postRepository.findAverageRatingByPostId(postId));
-        postRepository.save(post);
-
+    public void setAverageRatingPostRemoving(Long id, Long commentRemovedId) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.setAverageRating(postRepository.findAverageRatingByPostIdExcludingComment(id,commentRemovedId));
+        
+      
+    }
+    public void setAverageRatingPost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.setAverageRating(postRepository.findAverageRatingByPostId(id));
+        
+      
     }
 
     public void addSections(Post post, List<Long> sectionIds) {

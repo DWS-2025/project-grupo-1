@@ -33,6 +33,8 @@ class CSRFHandlerInterceptor implements HandlerInterceptor {
 				modelAndView.addObject("token", token.getToken());
 			}
 		}
+		
 	}
+	
 }
     

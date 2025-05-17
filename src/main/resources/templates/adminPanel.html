@@ -9,22 +9,36 @@
             </div>
             {{#users}}
             <div class="col-lg-12">
-                <div class="item d-flex align-items-center" style="display: flex; align-items: center; gap: 10px;">
+                <div class="item d-flex align-items-center justify-content-between"
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 8px;">
 
-                    <div class="avatar-05">
-                        <img src="/user/{{id}}/image" alt="Profile picture"
-                            style="width: 46px; height: 46px; object-fit: cover; border-radius: 50%;">
+                    <div class="d-flex align-items-center" style="gap: 10px;">
+                        <div class="avatar-05">
+                            <img src="/user/{{id}}/image" alt="Profile picture"
+                                style="width: 46px; height: 46px; object-fit: cover; border-radius: 50%;">
+                        </div>
+
+                        <h4 style="margin: 0;">
+                            <a href="/profile/{{id}}" style="text-decoration: none; color: inherit;">{{userName}}</a>
+                        </h4>
                     </div>
-
-                    <h4 style="margin: 0;">
-                        <a href="/profile/{{id}}" style="text-decoration: none; color: inherit;">
-                            {{userName}}
-                        </a>
-                    </h4>
+                    {{^isAdmin}}
+                    <div class="delete-button" style="margin-left: auto;">
+                        <form action="/deleteUser/{{id}}" method="post" style="margin: 0;">
+                            <input type="hidden" name="_csrf" value="{{token}}" />
+                            <button type="submit" style="background-color: #dc3545; color: white; border: none;
+                               padding: 6px 12px; border-radius: 20px; cursor: pointer;">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                    {{/isAdmin}}
 
                 </div>
             </div>
             {{/users}}
+
+
 
             {{^users}}
             <p>No se ha registrado ningún usuario.</p>
