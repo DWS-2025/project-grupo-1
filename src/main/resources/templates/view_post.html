@@ -24,14 +24,12 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="centered-image">
-                        {{#hasImage}}
-                          <img src="/post/{{post.id}}/image" alt=""></img>
-                        {{/hasImage}}
-                        {{^hasImage}}
-                          <img src="/no-image.png" alt=""></img>
-                        {{/hasImage}}
-                      </div>
+                      {{#hasImage}}
+                        <img class="centered-image" src="/post/{{post.id}}/image" alt=""></img>
+                      {{/hasImage}}
+                      {{^hasImage}}
+                        <img src="/no-image.png" alt=""></img>
+                      {{/hasImage}}
                     </div>
                     {{#logged}}
                     <div class="col-lg-12">
