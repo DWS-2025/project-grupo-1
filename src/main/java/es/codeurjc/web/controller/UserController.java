@@ -294,11 +294,15 @@ public class UserController {
 
     }
 
-
     @GetMapping("users/admin")
-    public String adminPanel(Model model){
-        model.addAttribute("users", userService.findAllUsers());
+    public String adminPanel(Model model, HttpServletRequest request) {
+        if (request.isUserInRole("ADMIN")) {
+            model.addAttribute("users", userService.findAllUsers());
+            return "adminPanel";
+        } else {
+            model.addAttribute("message", "No se ha encontrado la página solicitada");
+            return "error";
+        }
 
-        return "adminPanel";
     }
 }

@@ -30,17 +30,18 @@ public class SecurityConfiguration {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
+    @Autowired
+    private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
-	}
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
@@ -56,57 +57,57 @@ public class SecurityConfiguration {
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        
+
         http.authenticationProvider(authenticationProvider());
 
         http
                 .securityMatcher("/api/**")
-				.exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
 
-		http
+        http
                 .authorizeHttpRequests(authorize -> authorize
-                // PRIVATE ENDPOINTS
-                // SECTIONS
-                .requestMatchers(HttpMethod.GET, "/api/sections/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/sections/*").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
-                // USERS
-                .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/users").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("ADMIN")
-                
-                // POSTS
-                .requestMatchers(HttpMethod.GET, "/api/posts/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/posts/*").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/posts/*/image").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/posts/comments").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/api/posts/*/comments/*").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/posts/").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/posts/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/posts/*/comments").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*/image").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").hasRole("ADMIN")
-                // PUBLIC ENDPOINTS
-                .anyRequest().permitAll());
+                        // PRIVATE ENDPOINTS
+                        // SECTIONS
+                        .requestMatchers(HttpMethod.GET, "/api/sections/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
+                        // USERS
+                        .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("ADMIN")
+
+                        // POSTS
+                        .requestMatchers(HttpMethod.GET, "/api/posts/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/comments").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/posts/*/comments/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/posts/").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").hasRole("ADMIN")
+                        // PUBLIC ENDPOINTS
+                        .anyRequest().permitAll());
 
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
@@ -131,35 +132,36 @@ public class SecurityConfiguration {
     @Order(2)
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 
-
         http.authenticationProvider(authenticationProvider());
 
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
-                .requestMatchers("/", "/assets/**", "/vendor/**", "/home" , "/register", "/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/post","/section", "/section/*/image", "/user/*/image", "/no-image.png", "/images/spinner.gif").permitAll()
-                .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}").permitAll()
-              
+                        // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
+                        .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register", "/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post", "/section", "/section/*/image", "/user/*/image",
+                                "/no-image.png", "/images/spinner.gif")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post/{id:[0-9]+}").permitAll()
 
+                        // We should test the regex for the post id
 
-                // We should test the regex for the post id
-                
-                // PRIVATE PAGES
-                .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
-                .anyRequest().authenticated())
+                        // PRIVATE PAGES
+                        .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                .loginPage("/login")
-                .failureUrl("/login")
-                .defaultSuccessUrl("/discover")
-                .permitAll())
+                        .loginPage("/login")
+                        .failureUrl("/login")
+                        .defaultSuccessUrl("/discover")
+                        .permitAll())
                 .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .permitAll());
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .permitAll())
 
-       
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error"));
+
         return http.build();
     }
 }

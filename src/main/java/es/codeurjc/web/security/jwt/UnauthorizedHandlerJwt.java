@@ -23,4 +23,5 @@ public class UnauthorizedHandlerJwt implements AuthenticationEntryPoint {
 
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "message: %s, path: %s".formatted(authException.getMessage(), request.getServletPath()));
   }
+  
 }
