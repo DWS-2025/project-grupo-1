@@ -29,8 +29,12 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import es.codeurjc.web.dto.UserBasicDTO;
 import es.codeurjc.web.dto.UserDTO;
+import es.codeurjc.web.model.User;
+import es.codeurjc.web.security.jwt.AuthResponse;
+import es.codeurjc.web.security.jwt.LoginRequest;
 import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/users")
@@ -38,6 +42,9 @@ public class UserRestController {
 
     @Autowired
     private UserService UserService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public Page<UserBasicDTO> getUsers(@RequestParam(defaultValue = "0") int page) {
@@ -56,12 +63,18 @@ public class UserRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO UserDTO) {
-        UserDTO = UserService.save(UserDTO);
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO newUser, HttpServletResponse response) {
 
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(UserDTO.id()).toUri(); // URI for the new User
-
-        return ResponseEntity.created(location).body(UserDTO);
+        for (UserDTO user : UserService.findAllUsers()) {
+            if (user.email().equals(newUser.email()) || user.userName().equals(newUser.userName())) {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            }
+        }
+        User user = new User(newUser.userName(), passwordEncoder.encode(newUser.password()), newUser.email(), "USER");
+        UserService.save(user);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(newUser.id()).toUri(); // URI for the new User
+        return ResponseEntity.created(location).body(newUser);
     }
 
     @PutMapping("/{id}")
@@ -82,6 +95,7 @@ public class UserRestController {
         UserDTO User = UserService.findById(id);
             return UserService.deleteUser(User);
     }
+
 
     @PostMapping("/{id}/followings")
     public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO, HttpServletRequest request) {
