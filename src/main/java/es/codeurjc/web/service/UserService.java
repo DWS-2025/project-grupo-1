@@ -463,4 +463,18 @@ public class UserService {
         }
     }
 
+    public Collection<UserDTO> getOnlyUsersRole (HttpServletRequest request) {
+        UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
+        Collection<UserDTO> users = findAllUsers();
+        Collection<UserDTO> onlyUsers = new ArrayList<>();
+
+        for (UserDTO user : users) {
+            if (!user.userName().equals(loggedUser.userName()) && !user.userName().equals("Admin")) {
+                onlyUsers.add(user);
+            }
+        }
+
+        return onlyUsers;
+    }
+
 }

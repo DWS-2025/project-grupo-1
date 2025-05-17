@@ -3,6 +3,8 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -323,8 +325,8 @@ public class UserController {
     @GetMapping("users/admin")
     public String adminPanel(Model model, HttpServletRequest request) {
         if (request.isUserInRole("ADMIN")) {
-            model.addAttribute("users", userService.findAllUsers());
-            return "adminPanel";
+        model.addAttribute("users", userService.getOnlyUsersRole(request));
+        return "adminPanel";
         } else {
             model.addAttribute("message", "No se ha encontrado la página solicitada");
             return "error";
