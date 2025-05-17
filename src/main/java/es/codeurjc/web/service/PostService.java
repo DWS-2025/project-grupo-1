@@ -178,34 +178,40 @@ public class PostService {
     //     deletePost(toDomain(postDTO));
     // }
 
-    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        
-        Post oldPost = postRepository.findById(id).orElseThrow();
-        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
-        oldPost.setContent(sanitizeHtml(newPost.getContent()));
+   public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+    Post oldPost = postRepository.findById(id).orElseThrow();
+    oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+    oldPost.setContent(sanitizeHtml(newPost.getContent()));
 
-        if (newSectionIds != null && !newSectionIds.isEmpty()) {
-            oldPost.getSections().clear();
-            addSections(oldPost, newSectionIds);
+    for (Section s : oldPost.getSections()) {
+        s.getPosts().remove(oldPost);
+    }
+    oldPost.getSections().clear();
+
+
+    if (newSectionIds != null && !newSectionIds.isEmpty()) {
+        for (Long sectionId : newSectionIds) {
+            Section section = sectionService.findSectionById(sectionId).get();
+            oldPost.getSections().add(section);
+            if (!section.getPosts().contains(oldPost)) {
+                section.getPosts().add(oldPost);
+            }
         }
-
-        if (newContributorsStrings != null && newContributorsStrings.length > 0) {
-            oldPost.getContributors().clear();
-            addContributors(oldPost, newContributorsStrings);
-        }
-
-        // oldPost.setSections(new ArrayList<>(sectionService.getSectionsFromIdsList(newSectionIds)));
-        // oldPost.setContributors(new ArrayList<>(userService.getUsersFromUserNamesList(newContributorsStrings)));
-
-        if (!newImage.isEmpty()) {
-            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
-        }
-
-        postRepository.save(oldPost);
-
-        return oldPost;
     }
 
+    if (newContributorsStrings != null && newContributorsStrings.length > 0) {
+        oldPost.getContributors().clear();
+        addContributors(oldPost, newContributorsStrings);
+    }
+
+    if (!newImage.isEmpty()) {
+        oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
+    }
+
+    postRepository.save(oldPost);
+  
+    return oldPost;
+}
     public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
         return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
     }

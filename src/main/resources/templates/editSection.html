@@ -21,7 +21,7 @@
                                 <h2>Edita tu sección</h2>
                                 {{#section}}
                                 <!-- Form to edit section -->
-                                <form action="/section/{{id}}/edit" method="post" enctype="multipart/form-data">
+                                <form action="/section/{{id}}/edit" id="editSectionForm" method="post" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="userName">Title:</label>
                                         <input type="text" class="form-control" id="title" name="title"
@@ -78,7 +78,7 @@
         quill.clipboard.dangerouslyPasteHTML(sanitized); // Paste the sanitized content into the editor
     }
 
-    const form = document.querySelector('form');
+    const form = document.getElementById('editSectionForm'); 
     form.addEventListener('submit', function (e) {
         const rawHtml = quill.root.innerHTML;
         const cleaned = DOMPurify.sanitize(rawHtml);
