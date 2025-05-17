@@ -133,6 +133,9 @@ public class UserService {
     public UserDTO findById(long id) {
         return toDTO(userRepository.findById(id).orElseThrow());
     }
+     public User findByIdDomain(long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
 
     public UserBasicDTO findBasicById(long id) {
         return toBasicDTO(userRepository.findById(id).orElseThrow());

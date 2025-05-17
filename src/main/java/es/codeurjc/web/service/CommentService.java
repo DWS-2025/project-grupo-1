@@ -89,11 +89,13 @@ public class CommentService {
     public void deleteCommentFromPost(Long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         Post commentedPost = postService.findById(commentedPostId).get();
-        commentedPost.getComments().remove(commentToDelete);
-
-        commentRepository.delete(commentToDelete);
+        postService.saveForInit(commentedPost);
+      
+           
         // Calculates the rating of the post
-        postService.setAverageRatingPost(commentedPost.getId());
+        postService.setAverageRatingPostRemoving(commentedPost.getId(), commentToDelete.getId());
+        commentToDelete.setCommentedPost(null);
+        postService.saveForInit(commentedPost);
         //Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
         //Calculates the rating of the section
@@ -101,7 +103,7 @@ public class CommentService {
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
-        commentRepository.delete(commentToDelete);
+       
     }
 
     public boolean checkIfCommentOwnerAndCommnetOnPost(HttpServletRequest request, Long postId, Long commentId) {

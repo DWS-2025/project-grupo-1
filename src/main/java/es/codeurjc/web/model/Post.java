@@ -2,11 +2,8 @@ package es.codeurjc.web.model;
 
 import java.sql.Blob;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import es.codeurjc.web.dto.UserDTO;
-import es.codeurjc.web.service.UserService;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -163,6 +160,10 @@ public class Post {
     public void setSections(List<Section> sections) {
         this.sections = sections;
     }
+  public void removeComment(Comment comment) {
+    comments.remove(comment);
+   
+}
 
     public void setOwnerName(String name){
         this.ownerName = name;
