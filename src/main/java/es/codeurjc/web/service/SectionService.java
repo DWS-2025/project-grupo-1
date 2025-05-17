@@ -76,7 +76,7 @@ public class SectionService {
         return toDTOs(findAll());
     }
 
-    public Collection<Section> findAll(Example<Section> example) {
+    public Collection<Section> findAll(Example<Section> example) { // Example is a Spring Data interface for creating queries
         return sectionRepository.findAll(example);
     }
 
@@ -150,7 +150,7 @@ public class SectionService {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         if (section.getImageFile() != null) {
-            return new InputStreamResource(section.getImageFile().getBinaryStream()); //
+            return new InputStreamResource(section.getImageFile().getBinaryStream()); 
         } else {
             throw new NoSuchElementException();
         }

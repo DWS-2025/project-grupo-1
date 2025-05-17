@@ -77,7 +77,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
                 // USERS
-                .requestMatchers(HttpMethod.GET, "/api/users/").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/users").hasRole("USER")
@@ -88,6 +88,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("ADMIN")
+                
                 // POSTS
                 .requestMatchers(HttpMethod.GET, "/api/posts/").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/posts/*").hasAnyRole("USER", "ADMIN")
@@ -146,6 +147,7 @@ public class SecurityConfiguration {
                 // We should test the regex for the post id
                 
                 // PRIVATE PAGES
+                .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                 .loginPage("/login")

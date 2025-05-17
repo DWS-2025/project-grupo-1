@@ -76,17 +76,24 @@ https://templatemo.com/tm-579-cyborg-gaming
               <li><a href="/section">Secciones</a></li>
               {{#loggedUser}}
               <li><a href="/profile/{{loggedUser.id}}">Perfil</a></li>
-              <form id="logoutForm" action="/logout" method="post" style="display:inline;">
+              {{#admin}}
+              <li><a href="/users/admin">Panel administrador</a></li>
+              {{/admin}}
+              <li>
+                <form id="logoutForm" action="/logout" method="post" style="display:inline;">
                 <input type="hidden" name="_csrf" value="{{token}}">
                 <button type="submit" style="background:none;border:none;padding:0;color:#007bff;cursor:pointer;">Cerrar
                   sesión</button>
               </form>
+              </li>
+              
               
               {{/loggedUser}}
               {{^loggedUser}}
               <li><a href="/login">Iniciar sesión</a></li>
               <li><a href="/register">Crear cuenta</a></li>
               {{/loggedUser}}
+
             </ul>
             <a class='menu-trigger'>
               <span>Menu</span>

@@ -1,6 +1,7 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,11 +40,14 @@ public class UserController {
     @Autowired
     private SectionService sectionService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private static final String USERS_FOLDER = "users";
 
-    @GetMapping({"/home", "/"})
+    @GetMapping({ "/home", "/" })
     /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
-    public String index(Model model,HttpServletRequest request) {
+    public String index(Model model, HttpServletRequest request) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
         if (request.getUserPrincipal() != null) {
@@ -61,10 +66,13 @@ public class UserController {
 
     @GetMapping("/following")
     public String following(Model model, HttpServletRequest request) {
-        model.addAttribute("sections", userService.getLoggedUser(request.getUserPrincipal().getName()).followedSections());
+        model.addAttribute("sections",
+                userService.getLoggedUser(request.getUserPrincipal().getName()).followedSections());
         model.addAttribute("followed", true);
-        model.addAttribute("topUsers", rankingService.topUsersFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
-        model.addAttribute("topPosts", rankingService.topPostsFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
+        model.addAttribute("topUsers",
+                rankingService.topUsersFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
+        model.addAttribute("topPosts",
+                rankingService.topPostsFollowed(userService.getLoggedUser(request.getUserPrincipal().getName())));
 
         return "following";
     }
@@ -124,7 +132,7 @@ public class UserController {
             model.addAttribute("PassError", true);
             return "/register";
         }
-        User newUser = new User(userName, password, email);
+        User newUser = new User(userName, passwordEncoder.encode(password), email, "USER" );
         userService.save(newUser);
         return "redirect:/login";
     }
@@ -142,8 +150,7 @@ public class UserController {
 
             if (!Objects.equals(user.id(), userService.getLoggedUser(request.getUserPrincipal().getName()).id())) {
                 model.addAttribute("notSameUser", true);
-            }
-            else{
+            } else {
                 model.addAttribute("notSameUser", false);
             }
             if (userService.checkIfTheUserIsFollowed(user, request)) {
@@ -192,7 +199,8 @@ public class UserController {
             Blob image = userService.getImage(id);
             Resource file = new InputStreamResource(image.getBinaryStream());
 
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length())
+                    .body(file);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -281,12 +289,20 @@ public class UserController {
             model.addAttribute("message", "Error subiendo el CV: " + e.getMessage());
             return "error";
         }
-        return "redirect:/profile/" + id; 
+        return "redirect:/profile/" + id;
     }
 
     @GetMapping("users/{id}/download-cv")
     public ResponseEntity<Resource> downloadCv(@PathVariable Long id) throws IOException {
-     return userService.downloadCV(id);
+        return userService.downloadCV(id);
 
-}
+    }
+
+
+    @GetMapping("users/admin")
+    public String adminPanel(Model model){
+        model.addAttribute("users", userService.findAllUsers());
+
+        return "adminPanel";
+    }
 }
