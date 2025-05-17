@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException; 
+import java.util.NoSuchElementException;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,8 +112,8 @@ public class UserService {
 
         this.save(user);
     }
-    
-    public boolean checkIfUserIsTheOwner(Long id, HttpServletRequest request){
+
+    public boolean checkIfUserIsTheOwner(Long id, HttpServletRequest request) {
 
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         UserDTO userToEdit = findById(id);
@@ -123,7 +123,6 @@ public class UserService {
         } else {
             return false;
         }
-
 
     }
 
@@ -142,7 +141,6 @@ public class UserService {
     public UserDTO findByUserName(String userName) {
         return toDTO(userRepository.findByUserName(userName).get());
     }
-    
 
     public UserBasicDTO findByUserNameBasicDTO(String userName) {
         return toBasicDTO(userRepository.findByUserName(userName).orElseThrow());
@@ -154,10 +152,10 @@ public class UserService {
     }
 
     public UserDTO findByUserNameAuth(String username) {
-    return userRepository.findByUserName(username)
-            .map(mapper::toDTO)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-}
+        return userRepository.findByUserName(username)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 
     public Blob getImage(long id) throws SQLException {
         User user = userRepository.findById(id).orElseThrow();
@@ -398,7 +396,7 @@ public class UserService {
         System.out.println("File canonical path: " + fileCanonicalPath);
 
         if (!fileCanonicalPath.startsWith(expectedBasePath)) {
-            throw new SecurityException("Invalid file path detected");
+            throw new SecurityException("Invalid file path detected, go hack other page script kiddie");
         }
 
         // Check if the file exists
@@ -420,10 +418,19 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        // Sanitize the file name to remove any potentially dangerous characters
-        String sanitizedFileName = file.getOriginalFilename();
+        String originalFileName = file.getOriginalFilename();
+        // Check if the file name is not null and contains valid characters
+        if (!originalFileName.matches("[a-zA-Z0-9._\\-() ]+")) {
+            throw new IllegalArgumentException("El archivo contiene caracteres no válidos");
+        }
+        if (originalFileName == null || !originalFileName.toLowerCase().endsWith(".pdf")) {
+            throw new IllegalArgumentException("Solo se permiten archivos PDF");
+        }
+        if (!file.getContentType().equalsIgnoreCase("application/pdf")) {
+            throw new IllegalArgumentException("El archivo debe ser un PDF");
+        }
         // Build the file path using the base directory and the sanitized file name
-        File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, sanitizedFileName);
+        File destinationFile = new File(BASE_DIRECTORY + File.separator + CV_DIRECTORY, originalFileName);
 
         // Canonicalize the expected base path
         String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
@@ -432,7 +439,7 @@ public class UserService {
 
         // Verify that the canonical path of the destination file starts with the expected base path
         if (!destinationFile.getCanonicalPath().startsWith(expectedBasePath)) {
-            throw new SecurityException("Invalid file path detected");
+            throw new SecurityException("Invalid file path detected, go hack other page script kiddie");
         }
 
         // Create the directories if they do not exist
@@ -442,7 +449,7 @@ public class UserService {
         file.transferTo(destinationFile);
 
         // Save only the relative path of the file in the database
-        user.setCvFilePath(CV_DIRECTORY + sanitizedFileName);
+        user.setCvFilePath(CV_DIRECTORY + originalFileName);
         userRepository.save(user);
     }
 
