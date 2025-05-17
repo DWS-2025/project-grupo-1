@@ -254,20 +254,6 @@ public class UserService {
         return toDTO(userRepository.save(user));
     }
 
-    public void updateWebUser(Long userId, String newUserName, String description, MultipartFile userImage) {
-        User user = userRepository.findById(userId).orElseThrow();
-        user.setUserName(newUserName);
-        user.setDescription(description);
-        if (!userImage.isEmpty()) {
-            try {
-                user.setUserImage(BlobProxy.generateProxy(userImage.getInputStream(), userImage.getSize()));
-            } catch (IOException e) {
-                throw new RuntimeException("Error while processing the image", e);
-            }
-        }
-        userRepository.save(user);
-    }
-
     public void unfollowUser(UserDTO userToUnfollowDTO, HttpServletRequest request) {
         User userToUnfollow = userRepository.findById(userToUnfollowDTO.id()).orElseThrow();
         User loggedUser = getLoggedUserDomain(request.getUserPrincipal().getName());
