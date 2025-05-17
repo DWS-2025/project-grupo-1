@@ -23,6 +23,8 @@ import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
+import es.codeurjc.web.dto.UserBasicDTO;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
@@ -40,6 +42,8 @@ public class PostController {
 
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -191,49 +195,91 @@ public class PostController {
 
     }
 
-    // this should work, but the user can delete a comment from a post that is not
-    // on that post (manipulating the request?), need to be implemented a checker
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request) {
 
-        model.addAttribute("post", postService.findByIdAsDTO(postId));
-        model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
-        model.addAttribute("isEditing", true);
-        return "comment_form";
+        UserDTO loggedUser = userService.findByUserName(request.getUserPrincipal().getName());
+        UserBasicDTO ownerUser = commentService.findCommentByIdDTO(commentId).owner();
+
+        if (loggedUser.id().equals(ownerUser.id()) || loggedUser.userName().equals("Admin")) {
+
+            if (postService.findByIdAsDTO(postId).comments().contains(commentService.findCommentByIdBasicDTO(commentId))) {
+                model.addAttribute("post", postService.findByIdAsDTO(postId));
+                model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
+                model.addAttribute("isEditing", true);
+                return "comment_form";
+            } else {
+                model.addAttribute("message", "El comentario no pertenece a este post");
+                return "error";
+            }
+
+        } else {
+            model.addAttribute("message", "No tienes permiso para editar este comentario");
+            return "error";
+        }
 
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/edit")
     public String editPostCommentInfo(@PathVariable Long postId, @PathVariable Long commentId, Model model,
-            CommentDTO updatedComment) {
-                
-        postService.findByIdAsDTO(postId);
-        commentService.findCommentByIdDTO(commentId);
+            CommentDTO updatedComment, HttpServletRequest request) {
 
-        if (updatedComment.content().isEmpty()) {
-            model.addAttribute("message", "El comentario no puede estar vacio");
-            return "error";
+        UserDTO loggedUser = userService.findByUserName(request.getUserPrincipal().getName());
+        UserBasicDTO ownerUser = commentService.findCommentByIdDTO(commentId).owner();
 
-        } else if (updatedComment.rating() > 5 || updatedComment.rating() < 0) {
-            model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+        if (loggedUser.id().equals(ownerUser.id()) || loggedUser.userName().equals("Admin")) {
+
+            if (postService.findByIdAsDTO(postId).comments().contains(commentService.findCommentByIdBasicDTO(commentId))) {
+
+                postService.findByIdAsDTO(postId);
+                commentService.findCommentByIdDTO(commentId);
+
+                if (updatedComment.content().isEmpty()) {
+                    model.addAttribute("message", "El comentario no puede estar vacio");
+                    return "error";
+
+                } else if (updatedComment.rating() > 5 || updatedComment.rating() < 0) {
+                    model.addAttribute("message", "El valor del rating debe estar entre 0 y 5");
+                    return "error";
+                }
+                commentService.updateComment(commentId, updatedComment, postId);
+                return "redirect:/post/" + postId;
+
+            } else {
+                model.addAttribute("message", "El comentario no pertenece a este post");
+                return "error";
+            }
+        } else {
+            model.addAttribute("message", "No tienes permiso para editar este comentario");
             return "error";
         }
-        commentService.updateComment(commentId, updatedComment, postId);
-        return "redirect:/post/" + postId;
-
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
-    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request
+    ) {
+        UserDTO loggedUser = userService.findByUserName(request.getUserPrincipal().getName());
+        UserBasicDTO ownerUser = commentService.findCommentByIdDTO(commentId).owner();
 
-        PostDTO postDTO = postService.findByIdAsDTO(postId);
-        commentService.findCommentByIdDTO(commentId);
+        if (loggedUser.id().equals(ownerUser.id()) || loggedUser.userName().equals("Admin")) {
 
-        commentService.deleteCommentFromPost(postId, commentId);
-        model.addAttribute("post", postDTO);
-        model.addAttribute("Comments", postDTO.comments());
-        return "redirect:/post/" + postId;
+            if (postService.findByIdAsDTO(postId).comments().contains(commentService.findCommentByIdBasicDTO(commentId))) {
+                PostDTO postDTO = postService.findByIdAsDTO(postId);
+                commentService.findCommentByIdDTO(commentId);
 
+                commentService.deleteCommentFromPost(postId, commentId);
+                model.addAttribute("post", postDTO);
+                model.addAttribute("Comments", postDTO.comments());
+                return "redirect:/post/" + postId;
+            } else {
+                model.addAttribute("message", "El comentario no pertenece a este post");
+                return "error";
+
+            }
+        } else {
+            model.addAttribute("message", "No tienes permiso para eliminar este comentario");
+            return "error";
+        }
     }
 
 }

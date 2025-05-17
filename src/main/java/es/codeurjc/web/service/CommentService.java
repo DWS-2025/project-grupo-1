@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.web.dto.CommentBasicDTO;
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CommentMapper;
 import es.codeurjc.web.dto.CreateCommentDTO;
@@ -125,6 +126,9 @@ public class CommentService {
     public Optional<Comment> findCommentById(Long id) {
         return commentRepository.findById(id);
     }
+    public CommentBasicDTO findCommentByIdBasicDTO(Long id) {
+        return toCommentBasicDTO(commentRepository.findById(id).orElseThrow());
+    }
     public CommentDTO findCommentByIdDTO(Long id) {
         return toDTO(commentRepository.findById(id).orElseThrow());
     }
@@ -141,6 +145,9 @@ public class CommentService {
     }
     public Collection<CommentDTO> toDTOs(Collection<Comment> comments) {
         return mapper.toDTOs(comments);
+    }
+    public CommentBasicDTO toCommentBasicDTO(Comment comment) {
+        return mapper.toCommentBasicDTO(comment);
     }
   
 }
