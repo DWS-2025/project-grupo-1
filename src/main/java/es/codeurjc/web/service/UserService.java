@@ -138,8 +138,12 @@ public class UserService {
         return toBasicDTO(userRepository.findById(id).orElseThrow());
     }
 
-    public UserDTO findByUserName(String userName) {
-        return toDTO(userRepository.findByUserName(userName).get());
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElseThrow();
+    }
+
+    public UserDTO findByUserNameDTO(String userName) {
+        return toDTO(userRepository.findByUserName(userName).orElseThrow());
     }
 
     public UserBasicDTO findByUserNameBasicDTO(String userName) {
@@ -296,7 +300,7 @@ public class UserService {
     }
 
     private User toDomain(UserBasicDTO userBasicDTO) {
-        return mapper.toBasicDomain(userBasicDTO);
+        return mapper.toDomain(userBasicDTO);
     }
 
     private Collection<UserDTO> toDTOs(List<User> users) {

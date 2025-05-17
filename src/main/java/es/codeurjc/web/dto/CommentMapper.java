@@ -1,12 +1,10 @@
 package es.codeurjc.web.dto;
 
+import java.util.Collection;
+
 import org.mapstruct.Mapper;
 
 import es.codeurjc.web.model.Comment;
-
-import java.util.Collection;
-import java.util.List;
-
 
 @Mapper(componentModel = "spring")
 // This interface is used to map between Comment and CommentDTO objects

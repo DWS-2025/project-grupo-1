@@ -2,11 +2,8 @@ package es.codeurjc.web.model;
 
 import java.sql.Blob;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import es.codeurjc.web.dto.UserDTO;
-import es.codeurjc.web.service.UserService;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,6 +76,7 @@ public class Post {
     public void addContributor(User user) {
         if(!contributors.contains(user)) {
             this.contributors.add(user);
+            // user.addCollaboratedPosts(this);
         }
 
     }

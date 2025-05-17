@@ -14,7 +14,7 @@ public record UserDTO(
         List<PostBasicDTO> posts,
         List<UserBasicDTO> followers,
         List<UserBasicDTO> followings,
-        float averageRating,
+        float userRate,
         List<SectionBasicDTO> followedSections,
         List<CommentBasicDTO> comments,
         List<PostBasicDTO> collaboratedPosts) {

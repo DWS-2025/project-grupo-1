@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import es.codeurjc.web.model.User;
 
@@ -19,7 +18,7 @@ public interface UserMapper {
     
     User toDomain(UserDTO userDTO);
 
-    User toBasicDomain(UserBasicDTO userBasicDTO);
+    User toDomain(UserBasicDTO userBasicDTO);
 
     Collection<UserDTO> toDTOs(Collection<User> users);
 
