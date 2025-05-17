@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
@@ -56,7 +53,6 @@ public class PostRestController {
         return postService.findAllAsCreateDTO(pageable);
     }
 
-
     @GetMapping("/{id}")
     public PostDTO getPost(@PathVariable Long id) {
         return postService.findByIdAsDTO(id);
@@ -65,7 +61,7 @@ public class PostRestController {
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(@RequestBody CreatePostDTO createPostDTO, MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
-        PostDTO postDTO = postService.save(createPostDTO, imageFile,request); // Save the post and image
+        PostDTO postDTO = postService.save(createPostDTO, imageFile, request); // Save the post and image
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(postDTO.id()).toUri(); // URI for the new post
         return ResponseEntity.created(location).body(postDTO);
     }
@@ -88,38 +84,39 @@ public class PostRestController {
     }
 
     @PostMapping("/{id}/image")
-	public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
 
-		URI location = fromCurrentRequest().build().toUri();
+        URI location = fromCurrentRequest().build().toUri();
 
-		postService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+        postService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
-		return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build();
 
-	}
+    }
 
     @PutMapping("/{id}/image")
-	public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
 
-		postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
+        postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
 
-		return ResponseEntity.noContent().build();
-	}
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deletePostImage(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Object> deletePostImage(@PathVariable Long id) throws IOException {
 
-		postService.deletePostImage(id);
+        postService.deletePostImage(id);
 
-		return ResponseEntity.noContent().build();
-	}
-    
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/comments")
     //Get all comments for all posts
     public ResponseEntity<Page<CommentDTO>> getAllComments(@RequestParam(defaultValue = "0") int page) {
         Page<CommentDTO> commentsPage = commentService.findAllComments(page);
         return ResponseEntity.ok(commentsPage);
     }
+
     // Get all comments for a specific post
     @GetMapping("/{postId}/comments")
     public ResponseEntity<Page<CommentDTO>> getCommentsByPostId(
@@ -157,16 +154,20 @@ public class PostRestController {
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @RequestBody CommentDTO updatedCommentDTO) {
-
-        commentService.updateComment(commentId, updatedCommentDTO, postId);
-        return ResponseEntity.ok(updatedCommentDTO);
+            @RequestBody CommentDTO updatedCommentDTO, HttpServletRequest request) {
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+            commentService.updateComment(commentId, updatedCommentDTO, postId);
+            return ResponseEntity.ok(updatedCommentDTO);
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
     }
 
     // delete a specific comment from a post
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public void deleteCommentFromPost(@RequestParam Long postId, @RequestParam Long commentId) {
-        commentService.deleteCommentFromPost(commentId, postId);
-
+    public void deleteCommentFromPost(@RequestParam Long postId, @RequestParam Long commentId, HttpServletRequest request) {
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+            commentService.deleteCommentFromPost(commentId, postId);
+        }
     }
 }
