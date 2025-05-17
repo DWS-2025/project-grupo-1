@@ -260,8 +260,7 @@ public class SectionService {
     public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
         List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
-       
-        // List<Section> followedSections = userService.getLoggedUserDomain().getFollowedSections();
+    
         // Filter only the sections that are NOT in the list of followed sections
         if (followedSections != null) {
             List<Section> notFollowedSections = allSections.stream()

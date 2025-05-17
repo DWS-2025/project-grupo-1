@@ -1,7 +1,6 @@
 package es.codeurjc.web.controller;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -45,7 +44,7 @@ public class UserController {
 
     private static final String USERS_FOLDER = "users";
 
-    @GetMapping({ "/home", "/" })
+    @GetMapping({"/home", "/"})
     /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
     public String index(Model model, HttpServletRequest request) {
         // We add the user name to the model to show it in the home page, if theres any
@@ -132,7 +131,7 @@ public class UserController {
             model.addAttribute("PassError", true);
             return "/register";
         }
-        User newUser = new User(userName, passwordEncoder.encode(password), email, "USER" );
+        User newUser = new User(userName, passwordEncoder.encode(password), email, "USER");
         userService.save(newUser);
         return "redirect:/login";
     }
@@ -170,25 +169,36 @@ public class UserController {
     }
 
     @GetMapping("/editProfile/{userId}")
-    public String getMethodName(Model model, @PathVariable long userId) {
-        model.addAttribute("User", userService.getUserById(userId));
-        return "editProfile";
+    public String getMethodName(Model model, @PathVariable long userId, HttpServletRequest request) {
+        if (userService.checkIfUserIsTheOwner(userId, request)) {
+            model.addAttribute("User", userService.getUserById(userId));
+            return "editProfile";
+        } else {
+            model.addAttribute("message", "No puedes editar el perfil de otro usuario");
+            return "error";
+        }
+
     }
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage)
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage, HttpServletRequest request)
             throws IOException, SQLException {
 
-        UserDTO user = userService.getUserById(userId);
+        if (userService.checkIfUserIsTheOwner(userId, request)) {
+            UserDTO user = userService.getUserById(userId);
 
-        if (user == null) {
-            model.addAttribute("message", "No se ha encontrado ese usuario");
+            if (user == null) {
+                model.addAttribute("message", "No se ha encontrado ese usuario");
+                return "error";
+            }
+            userService.updateWebUser(userId, newUserName, description, userImage);
+
+            return "redirect:/profile/" + user.id();
+        } else {
+            model.addAttribute("message", "No puedes editar el perfil de otro usuario");
             return "error";
         }
-        userService.updateWebUser(userId, newUserName, description, userImage);
-
-        return "redirect:/profile/" + user.id();
     }
 
     @GetMapping("/user/{id}/image")
@@ -207,15 +217,21 @@ public class UserController {
     }
 
     @PostMapping("/deleteUser/{userId}")
-    public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU) {
-        if (userService.findById(userId) != null) {
-            UserDTO userToDelete = userService.getUserById(userId);
-            userService.deleteUser(userToDelete);
-            model.addAttribute("name", userToDelete.userName());
-            model.addAttribute("byPost", true);
-            return "user_delete";
+    public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU, HttpServletRequest request) {
+        if (userService.checkIfUserIsTheOwner(userId, request)) {
+
+            if (userService.findById(userId) != null) {
+                UserDTO userToDelete = userService.getUserById(userId);
+                userService.deleteUser(userToDelete);
+                model.addAttribute("name", userToDelete.userName());
+                model.addAttribute("byPost", true);
+                return "user_delete";
+            } else {
+                model.addAttribute("message", "No se ha encontrado ese usuario");
+                return "error";
+            }
         } else {
-            model.addAttribute("message", "No se ha encontrado ese usuario");
+            model.addAttribute("message", "No puedes eliminar el perfil de otro usuario");
             return "error";
         }
     }
@@ -282,7 +298,8 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/upload-cv")
-    public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model) {
+    public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model, HttpServletRequest request) {
+        if (userService.checkIfUserIsTheOwner(id,request)) {
         try {
             userService.uploadCv(id, file);
         } catch (IOException e) {
@@ -291,6 +308,11 @@ public class UserController {
         }
         return "redirect:/profile/" + id;
     }
+    else {
+        model.addAttribute("message", "No puedes editar el perfil de otro usuario");
+        return "error";
+    }
+}
 
     @GetMapping("users/{id}/download-cv")
     public ResponseEntity<Resource> downloadCv(@PathVariable Long id) throws IOException {
