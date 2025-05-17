@@ -17,11 +17,13 @@
                 <div class="col-lg-4 align-self-center">
                   <div class="main-info header-text">
 
+                    {{#ShowButtons}}
                     <div class="col-lg-12">
                       <div class="main-button">
                         <a href="/editProfile/{{id}}">Editar</a>
                       </div>
                     </div>
+                    {{/ShowButtons}}
                     {{#notSameUser}}
                     <div class="col-lg-12">
                       {{#followed}}
@@ -45,7 +47,7 @@
                     {{^user.cvFilePath}}
                     <p>El usuario todavía no ha subido su CV</p>
                     {{/user.cvFilePath}}
-                    {{^hideDeleteButton}}
+                    {{#ShowButtons}}
 
 
                     <div class="col-lg-12">
@@ -57,14 +59,16 @@
                         </form>
                       </div>
                     </div>
-                    {{/hideDeleteButton}}
+                    {{/ShowButtons}}
 
                     <h4>{{user.userName}}</h4>
                     <p>{{#user.description}}{{user.description}}{{/user.description}} {{^user.description}}No hay
                       descripción{{/user.description}}</p>
+                      {{#ShowButtons}}
                     <div class="main-border-button">
                       <a href="/post">Nueva publicación</a>
                     </div>
+                    {{/ShowButtons}}
                   </div>
                 </div>
                 <div class="col-lg-4 align-self-center">
@@ -82,6 +86,7 @@
                     color: white;
                   }
                 </style>
+                {{#ShowButtons}}
                 <div class="col-lg-4 align-self-center">
 
                   <form action="/users/{{user.id}}/upload-cv" method="post" enctype="multipart/form-data">
@@ -94,6 +99,7 @@
                   </form>
 
                 </div>
+                {{/ShowButtons}}
                 {{/notSameUser}}
               </div>
               <div class="row">

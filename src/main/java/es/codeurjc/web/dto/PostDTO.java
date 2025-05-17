@@ -8,7 +8,6 @@ public record PostDTO(
         String content,
         String image,
         UserBasicDTO owner,
-        String ownerName,
         float  averageRating,
         List<CommentBasicDTO> comments,
         List<SectionBasicDTO> sections,

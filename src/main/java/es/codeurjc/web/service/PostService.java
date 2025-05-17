@@ -146,7 +146,6 @@ public class PostService {
 
     public void saveOtherUsersPost(Post post, User user) {
         post.setOwner(user);
-        post.setOwnerName(user.getUserName());
         post.setTitle(sanitizeHtml(post.getTitle()));
         post.setContent(sanitizeHtml(post.getContent()));
         postRepository.save(post);

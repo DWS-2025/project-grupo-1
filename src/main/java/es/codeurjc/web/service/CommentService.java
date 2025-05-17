@@ -49,7 +49,6 @@ public class CommentService {
 
         User currentUser = userService.getLoggedUserDomain(request.getUserPrincipal().getName());
         comment.setOwner(currentUser);
-        comment.setCommentOwnerName(currentUser.getUserName());
         comment.setCommentedPost(postToComment);
 
         commentRepository.save(comment);

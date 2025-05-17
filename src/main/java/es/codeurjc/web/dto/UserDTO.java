@@ -7,6 +7,7 @@ public record UserDTO(
         Long id,
         String userName,
         String description,
+        String password,
         String cvFilePath,
         String email,
         String image,
