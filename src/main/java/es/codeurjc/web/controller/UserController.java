@@ -156,7 +156,7 @@ public class UserController {
             if (userService.checkIfTheUserIsFollowed(user, request)) {
                 model.addAttribute("followed", true);
             }
-            if (user.equals(loggedUser) || loggedUser.id() == 1) {
+            if (userService.checkIsSameUser(userId, request)) {
                 model.addAttribute("ShowButtons", true);
             }
 
@@ -171,7 +171,7 @@ public class UserController {
 
     @GetMapping("/editProfile/{userId}")
     public String getMethodName(Model model, @PathVariable long userId, HttpServletRequest request) {
-        if (userService.checkIfUserIsTheOwner(userId, request)) {
+        if (userService.checkIsSameUser(userId, request)) {
             model.addAttribute("User", userService.getUserById(userId));
             return "editProfile";
         } else {
@@ -186,7 +186,7 @@ public class UserController {
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage, HttpServletRequest request)
             throws IOException, SQLException {
 
-        if (userService.checkIfUserIsTheOwner(userId, request)) {
+        if (userService.checkIsSameUser(userId, request)) {
             UserDTO user = userService.getUserById(userId);
 
             if (user == null) {
@@ -219,7 +219,7 @@ public class UserController {
 
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU, HttpServletRequest request) {
-        if (userService.checkIfUserIsTheOwner(userId, request)) {
+        if (userService.checkIsSameUser(userId, request)) {
 
             if (userService.findById(userId) != null) {
                 UserDTO userToDelete = userService.getUserById(userId);
@@ -300,7 +300,7 @@ public class UserController {
 
     @PostMapping("/users/{id}/upload-cv")
     public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model, HttpServletRequest request) {
-        if (userService.checkIfUserIsTheOwner(id,request)) {
+        if (userService.checkIsSameUser(id,request)) {
         try {
             userService.uploadCv(id, file);
         } catch (IOException e) {

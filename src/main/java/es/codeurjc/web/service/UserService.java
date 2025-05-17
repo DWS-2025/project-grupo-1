@@ -113,7 +113,7 @@ public class UserService {
         this.save(user);
     }
 
-    public boolean checkIfUserIsTheOwner(Long id, HttpServletRequest request) {
+    public boolean checkIsSameUser(Long id, HttpServletRequest request) {
 
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         UserDTO userToEdit = findById(id);
