@@ -253,11 +253,11 @@ public class UserController {
     @GetMapping("/user/{userId}/unfollow")
     public String unfollowUser(Model model, @PathVariable long userId, HttpServletRequest request) {
         UserDTO userToUnfollow = userService.getUserById(userId);
-        if (userToUnfollow != null) {
+        if (userService.checkIfTheUserIsFollowed(userToUnfollow, request)){
             userService.unfollowUser(userToUnfollow, request);
             return "redirect:/profile/" + userId;
         } else {
-            model.addAttribute("message", "no se ha encontrado ese usuario");
+            model.addAttribute("message", "no puedes dejar de seguir a un usuario que no sigues");
             return "error";
         }
     }
