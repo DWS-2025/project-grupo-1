@@ -82,14 +82,14 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}")
-    public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {//, @RequestParam(defaultValue = "0") int page) {
+    public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {
         PostDTO postDTO = postService.findByIdAsDTO(postId);
 
-        //Page<CommentDTO> commentPage = commentService.findAllCommentsByPostId(postId,page);
+
         if (request.getUserPrincipal() != null) {
             model.addAttribute("post", postDTO);
             model.addAttribute("comments", commentService.findAllCommentsByPostId(postId));
-            //model.addAttribute("comments", commentService.findAllCommentsByPostId(postId,page).getContent());
+           
             model.addAttribute("currentPage", 0); //commentPage.getNumber());
             model.addAttribute("hasImage", postDTO.image() != null);
             model.addAttribute("logged", true);
