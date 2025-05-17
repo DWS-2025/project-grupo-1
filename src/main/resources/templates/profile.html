@@ -54,13 +54,21 @@
                       <div class="delete-button">
                         <form action="/deleteUser/{{id}}" method="post">
 
-                          <input type='submit' value='Eliminar usuario' />
+                          <input type='submit' value='Eliminar usuario'  style="
+                          background-color: #eb5a9e;
+                          color: white;
+                          border: none;
+                          padding: 10px 18px;
+                          border-radius: 20px;
+                          cursor: pointer;
+                          font-size: 16px;
+                          font-weight: 400;
+                          "/>
                           <input type="hidden" name="_csrf" value="{{token}}"/>
                         </form>
                       </div>
                     </div>
                     {{/ShowButtons}}
-
                     <h4>{{user.userName}}</h4>
                     <p>{{#user.description}}{{user.description}}{{/user.description}} {{^user.description}}No hay
                       descripción{{/user.description}}</p>
