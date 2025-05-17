@@ -5,6 +5,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,25 +164,31 @@ public class PostRestController {
     }
 
     // update a specific comment in a post
+
     @PutMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody CommentDTO updatedCommentDTO, HttpServletRequest request) {
         if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-            commentService.updateComment(commentId, updatedCommentDTO, postId);
-            return ResponseEntity.ok(updatedCommentDTO);
+            
+            return ResponseEntity.ok(commentService.updateComment(commentId, updatedCommentDTO, postId));
         } else {
             return ResponseEntity.status(403).build(); // Forbidden
         }
     }
 
     // delete a specific comment from a post
-    @DeleteMapping("/{postId}/comments/{commentId}")
-    public void deleteCommentFromPost(@RequestParam Long postId, @RequestParam Long commentId, HttpServletRequest request) {
-        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-            commentService.deleteCommentFromPost(commentId, postId);
-        }
+    @DeleteMapping("/{postId}/comments/{commentId}/")
+public ResponseEntity<Collection<CommentDTO>> deleteCommentFromPost(
+        @PathVariable Long postId,
+        @PathVariable Long commentId,
+        HttpServletRequest request) {
+    if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+        // Aquí llamas al método que realmente borra el comentario
+        Collection<CommentDTO> comments = commentService.deleteCommentFromPostAPI(postId, commentId);
+        return ResponseEntity.ok(comments);
     }
-    
+    return ResponseEntity.status(403).build(); // Forbidden
+}
 }

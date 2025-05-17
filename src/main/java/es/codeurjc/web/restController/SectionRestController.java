@@ -27,6 +27,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.service.SectionService;
+import es.codeurjc.web.service.UserService;
 
 
 
@@ -118,12 +119,13 @@ public class SectionRestController {
 	}
 
     @PutMapping("/{id}/image")
-	public ResponseEntity<Object> replaceSectionImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
+        sectionService.replaceSectionImage(id, imageFile.getInputStream(), imageFile.getSize());
+        return ResponseEntity.noContent().build();
+    }
 
-		sectionService.replaceSectionImage(id, imageFile.getInputStream(), imageFile.getSize());
-
-		return ResponseEntity.noContent().build();
-	}
+    
 
     @DeleteMapping("/{id}/image")
 	public ResponseEntity<Object> deleteSectionImage(@PathVariable long id) throws IOException {

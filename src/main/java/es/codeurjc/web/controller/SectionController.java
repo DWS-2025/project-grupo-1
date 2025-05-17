@@ -296,22 +296,7 @@ public class SectionController {
     @GetMapping("/section/search")
     public String searchSection(Model model, @RequestParam(required = false) List<String> filters){
         Collection<SectionDTO> sections;
-
-        /*if (filters == null || filters.isEmpty()) {
-            sections = sectionService.getAllSections();
-        } else {
-            if (filters.contains("title")) {
-                sections = sectionService.getSectionByTitltesASC();
-            } else if (filters.contains("averageRating")) {
-                sections = sectionService.getSectionByAverageRatingDESC();
-            } else if (filters.contains("minRating")) {
-                sections = sectionService.getSectionGT5();
-            } else if (filters.contains("minPosts")) {
-                sections = sectionService.getSectionGT5Publications();
-            } else {
-                sections = sectionService.getAllSections();
-            }
-        }*/
+        
         if (filters == null || filters.isEmpty()) {
             sections = sectionService.getAllSections();
         } else {

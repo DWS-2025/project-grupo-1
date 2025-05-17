@@ -113,7 +113,7 @@ public class UserService {
         this.save(user);
     }
 
-    public boolean checkIfUserIsTheOwner(Long id, HttpServletRequest request) {
+    public boolean checkIsSameUser(Long id, HttpServletRequest request) {
 
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         UserDTO userToEdit = findById(id);
@@ -132,6 +132,9 @@ public class UserService {
 
     public UserDTO findById(long id) {
         return toDTO(userRepository.findById(id).orElseThrow());
+    }
+     public User findByIdDomain(long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
     public UserBasicDTO findBasicById(long id) {
@@ -465,6 +468,20 @@ public class UserService {
         } else {
             return false;
         }
+    }
+
+    public Collection<UserDTO> getOnlyUsersRole (HttpServletRequest request) {
+        UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
+        Collection<UserDTO> users = findAllUsers();
+        Collection<UserDTO> onlyUsers = new ArrayList<>();
+
+        for (UserDTO user : users) {
+            if (!user.userName().equals(loggedUser.userName()) && !user.userName().equals("Admin")) {
+                onlyUsers.add(user);
+            }
+        }
+
+        return onlyUsers;
     }
 
 }

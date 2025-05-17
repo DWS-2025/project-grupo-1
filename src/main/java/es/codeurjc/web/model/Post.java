@@ -156,6 +156,10 @@ public class Post {
     public void setSections(List<Section> sections) {
         this.sections = sections;
     }
+  public void removeComment(Comment comment) {
+    comments.remove(comment);
+   
+}
 
     @Override
     public boolean equals(Object obj) {
