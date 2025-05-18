@@ -95,7 +95,8 @@ public class PostService {
     }
 
     @Transactional
-    public Post save(Post post, MultipartFile imageFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException { // Swapped from Post to void
+    public Post save(Post post, MultipartFile imageFile, List<Long> sectionsId, String[] contributors,
+            HttpServletRequest request) throws IOException { // Swapped from Post to void
 
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         post.setTitle(policy.sanitize(post.getTitle()));
@@ -137,12 +138,14 @@ public class PostService {
     }
 
     // Transform the PostDTO to a Post and save it
-    public PostDTO save(PostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException {
+    public PostDTO save(PostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors,
+            HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
     }
 
     // Transform the CreatePostDTO to a Post and save it
-    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException {
+    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors,
+            HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
     }
 
@@ -159,7 +162,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id) {
-        
+
         Post post = postRepository.findById(id).orElseThrow();
         User owner = post.getOwner();
 
@@ -182,8 +185,9 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public Post updatePost(Long id, Post newPost, MultipartFile newImage, List<Long> newSectionIds, String[] newContributors, HttpServletRequest request) throws IOException {
-        
+    public Post updatePost(Long id, Post newPost, MultipartFile newImage, List<Long> newSectionIds,
+            String[] newContributors, HttpServletRequest request) throws IOException {
+
         Post oldPost = postRepository.findById(id).orElseThrow();
 
         if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {
@@ -226,7 +230,7 @@ public class PostService {
         post.getSections().clear();
 
         if (sectionIds != null && !sectionIds.isEmpty()) {
-            
+
             Set<Long> uniqueSectionsId = new LinkedHashSet<>(sectionIds);
             Section section;
 
@@ -259,18 +263,18 @@ public class PostService {
     }
 
     public void addContributors(Post post, String[] contributorNames) {
-        
+
         post.getContributors().clear();
 
         User user;
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         if (contributorNames != null && contributorNames.length > 0) {
-            
+
             Set<String> uniqueContributors = new LinkedHashSet<>(List.of(contributorNames));
 
             for (String colaborator : uniqueContributors) {
-                
+
                 colaborator = policy.sanitize(colaborator);
 
                 try {
@@ -402,10 +406,10 @@ public class PostService {
         String loggedUsername = request.getUserPrincipal().getName();
         String ownerUsername = post.getOwner().getUserName();
 
-        // Comprueba si es el owner
+        // Check if the logged user is the owner of the post
         boolean isOwner = loggedUsername.equals(ownerUsername);
 
-        // Comprueba si es admin (puedes cambiar la lógica de admin según tu sistema)
+        // Check if the logged user is an admin
         boolean isAdmin = userService.getLoggedUser(loggedUsername).id() == 1;
 
         return isOwner || isAdmin;

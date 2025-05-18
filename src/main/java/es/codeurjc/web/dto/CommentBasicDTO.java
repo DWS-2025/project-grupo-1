@@ -2,7 +2,6 @@ package es.codeurjc.web.dto;
 
 import java.util.Objects;
 
-// maybe we dont need a basic DTO for comment, we can use the full DTO instead
 public record CommentBasicDTO(
         Long id,
         String content,

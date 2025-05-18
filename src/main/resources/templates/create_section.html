@@ -23,7 +23,7 @@
             <div class="col-lg-12">
               <div class="page-content header-text">
                 <form action="/section/new" method="post" enctype="multipart/form-data">
-                 
+
                   <div class="form-group">
                     <label for="title">Título:</label>
                     <input type="text" class="form-control" id="title" name="title" required>
@@ -31,18 +31,14 @@
 
 
 
-                  <div class="form-group editor-container" >
+                  <div class="form-group editor-container">
                     <label for="description">Descripción:</label>
 
-                    <div id="editor" class="quill-editor custom-editor" style="height: 200px;"></div> <!-- Contenedor para Quill-->
-                    <!--<textarea class="form-control" id="description" name="description" rows="10" required></textarea> -->
-                    <input type="hidden" id="description" name="description" required> <!-- Contenido que se mandará sanitizado-->
-                    
-                  </div>
-                  
-                  
-                  
-                  <br>
+                    <div id="editor" class="quill-editor custom-editor" style="height: 200px;"></div>
+                    <!-- Quill docker -->
+                    <input type="hidden" id="description" name="description" required>
+                    <!-- Sanitized content -->
+                  </div> <br>
                   <div class="form-group">
                     <label for="sectionImage">Imagen para la carátula:</label>
                     <input type="file" class="form-control file-input-small" id="sectionImage" name="sectionImage"
@@ -51,13 +47,9 @@
                   <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">Publicar</button>
                   </div>
-                  <input type="hidden" name="_csrf" value="{{token}}"/>
+                  <input type="hidden" name="_csrf" value="{{token}}" />
                 </form>
               </div>
-
-
-
-
             </div>
           </div>
         </div>
@@ -69,36 +61,32 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Inicializar Quill
     const quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: 'Escribe tu descripción aquí...',
-        modules: {
-            toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['clean']
-            ]
-        }
+      theme: 'snow',
+      placeholder: 'Escribe tu descripción aquí...',
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          ['clean']
+        ]
+      }
     });
 
-    // Manejar el envío del formulario
     const form = document.querySelector('form');
-    form.addEventListener('submit', function(e) {
-        // Sincronizar el contenido de Quill al campo oculto
-        const rawDescription = quill.root.innerHTML;
-        const cleanedDescription = DOMPurify.sanitize(rawDescription);
-        
-        // Validar que haya contenido
-        if (quill.getText().trim().length === 0) {
-            e.preventDefault();
-            alert('La descripción no puede estar vacía');
-            return;
-        }
-        
-        document.getElementById('description').value = cleanedDescription;
+    form.addEventListener('submit', function (e) {
+      const rawDescription = quill.root.innerHTML;
+      const cleanedDescription = DOMPurify.sanitize(rawDescription);
+
+      if (quill.getText().trim().length === 0) {
+        e.preventDefault();
+        alert('La descripción no puede estar vacía');
+        return;
+      }
+
+      document.getElementById('description').value = cleanedDescription;
     });
-});
+  });
 </script>
 
 

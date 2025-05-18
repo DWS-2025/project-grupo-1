@@ -54,29 +54,31 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+    public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO,
+            @RequestParam MultipartFile newImage, @RequestParam String newContributors,
+            @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request)
+            throws IOException {
 
-    if (createPostDTO.title().isEmpty()) {
-        model.addAttribute("message", "The title cannot be empty");
-        return "error";
-    }
+        if (createPostDTO.title().isEmpty()) {
+            model.addAttribute("message", "The title cannot be empty");
+            return "error";
+        }
 
         postService.save(createPostDTO, newImage, sectionIds, newContributors.split(","), request);
-        
+
         return "redirect:/post";
-    
+
     }
 
     @GetMapping("/post/{postId}")
     public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {
         PostDTO postDTO = postService.findByIdAsDTO(postId);
 
-
         if (request.getUserPrincipal() != null) {
 
             model.addAttribute("post", postDTO);
             model.addAttribute("comments", commentService.findAllCommentsByPostId(postId));
-            model.addAttribute("currentPage", 0); //commentPage.getNumber());
+            model.addAttribute("currentPage", 0); // commentPage.getNumber());
             model.addAttribute("hasImage", postDTO.image() != null);
             model.addAttribute("isOwner", postService.checkIfUserIsTheOwner(postId, request));
             model.addAttribute("logged", true);
@@ -87,12 +89,12 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
 
             model.addAttribute("post", postDTO);
             model.addAttribute("comments", commentService.findAllCommentsByPostId(postId));
-            model.addAttribute("currentPage", 0); //commentPage.getNumber());
+            model.addAttribute("currentPage", 0); // commentPage.getNumber());
             model.addAttribute("hasImage", postDTO.image() != null);
             model.addAttribute("logged", false);
-            
+
             return "view_post";
-        
+
         }
 
     }
@@ -108,7 +110,7 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
     public String updatePost(Model model, @PathVariable Long postId, HttpServletRequest request) {
 
         if (postService.checkIfUserIsTheOwner(postId, request)) {
-            
+
             PostDTO postDTO = postService.findByIdAsDTO(postId);
 
             List<Map<String, Object>> markedSections = postService.preparePostSectionsForForm(postId);
@@ -121,7 +123,7 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
             model.addAttribute("content", postDTO.content());
             model.addAttribute("contributors", contributors);
             model.addAttribute("isEditing", true);
-            
+
             return "post_form";
 
         } else {
@@ -133,7 +135,8 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
 
     @PostMapping("/post/{postId}/edit")
     public String updatePost(Model model, @PathVariable Long postId, @ModelAttribute CreatePostDTO createPostDTO,
-            @RequestParam MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
+            @RequestParam MultipartFile newImage,
+            @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
             @RequestParam String newContributors, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(postId, request)) {
@@ -150,9 +153,9 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
 
     @PostMapping("/post/{postId}/delete")
     public String deletePost(@PathVariable Long postId, Model model, HttpServletRequest request) {
-        
+
         if (postService.checkIfUserIsTheOwner(postId, request)) {
-        
+
             postService.deletePost(postId);
             return "redirect:/post";
 
@@ -171,8 +174,9 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
     }
 
     @PostMapping("/post/{postId}/comment/new")
-    public String newPostComment(Model model, @PathVariable Long postId, CreateCommentDTO newComment, HttpServletRequest request) {
-        
+    public String newPostComment(Model model, @PathVariable Long postId, CreateCommentDTO newComment,
+            HttpServletRequest request) {
+
         if (postService.existsById(postId)) {
 
             if (newComment.content().isEmpty()) {
@@ -195,18 +199,20 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
     }
 
     @GetMapping("/post/{postId}/comment/{commentId}/edit")
-    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request) {
+    public String editPostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model,
+            HttpServletRequest request) {
 
         if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-            
+
             model.addAttribute("post", postService.findByIdAsDTO(postId));
             model.addAttribute("comment", commentService.findCommentByIdDTO(commentId));
             model.addAttribute("isEditing", true);
-            
+
             return "comment_form";
 
         } else {
-            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
+            model.addAttribute("message",
+                    "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
             return "error";
         }
 
@@ -217,7 +223,7 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
             CommentDTO updatedComment, HttpServletRequest request) {
 
         if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-            
+
             postService.findByIdAsDTO(postId);
             commentService.findCommentByIdDTO(commentId);
 
@@ -231,32 +237,35 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
             }
 
             commentService.updateComment(commentId, updatedComment, postId);
-            
+
             return "redirect:/post/" + postId;
 
         } else {
-            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
+            model.addAttribute("message",
+                    "No tienes permisos para realizar esa acción, o estás intentando editar un comentario de otro post");
             return "error";
         }
 
     }
 
     @PostMapping("/post/{postId}/comment/{commentId}/delete")
-    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model, HttpServletRequest request) {
-        
+    public String deletePostComment(@PathVariable Long postId, @PathVariable Long commentId, Model model,
+            HttpServletRequest request) {
+
         if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-        
+
             PostDTO postDTO = postService.findByIdAsDTO(postId);
             commentService.findCommentByIdDTO(commentId);
             commentService.deleteCommentFromPost(postId, commentId);
-            
+
             model.addAttribute("post", postDTO);
             model.addAttribute("Comments", postDTO.comments());
-        
+
             return "redirect:/post/" + postId;
-        
+
         } else {
-            model.addAttribute("message", "No tienes permisos para realizar esa acción, o estás intentando eliminar un comentario de otro post");
+            model.addAttribute("message",
+                    "No tienes permisos para realizar esa acción, o estás intentando eliminar un comentario de otro post");
             return "error";
 
         }

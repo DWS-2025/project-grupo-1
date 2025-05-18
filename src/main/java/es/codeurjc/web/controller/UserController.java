@@ -43,8 +43,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping({"/home", "/"})
-    /* THIS METHOD WILL BE USED IN THE NEXT PHASE */
+    @GetMapping({ "/home", "/" })
     public String index(Model model, HttpServletRequest request) {
         // We add the user name to the model to show it in the home page, if theres any
         // problem with the user name we show "Invitado" as a default value.
@@ -183,8 +182,9 @@ public class UserController {
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage,
-            HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, SQLException {
-            
+            HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response)
+            throws IOException, SQLException {
+
         if (!request.getUserPrincipal().getName().equals(newUserName)) {
             for (UserDTO userDTO : userService.findAllUsers()) {
                 if (userDTO.userName().equals(newUserName)) {
@@ -202,16 +202,14 @@ public class UserController {
                 return "error";
             }
 
-            try{
-            userService.updateWebUser(userId, newUserName, description, userImage);
-            }
-            catch (UnsupportedOperationException e){ 
+            try {
+                userService.updateWebUser(userId, newUserName, description, userImage);
+            } catch (UnsupportedOperationException e) {
                 model.addAttribute("message", "El administrador no puede cambiar su nombre de usuario");
                 return "error";
             }
-           
 
-                // Invalida la sesión y borra la cookie JSESSIONID
+            // invalidate the session and delete the JSESSIONID cookie
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
@@ -222,7 +220,8 @@ public class UserController {
             cookie.setHttpOnly(true);
             cookie.setMaxAge(0);
             response.addCookie(cookie);
-            model.addAttribute("message", "El perfil se ha editado correctamente, debe inicar sesión con las nuevas creedenciales");
+            model.addAttribute("message",
+                    "El perfil se ha editado correctamente, debe inicar sesión con las nuevas creedenciales");
             return "/profileEdited";
         } else {
             model.addAttribute("message", "No puedes editar el perfil de otro usuario");
@@ -251,7 +250,8 @@ public class UserController {
     }
 
     @PostMapping("/deleteUser/{userId}")
-    public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU, HttpServletRequest request) {
+    public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU,
+            HttpServletRequest request) {
         if (userService.checkIsSameUser(userId, request)) {
 
             if (userService.findById(userId) != null) {
@@ -332,7 +332,8 @@ public class UserController {
     }
 
     @PostMapping("/users/{id}/upload-cv")
-    public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model, HttpServletRequest request) {
+    public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model,
+            HttpServletRequest request) {
         if (userService.checkIsSameUser(id, request)) {
             try {
                 userService.uploadCv(id, file);

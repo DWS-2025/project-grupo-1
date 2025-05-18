@@ -137,8 +137,7 @@ public class SecurityConfiguration {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                // PUBLIC PAGES, in /assets/** maybe we should just specify the files we
-                // need
+                // PUBLIC PAGES
                 .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register",
                         "/login")
                 .permitAll()
@@ -147,10 +146,6 @@ public class SecurityConfiguration {
                         "/no-image.png", "/images/spinner.gif",
                         "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
                 .permitAll()
-                // We should test the regex for the post id
-
-                // We should test the regex for the post id
-
                 // PRIVATE PAGES
                 .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")

@@ -31,9 +31,10 @@ public class RankingService {
         this.postRepository = postRepository;
     }
 
-    public void calculatePostAverageRating(Long id){
-        
+    public void calculatePostAverageRating(Long id) {
+
     }
+
     public Collection<UserDTO> topUsersApp() {
         return userMapper.toDTOs(userRepository.findTop5ByOrderByUserRateDesc());
     }
@@ -41,18 +42,18 @@ public class RankingService {
     public Collection<UserDTO> topUsersFollowed(UserDTO userDTO) {
         User user = userMapper.toDomain(userDTO);
         return userMapper.toDTOs(userRepository.findTopFollowedUsers(user.getId()));
-        
+
     }
 
     public Collection<PostDTO> topPostsApp() {
         return postMapper.toDTOs(postRepository.findTop5ByOrderByAverageRatingDesc());
-      
+
     }
 
     public Collection<PostDTO> topPostsFollowed(UserDTO userDTO) {
         User user = userMapper.toDomain(userDTO);
         return postMapper.toDTOs(postRepository.findTopPostsFollowedByUser(user.getId()));
-      
+
     }
 
 }
