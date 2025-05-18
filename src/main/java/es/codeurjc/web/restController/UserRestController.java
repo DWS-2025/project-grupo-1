@@ -70,10 +70,11 @@ public class UserRestController {
         }
         User user = new User(newUser.userName(), passwordEncoder.encode(newUser.password()), newUser.email(), "USER");
         userService.save(user);
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(newUser.id()).toUri(); // URI for the new User
-        return ResponseEntity.created(location).body(newUser);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri(); // URI for the new User
+        return ResponseEntity.created(location).body(userService.findById(user.getId()));
     }
 
+<<<<<<< HEAD
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
             MultipartFile newImagem, HttpServletRequest request) throws IOException, SQLException {
@@ -88,7 +89,29 @@ public class UserRestController {
         return userService.updateApiUser(id, newUserDTO);
 
     }
+=======
+        @PutMapping("/{id}")
+        public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO, HttpServletRequest request)
+        throws SQLException {
+        
+            UserDTO oldUser = userService.findById(id);
+            if (oldUser == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+            if (!userService.checkIsSameUser(id, request)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
+            }
+        
+            userService.updateApiUser(id, newUserDTO);
+>>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
 
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.WWW_AUTHENTICATE,
+                            "Bearer error=\"invalid_token\", error_description=\"Updated successfully. Please login again\"")
+                    .build();
+        }
+    
     @DeleteMapping("/{id}")
     public UserDTO deleteUser(@PathVariable long id, HttpServletRequest request) {
         UserDTO user = userService.findById(id);

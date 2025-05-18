@@ -34,6 +34,7 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
+import es.codeurjc.web.security.jwt.JwtTokenProvider;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -236,7 +237,14 @@ public class UserService {
 
             }
         }
+<<<<<<< HEAD
 
+=======
+          
+        }
+    }
+    
+>>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
             user.setDescription(description);
@@ -259,12 +267,19 @@ public class UserService {
         String userName = updatedUser.getUserName();
         updatedUser.setId(id);
 
+<<<<<<< HEAD
         if (userName != null && !userName.isEmpty()) {
             if (!oldUser.getRols().contains("ADMIN") && !oldUser.getUserName().equals(userName)) {
                 for (UserDTO userDTO : this.findAllUsers()) {
                     if (userDTO.userName().equals(updatedUserDTO.userName())) {
                         throw new IllegalArgumentException("El nombre de usuario ya está en uso");
                     }
+=======
+        for (UserDTO userDTO : this.findAllUsers()) {
+            if (!updatedUser.getRols().contains("ADMIN")){
+                if (userDTO.userName().equals(updatedUserDTO.userName())) {
+                    throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+>>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
                 }
             }
         }
@@ -289,15 +304,9 @@ public class UserService {
             oldUser.setPassword(password);
         }
 
-        if (oldUser.getImage() != null) {
-            // Set the image in the updated user
-            updatedUser.setUserImage(BlobProxy.generateProxy(
-                    oldUser.getUserImage().getBinaryStream(),
-                    oldUser.getUserImage().length()));
-            updatedUser.setImage(oldUser.getImage());
-        }
-        userRepository.save(updatedUser);
-        return toDTO(updatedUser);
+        userRepository.save(oldUser);
+        return toDTO(oldUser);
+
     }
 
     public void unfollowUser(UserDTO userToUnfollowDTO, HttpServletRequest request) {
