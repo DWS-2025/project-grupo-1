@@ -34,7 +34,6 @@ import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserBasicDTO;
-import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -114,23 +113,26 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
     public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, request));
     }
+    public PostDTO save(CreatePostDTO postDTO, MultipartFile imageFile, HttpServletRequest request, List<Long> sectionIds, String[] contributorNames) throws IOException {
+    Post post = toDomain(postDTO);
+
+
+    addSections(post, sectionIds);
+    addContributors(post, contributorNames);
+
+    return toDTO(save(post, imageFile, request));
+}
 
     public Post save(Post post, HttpServletRequest request) { // Swapped from Post to void
 
-        UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
-
-        User currentUser = userService.findByIdDomain(userDTO.id());
-
+        User currentUser = userService.findByUserName(request.getUserPrincipal().getName());
+              
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
 
         post.setContent(sanitizeHtml(post.getContent()));
         post.setTitle(sanitizeHtml(post.getTitle()));
-
-        List<Section> sections = post.getSections();
-        for (Section section : sections) {
-            section.addPost(post);
-        }
+      
 
         List<User> contributors = post.getContributors();
         for (User contributor : contributors) {
@@ -265,7 +267,8 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
         if (sectionIds != null && !sectionIds.isEmpty()) {
 
             for (Long sectionId : sectionIds) {
-                post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));
+                post.addSection(sectionService.findSectionById(sectionId).get());
+                sectionService.findSectionById(sectionId).get().addPost(post);
             }
 
         }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,25 +58,16 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
 
-        if (!userService.isLogged(userService.getLoggedUser(request.getUserPrincipal().getName()))) {
-            model.addAttribute("message", "You must be logged in to create a post");
-            return "error";
-        }
-
-        if (createPostDTO.title().isEmpty()) {
-            model.addAttribute("message", "The title cannot be empty");
-            return "error";
-        }
-
-        postService.addSections(createPostDTO, sectionIds);
-
-        String[] contributorsArray = newContributors.split(",");
-        postService.addContributors(createPostDTO, contributorsArray);
-        postService.save(createPostDTO, newImage, request);
-        return "redirect:/post";
+    if (createPostDTO.title().isEmpty()) {
+        model.addAttribute("message", "The title cannot be empty");
+        return "error";
     }
+
+    postService.save(createPostDTO, newImage, request, sectionIds, newContributors.split(","));
+    return "redirect:/post";
+}
 
     @GetMapping("/post/{postId}")
     public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {
