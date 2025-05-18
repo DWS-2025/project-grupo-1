@@ -36,7 +36,7 @@ Las entidades con imágenes serán los **Post**, los **User** (foto de perfil) y
 ## Desarrollo Colaborativo
 
 ### Alejandro Damas Pablos
-Se ha encargado principalmente de la clase Post, implementando cada aspecto referente a esta. Además, ha ido manipulando el resto de entidades en mayor o menor medida debido a la conexión de la entidad Post con todas las demás.
+Encargado principalmente de la clase Post, implementando cada aspecto referente a esta. Además, ha ido manipulando el resto de entidades en mayor o menor medida debido a la conexión de la entidad Post con todas las demás.
 
 #### 5 commits más significativos
 - 
@@ -53,11 +53,13 @@ Se ha encargado principalmente de la clase Post, implementando cada aspecto refe
 - 
 
 ### Eva Fernández López
-Se ha encargado principalmente de la clase Section, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
+Encargada principalmente de la clase Section, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
-- 
-- 
+- [a2e647e](https://github.com/DWS-2025/project-grupo-1/commit/a2e647e484bcc8488691687a1e7ed37b3ab54007): Todas las entradas de los formularios sanitizadas.
+- [b451183](https://github.com/DWS-2025/project-grupo-1/commit/b4511839b35c825199d79a65aed4a9c990bfd35d): Añadido el panel de administrador para que pueda ver todos los usuarios, solo el administrador podrá acceder a esta página.
+
+
 - 
 - 
 - 
@@ -70,7 +72,7 @@ Se ha encargado principalmente de la clase Section, implementando cada aspecto r
 - 
 
 ### Markel Fernández Pinilla
-Se ha encargado principalmente de la clase Comment, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
+Encargado principalmente de la clase Comment, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
 - 
@@ -87,7 +89,7 @@ Se ha encargado principalmente de la clase Comment, implementando cada aspecto r
 - 
 
 ### Julio López de Lucas
-Se ha encargado principalmente de la clase User, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
+Encargado principalmente de la clase User, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
 - 
