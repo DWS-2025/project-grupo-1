@@ -138,7 +138,7 @@
                       <div class="col-lg-3 col-sm-6">
                         <div class="item">
                           <div class="thumb">
-                            <img src="/post/{{id}}/image" alt="" style="border-radius: 23px;">
+                            <img class="centered-image" src="/post/{{id}}/image" alt="" >
                           </div>
                           <div class="down-content">
                             <ul>
@@ -153,35 +153,37 @@
                       {{/user.posts}}
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="heading-section">
-                        <h4><em>Publicaciones en la que ha colaborado</em></h4>
-                      </div>
-                    </div>
-                    {{#user.collaboratedPosts}}
-                    <div class="col-lg-3 col-sm-6">
-                      <div class="item">
-                        <div class="thumb">
-                          <img src="/post/{{id}}/image" alt="" style="border-radius: 23px;">
+                  <div class="clips">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="heading-section">
+                          <h4><em>Publicaciones en la que ha colaborado</em></h4>
                         </div>
-                        <div class="down-content">
-                          <ul>
-                            <li>
-                              <h6> <a href="/post/{{id}}">{{title}}</a></h6>
-                            </li>
-                            <li>
-                              <span><i class="fa fa-star" style="color: yellow;"></i>{{averageRating}}</span>
-                            </li>
-                          </ul>
+                      </div>
+                      {{#user.collaboratedPosts}}
+                      <div class="col-lg-3 col-sm-6">
+                        <div class="item">
+                          <div class="thumb">
+                            <img class="centered-image" src="/post/{{id}}/image" alt="" >
+                          </div>
+                          <div class="down-content">
+                            <ul>
+                              <li>
+                                <h6> <a href="/post/{{id}}">{{title}}</a></h6>
+                              </li>
+                              <li>
+                                <span><i class="fa fa-star" style="color: yellow;"></i>{{averageRating}}</span>
+                              </li>
+                            </ul>
 
+                          </div>
                         </div>
                       </div>
+                      {{/user.collaboratedPosts}}
+                      {{^user.collaboratedPosts}}
+                      <h5>Todavía no ha colaborado en ningún post</h5><br><br>
+                      {{/user.collaboratedPosts}}
                     </div>
-                    {{/user.collaboratedPosts}}
-                    {{^user.collaboratedPosts}}
-                    <h5>Todavía no ha colaborado en ningún post</h5><br><br>
-                    {{/user.collaboratedPosts}}
                   </div>
                 </div>
               </div>

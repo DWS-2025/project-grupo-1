@@ -1,4 +1,9 @@
 .post-img {
-    width: 400px;
-    height: auto;
+    display: block;
+    margin: 0 0 auto 0;
+    border-radius: 30px;
+    width: 356px;
+    height: 212.6px;
+    object-fit: cover;
+    max-width: 100%; /* Opcional: para hacerlo responsive */ 
 }
