@@ -3,8 +3,6 @@ package es.codeurjc.web.controller;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +24,9 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.service.RankingService;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 public class UserController {
@@ -185,11 +182,11 @@ public class UserController {
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage, HttpServletRequest request)
-            throws IOException, SQLException {
+            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage,
+            HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, SQLException {
 
-            for (UserDTO userDTO : userService.findAllUsers()) {
-            if (userDTO.userName().equals(newUserName)) {            
+        for (UserDTO userDTO : userService.findAllUsers()) {
+            if (userDTO.userName().equals(newUserName)) {
                 model.addAttribute("message", "El nombre de usuario ya existe");
                 return "error";
             }
@@ -203,12 +200,28 @@ public class UserController {
                 return "error";
             }
             userService.updateWebUser(userId, newUserName, description, userImage);
-
-            return "redirect:/profile/" + user.id();
+                // Invalida la sesión y borra la cookie JSESSIONID
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            // We invalidate the session and delete the JSESSIONID cookie
+            Cookie cookie = new Cookie("JSESSIONID", "");
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+            model.addAttribute("message", "El perfil se ha editado correctamente, debe inicar sesión con las nuevas creedenciales");
+            return "/profileEdited";
         } else {
             model.addAttribute("message", "No puedes editar el perfil de otro usuario");
             return "error";
         }
+    }
+
+    @GetMapping("/custom-logout")
+    public String customLogout(Model model, HttpServletRequest request) {
+        return "logout";
     }
 
     @GetMapping("/user/{id}/image")
@@ -260,7 +273,7 @@ public class UserController {
     @GetMapping("/user/{userId}/unfollow")
     public String unfollowUser(Model model, @PathVariable long userId, HttpServletRequest request) {
         UserDTO userToUnfollow = userService.getUserById(userId);
-        if (userService.checkIfTheUserIsFollowed(userToUnfollow, request)){
+        if (userService.checkIfTheUserIsFollowed(userToUnfollow, request)) {
             userService.unfollowUser(userToUnfollow, request);
             return "redirect:/profile/" + userId;
         } else {
@@ -309,20 +322,19 @@ public class UserController {
 
     @PostMapping("/users/{id}/upload-cv")
     public String uploadCv(@PathVariable Long id, @RequestParam("file") MultipartFile file, Model model, HttpServletRequest request) {
-        if (userService.checkIsSameUser(id,request)) {
-        try {
-            userService.uploadCv(id, file);
-        } catch (IOException e) {
-            model.addAttribute("message", "Error subiendo el CV: " + e.getMessage());
+        if (userService.checkIsSameUser(id, request)) {
+            try {
+                userService.uploadCv(id, file);
+            } catch (IOException e) {
+                model.addAttribute("message", "Error subiendo el CV: " + e.getMessage());
+                return "error";
+            }
+            return "redirect:/profile/" + id;
+        } else {
+            model.addAttribute("message", "No puedes editar el perfil de otro usuario");
             return "error";
         }
-        return "redirect:/profile/" + id;
     }
-    else {
-        model.addAttribute("message", "No puedes editar el perfil de otro usuario");
-        return "error";
-    }
-}
 
     @GetMapping("users/{id}/download-cv")
     public ResponseEntity<Resource> downloadCv(@PathVariable Long id) throws IOException {
@@ -332,7 +344,7 @@ public class UserController {
 
     @PostMapping("users/{id}/delete-cv")
     public String deleteCv(@PathVariable Long id, Model model, HttpServletRequest request) throws IOException {
-        if (userService.checkIsSameUser(id,request)) {
+        if (userService.checkIsSameUser(id, request)) {
             userService.deleteCv(id);
             return "redirect:/profile/" + id;
         } else {
@@ -344,8 +356,8 @@ public class UserController {
     @GetMapping("users/admin")
     public String adminPanel(Model model, HttpServletRequest request) {
         if (request.isUserInRole("ADMIN")) {
-        model.addAttribute("users", userService.getOnlyUsersRole(request));
-        return "adminPanel";
+            model.addAttribute("users", userService.getOnlyUsersRole(request));
+            return "adminPanel";
         } else {
             model.addAttribute("message", "No se ha encontrado la página solicitada");
             return "error";

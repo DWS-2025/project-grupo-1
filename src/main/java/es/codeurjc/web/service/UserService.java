@@ -219,11 +219,14 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
-            userName = policy.sanitize(user.getUserName());
-            user.setUserName(userName);
+            if (!user.getRols().contains("ADMIN")) {
+              userName = policy.sanitize(userName);
+                user.setUserName(userName);
+        }
+          
         }
         if (description != null && !description.isEmpty()) {
-            description = policy.sanitize(user.getDescription());
+            description = policy.sanitize(description);
             user.setDescription(description);
         }
         if (image != null && !image.isEmpty()) {
@@ -287,8 +290,12 @@ public class UserService {
         String sanitizedUsername = policy.sanitize(userDTO.userName());
         String sanitizedDescription = policy.sanitize(userDTO.description());
         String sanitizedEmail = policy.sanitize(userDTO.email());
-
-        user.setUserName(sanitizedUsername);
+        if(!sanitizedUsername.equals("Admin") ) {
+            throw new IllegalArgumentException("No es posible establecer este nombre de usuario");
+        }
+        if (!user.getRols().contains("ADMIN")) {
+            user.setUserName(sanitizedUsername);
+        }
         user.setDescription(sanitizedDescription);
         user.setEmail(sanitizedEmail);
 
