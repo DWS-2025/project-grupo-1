@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,18 +39,7 @@ public class PostController {
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
-        int pageSize = 10; // Number of posts per page
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<PostDTO> postPage = postService.findAllAsDTO(pageable);
-
-        model.addAttribute("posts", postPage.getContent());
-        model.addAttribute("currentPage", postPage.getNumber());
-        model.addAttribute("totalPages", postPage.getTotalPages());
-        model.addAttribute("hasPrev", postPage.hasPrevious());
-        model.addAttribute("hasNext", postPage.hasNext());
-        model.addAttribute("prev", page - 1);
-        model.addAttribute("next", page + 1);
-        model.addAttribute("currentPage", page);
+        model.addAttribute("posts", postService.findAllAsDTO());
 
         return "post_list";
 

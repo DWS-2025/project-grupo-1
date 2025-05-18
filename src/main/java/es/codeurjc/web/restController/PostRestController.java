@@ -1,7 +1,5 @@
 package es.codeurjc.web.restController;
 
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
@@ -36,7 +35,7 @@ import es.codeurjc.web.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 public class PostRestController {
 
     @Autowired
@@ -57,11 +56,19 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,@RequestParam(value = "sections", required = false) List<Long> sectionIds,@RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
-        PostDTO postDTO = postService.save(createPostDTO, imageFile, request); // Save the post and image
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(postDTO.id()).toUri(); // URI for the new post
-        return ResponseEntity.created(location).body(postDTO);
+        if (createPostDTO.title().isEmpty()) {
+          throw new IllegalArgumentException("Title cannot be empty");
+        }
+
+        postService.addSections(createPostDTO, sectionIds);
+
+        String[] contributorsArray = newContributors.split(",");
+        postService.addContributors(createPostDTO, contributorsArray);
+
+        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, request));
+
     }
 
     @PutMapping("/{id}")
@@ -180,7 +187,7 @@ public ResponseEntity<Collection<CommentDTO>> deleteCommentFromPost(
         @PathVariable Long commentId,
         HttpServletRequest request) {
     if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-        // Aquí llamas al método que realmente borra el comentario
+
         Collection<CommentDTO> comments = commentService.deleteCommentFromPostAPI(postId, commentId);
         return ResponseEntity.ok(comments);
     }
