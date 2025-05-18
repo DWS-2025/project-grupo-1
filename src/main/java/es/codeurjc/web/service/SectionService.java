@@ -220,10 +220,10 @@ public class SectionService {
 
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         String updatedSanitizedDescription = policy.sanitize(updatedSectionDTO.description());
-        String updatedSanitizedTitle = sanitizeHtml(updatedSectionDTO.title());
+        String updatedSanitizedTitle = policy.sanitize(updatedSectionDTO.title());
 
-        oldSection.setTitle(updatedSanitizedDescription);
-        oldSection.setDescription(sanitizeHtml(updatedSanitizedTitle));
+        oldSection.setTitle(policy.sanitize(updatedSanitizedTitle));
+        oldSection.setDescription(policy.sanitize(updatedSanitizedDescription));
 
         if (!newImage.isEmpty()) {
             Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts
@@ -231,7 +231,6 @@ public class SectionService {
                                                                                                         // to Blob
             oldSection.setImageFile(updatedImage);
         }
-
         sectionRepository.save(oldSection);
         return toDTO(oldSection);
     }
@@ -280,6 +279,9 @@ public class SectionService {
 
     Section toDomain(SectionDTO sectionDTO) {
         return mapper.toDomain(sectionDTO);
+    }
+    public SectionDTO toDTO(CreateSectionDTO sectionDTO) {
+        return mapper.toDTO(sectionDTO);
     }
 
     private Collection<SectionDTO> toDTOs(Collection<Section> sections) {

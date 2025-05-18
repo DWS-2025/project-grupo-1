@@ -56,14 +56,14 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,@RequestParam(value = "sections", required = false) List<Long> sectionIds,@RequestParam String[] newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,@RequestParam(value = "sections", required = false) List<Long> sectionIds,@RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
         
         if (createPostDTO.title().isEmpty()) {
           throw new IllegalArgumentException("Title cannot be empty");
         }
 
-        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, sectionIds, newContributors, request));
+        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, sectionIds, newContributors.split(","), request));
 
     }
 

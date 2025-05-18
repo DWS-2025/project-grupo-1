@@ -23,7 +23,6 @@ import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
-import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -37,9 +36,6 @@ public class PostController {
 
     @Autowired
     private SectionService sectionService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -58,17 +54,12 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
 
-        if (!userService.isLogged(userService.getLoggedUser(request.getUserPrincipal().getName()))) {
-            model.addAttribute("message", "You must be logged in to create a post");
-            return "error";
-        }
-
-        if (createPostDTO.title().isEmpty()) {
-            model.addAttribute("message", "The title cannot be empty");
-            return "error";
-        }
+    if (createPostDTO.title().isEmpty()) {
+        model.addAttribute("message", "The title cannot be empty");
+        return "error";
+    }
 
         postService.save(createPostDTO, newImage, sectionIds, newContributors.split(","), request);
         

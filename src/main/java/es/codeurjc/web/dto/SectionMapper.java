@@ -9,6 +9,8 @@ import org.mapstruct.Mapper;
 // This interface is used to map between Section and SectionDTO objects
 public interface SectionMapper {
     SectionDTO toDTO(Section section); 
+    
+     SectionDTO toDTO(CreateSectionDTO section); 
 
     Section toDomain(SectionDTO sectionDTO); 
 
