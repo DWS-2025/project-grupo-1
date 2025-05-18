@@ -56,7 +56,7 @@ public class SectionRestController {
 
 
     @GetMapping("/{id}")
-    public SectionDTO getSection (@PathVariable long id) {
+    public SectionDTO getSection (@PathVariable Long id) {
         if (sectionService.getSection(id) != null) {
             return sectionService.getSection(id);
         } else {
@@ -75,7 +75,7 @@ public class SectionRestController {
     }
 
     @PutMapping("/{id}")
-    public SectionDTO updateSection(@PathVariable long id, @RequestBody SectionDTO oldSectionDTO, MultipartFile newImage) throws IOException {
+    public SectionDTO updateSection(@PathVariable Long id, @RequestBody SectionDTO oldSectionDTO, MultipartFile newImage) throws IOException {
 
         SectionDTO newSection = sectionService.getSection(id);
         
@@ -87,7 +87,7 @@ public class SectionRestController {
     }
     
     @DeleteMapping("/{id}")
-    public SectionDTO deleteSection(@PathVariable long id){
+    public SectionDTO deleteSection(@PathVariable Long id){
 
         SectionDTO section = sectionService.getSection(id);
 
@@ -100,7 +100,7 @@ public class SectionRestController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getImageFile(@PathVariable long id) throws SQLException, IOException {
+    public ResponseEntity<Object> getImageFile(@PathVariable Long id) throws SQLException, IOException {
         Resource sectionImage = sectionService.getSectionImage(id);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(sectionImage);
@@ -108,7 +108,7 @@ public class SectionRestController {
     
 
     @PostMapping("/{id}/image")
-	public ResponseEntity<Object> createSectionImage(@PathVariable long id, @RequestParam MultipartFile imageFile) throws IOException {
+	public ResponseEntity<Object> createSectionImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
 
 		URI location = fromCurrentRequest().build().toUri();
 
@@ -119,7 +119,7 @@ public class SectionRestController {
 	}
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+    public ResponseEntity<Object> replaceUserImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
             throws IOException {
         sectionService.replaceSectionImage(id, imageFile.getInputStream(), imageFile.getSize());
         return ResponseEntity.noContent().build();
@@ -128,7 +128,7 @@ public class SectionRestController {
     
 
     @DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deleteSectionImage(@PathVariable long id) throws IOException {
+	public ResponseEntity<Object> deleteSectionImage(@PathVariable Long id) throws IOException {
 
 		sectionService.deleteSectionImage(id);
 
