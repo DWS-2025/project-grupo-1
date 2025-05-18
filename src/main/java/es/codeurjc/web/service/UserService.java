@@ -219,7 +219,13 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
-            if (!user.getRols().contains("ADMIN")) {
+            if (!user.getRols().contains("ADMIN") && !user.getUserName().equals(userName)) {
+                for (UserDTO userDTO : this.findAllUsers()) {
+                    if (userDTO.userName().equals(userName)) {
+                        throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                    }
+                }
+                // Sanitize the username
               userName = policy.sanitize(userName);
                 user.setUserName(userName);
         }
@@ -244,15 +250,20 @@ public class UserService {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
+        String userName = updatedUser.getUserName();
         updatedUser.setId(id);
 
+        if (userName != null && !userName.isEmpty()) {
+            if (!oldUser.getRols().contains("ADMIN") && !oldUser.getUserName().equals(userName)) {
         for (UserDTO userDTO : this.findAllUsers()) {
             if (userDTO.userName().equals(updatedUserDTO.userName())) {
                 throw new IllegalArgumentException("El nombre de usuario ya está en uso");
             }
         }
+    }
+}
 
-        String userName = policy.sanitize(updatedUser.getUserName());
+         userName = policy.sanitize(updatedUser.getUserName());
         if (userName != null && !userName.isEmpty()) {
             oldUser.setUserName(userName);
         }

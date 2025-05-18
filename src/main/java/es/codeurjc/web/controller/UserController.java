@@ -184,13 +184,15 @@ public class UserController {
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage,
             HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, SQLException {
-
+            
+        if (!request.getUserPrincipal().getName().equals(newUserName)) {
         for (UserDTO userDTO : userService.findAllUsers()) {
             if (userDTO.userName().equals(newUserName)) {
                 model.addAttribute("message", "El nombre de usuario ya existe");
                 return "error";
             }
         }
+    }
 
         if (userService.checkIsSameUser(userId, request)) {
             UserDTO user = userService.getUserById(userId);
