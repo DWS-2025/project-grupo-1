@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -27,8 +29,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
