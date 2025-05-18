@@ -231,7 +231,6 @@ public class SectionService {
                                                                                                         // to Blob
             oldSection.setImageFile(updatedImage);
         }
-
         sectionRepository.save(oldSection);
         return toDTO(oldSection);
     }
@@ -280,6 +279,9 @@ public class SectionService {
 
     Section toDomain(SectionDTO sectionDTO) {
         return mapper.toDomain(sectionDTO);
+    }
+    public SectionDTO toDTO(CreateSectionDTO sectionDTO) {
+        return mapper.toDTO(sectionDTO);
     }
 
     private Collection<SectionDTO> toDTOs(Collection<Section> sections) {

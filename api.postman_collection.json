@@ -478,15 +478,26 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Seguridad Física\",\r\n    \"description\": \"La seguridad física es un aspecto crucial en la ciberseguridad ya que protege los recursos físicos de una organización, incluyendo edificios, instalaciones, sistemas de información y activos tangibles.\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "esta es mi seccion editada",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "esta es la descripcion de mi seccion editada",
+							"type": "text"
+						},
+						{
+							"key": "newImage",
+							"type": "file",
+							"src": "/C:/Users/marke/Downloads/test.png"
 						}
-					}
+					]
 				},
-				"url": "https://localhost:8443/api/sections/4"
+				"url": "{{baseURL}}/api/sections/4"
 			},
 			"response": []
 		},

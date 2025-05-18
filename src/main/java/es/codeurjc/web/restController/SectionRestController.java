@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
+import es.codeurjc.web.dto.CreateSectionDTO;
 import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
@@ -74,17 +75,19 @@ public class SectionRestController {
         return ResponseEntity.created(location).body(sectionDTO);
     }
 
-    @PutMapping("/{id}")
-    public SectionDTO updateSection(@PathVariable Long id, @RequestBody SectionDTO oldSectionDTO, MultipartFile newImage) throws IOException {
+   @PutMapping("/{id}")
+public SectionDTO updateSection(
+    @PathVariable Long id,   @RequestParam String title,   @RequestParam String description, @RequestParam(required = false) MultipartFile newImage) throws IOException {
 
-        SectionDTO newSection = sectionService.getSection(id);
-        
-        if (newSection == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Section not found");
-        } else {
-            return sectionService.update(newSection, oldSectionDTO, newImage);
-        }
+    SectionDTO oldSection = sectionService.getSection(id);
+
+    if (oldSection == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Section not found");
+    } else {
+        CreateSectionDTO newSectionDTO = new CreateSectionDTO(title, description);
+        return sectionService.update(oldSection, sectionService.toDTO(newSectionDTO), newImage);
     }
+}
     
     @DeleteMapping("/{id}")
     public SectionDTO deleteSection(@PathVariable Long id){

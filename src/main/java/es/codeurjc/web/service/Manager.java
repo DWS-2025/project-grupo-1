@@ -108,6 +108,18 @@ public class Manager {
             defaultSection10.setImageFile(localImageToBlob("images/sections/image-10.jpeg"));
             defaultSection11.setImageFile(localImageToBlob("images/sections/image-11.jpeg"));
 
+            defaultSection1.setImage("/api/sections/1/image");
+            defaultSection2.setImage("/api/sections/2/image");
+            defaultSection3.setImage("/api/sections/3/image");
+            defaultSection4.setImage("/api/sections/4/image");
+            defaultSection5.setImage("/api/sections/5/image");
+            defaultSection6.setImage("/api/sections/6/image");
+            defaultSection7.setImage("/api/sections/7/image");
+            defaultSection8.setImage("/api/sections/8/image");
+            defaultSection9.setImage("/api/sections/9/image");
+            defaultSection10.setImage("/api/sections/10/image");
+            defaultSection11.setImage("/api/sections/11/image");
+
             defaultSection1.setAverageRating(10);
             defaultSection2.setAverageRating(9);
             defaultSection3.setAverageRating(2);
