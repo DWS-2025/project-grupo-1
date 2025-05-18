@@ -196,6 +196,9 @@ public class SectionService {
                 user.getFollowedSections().remove(section);
             }
         }
+        for (Post post : section.getPosts()) {
+            post.getSections().remove(section);
+        }
         sectionRepository.delete(sectionToDelete);
         return toDTO(sectionToDelete);
     }
