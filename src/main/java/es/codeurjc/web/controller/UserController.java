@@ -186,13 +186,13 @@ public class UserController {
             HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, SQLException {
             
         if (!request.getUserPrincipal().getName().equals(newUserName)) {
-        for (UserDTO userDTO : userService.findAllUsers()) {
-            if (userDTO.userName().equals(newUserName)) {
-                model.addAttribute("message", "El nombre de usuario ya existe");
-                return "error";
+            for (UserDTO userDTO : userService.findAllUsers()) {
+                if (userDTO.userName().equals(newUserName)) {
+                    model.addAttribute("message", "El nombre de usuario ya existe");
+                    return "error";
+                }
             }
         }
-    }
 
         if (userService.checkIsSameUser(userId, request)) {
             UserDTO user = userService.getUserById(userId);
