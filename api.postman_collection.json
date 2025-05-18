@@ -586,19 +586,6 @@
 			"response": []
 		},
 		{
-			"name": "DELETE Section Image",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": "https://localhost:8443/api/sections/7/image"
-			},
-			"response": []
-		},
-		{
 			"name": "DELETE COMMENT",
 			"request": {
 				"auth": {
