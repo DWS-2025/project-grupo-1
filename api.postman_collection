@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "fcb5df18-807d-46d2-9634-3997ca133062",
-		"name": "Test",
+		"_postman_id": "cd73969f-c9c9-4f64-af0e-7df0b77ae693",
+		"name": "Test Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "43541831",
-		"_collection_link": "https://markel-6334295.postman.co/workspace/markel's-Workspace~325af611-9f62-4d0d-8f93-d9f9f005c35a/collection/43541831-fcb5df18-807d-46d2-9634-3997ca133062?action=share&source=collection_link&creator=43541831"
+		"_collection_link": "https://markel-6334295.postman.co/workspace/markel's-Workspace~325af611-9f62-4d0d-8f93-d9f9f005c35a/collection/43541831-cd73969f-c9c9-4f64-af0e-7df0b77ae693?action=share&source=collection_link&creator=43541831"
 	},
 	"item": [
 		{
@@ -56,7 +56,8 @@
 			"name": "GET all users",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": ""
 			},
 			"response": []
 		},
@@ -64,7 +65,8 @@
 			"name": "GET all comments",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": ""
 			},
 			"response": []
 		},
@@ -72,7 +74,8 @@
 			"name": "GET 1 user",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": ""
 			},
 			"response": []
 		},
@@ -150,17 +153,7 @@
 						"type": "text"
 					}
 				],
-				"url": {
-					"raw": "{{baseURL}}/api/post/1",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1"
 			},
 			"response": []
 		},
@@ -209,17 +202,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{baseURL}}/api/post/",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						""
-					]
-				}
+				"url": "{{baseURL}}/api/post/"
 			},
 			"response": []
 		},
@@ -261,17 +244,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{baseURL}}/api/post/1",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1"
 			},
 			"response": []
 		},
@@ -280,17 +253,7 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/api/post/1",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1"
 			},
 			"response": []
 		},
@@ -314,18 +277,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/api/post/1/image",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1",
-						"image"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1/image"
 			},
 			"response": []
 		},
@@ -359,18 +311,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{baseURL}}/api/post/1/image",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1",
-						"image"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1/image"
 			},
 			"response": []
 		},
@@ -404,18 +345,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{baseURL}}/api/post/1/image",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1",
-						"image"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1/image"
 			},
 			"response": []
 		},
@@ -431,18 +361,7 @@
 					"mode": "formdata",
 					"formdata": []
 				},
-				"url": {
-					"raw": "{{baseURL}}/api/post/1/image",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"post",
-						"1",
-						"image"
-					]
-				}
+				"url": "{{baseURL}}/api/post/1/image"
 			},
 			"response": []
 		},
@@ -499,262 +418,6 @@
 				"url": "{{baseURL}}/api/post/1/comments/3/"
 			},
 			"response": []
-		},
-		{
-			"name": "GET Sections",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/sections",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET Section",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/1",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET Image",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/sections/1/image",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"1",
-						"image"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CREATE Section",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Autenticación segura\",\r\n    \"description\": \"La autenticación segura es un proceso esencial en la ciberseguridad que permite a individuos, aplicaciones o servicios demostrar su identidad antes de acceder a sistemas digitales.\"\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST image",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "imageFile",
-							"type": "file",
-							"src": "/C:/Users/evafe/Pictures/unnamed.jpg"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/12/image",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"12",
-						"image"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Image",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "imageFile",
-							"type": "file",
-							"src": "/C:/Users/evafe/Pictures/unnamed.jpg"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/1/image",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"1",
-						"image"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT Section",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Seguridad Física\",\r\n    \"description\": \"La seguridad física es un aspecto crucial en la ciberseguridad ya que protege los recursos físicos de una organización, incluyendo edificios, instalaciones, sistemas de información y activos tangibles.\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/4",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"4"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Section",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}"
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/3",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Section Image",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "https://localhost:8443/api/sections/7/image",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"sections",
-						"7",
-						"image"
-					]
-				}
-			},
-			"response": []
 		}
-
 	]
 }

@@ -252,7 +252,7 @@ public class UserService {
             }
         }
 
-        String userName = updatedUser.getUserName();
+        String userName = policy.sanitize(updatedUser.getUserName());
         if (userName != null && !userName.isEmpty()) {
             oldUser.setUserName(userName);
         }

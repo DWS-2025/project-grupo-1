@@ -62,7 +62,7 @@ public class SectionService {
         this.commentService = commentService;
     }
 
-    public long count() {
+    public Long count() {
         return sectionRepository.count();
     }
 
@@ -86,11 +86,11 @@ public class SectionService {
         return toDTOs(findAll(example));
     }
 
-    public Optional<SectionDTO> findById(long id) {
+    public Optional<SectionDTO> findById(Long id) {
         return toDTO(sectionRepository.findById(id));
     }
 
-    public Optional<Section> findSectionById(long id) {
+    public Optional<Section> findSectionById(Long id) {
         return sectionRepository.findById(id);
     }
 
@@ -142,7 +142,7 @@ public class SectionService {
         this.saveSection(section);
     }
 
-    public void createSectionImage(long id, URI location, InputStream inputStream, long size) {
+    public void createSectionImage(Long id, URI location, InputStream inputStream, Long size) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         section.setImage(location.toString()); // Set the image URL or path here
@@ -150,7 +150,7 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public Resource getSectionImage(long id) throws SQLException {
+    public Resource getSectionImage(Long id) throws SQLException {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         if (section.getImageFile() != null) {
@@ -160,7 +160,7 @@ public class SectionService {
         }
     }
 
-    public void replaceSectionImage(long id, InputStream inputStream, long size) {
+    public void replaceSectionImage(Long id, InputStream inputStream, Long size) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         if (section.getImage() == null) {
@@ -172,7 +172,7 @@ public class SectionService {
         sectionRepository.save(section);
     }
 
-    public void deleteSectionImage(long id) {
+    public void deleteSectionImage(Long id) {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         if (section.getImage() == null) {
@@ -181,6 +181,8 @@ public class SectionService {
 
         section.setImageFile(null); // Set the image URL or path here
         section.setImage(null); // Set the image URL or path here
+
+        sectionRepository.save(section);
 
     }
 
@@ -196,6 +198,9 @@ public class SectionService {
                 user.getFollowedSections().remove(section);
             }
         }
+        for (Post post : section.getPosts()) {
+            post.getSections().remove(section);
+        }
         sectionRepository.delete(sectionToDelete);
         return toDTO(sectionToDelete);
     }
@@ -208,7 +213,7 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) 
             throws IOException {
         Section oldSection =  sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
         //Section updatedSection = toDomain(updatedSectionDTO);

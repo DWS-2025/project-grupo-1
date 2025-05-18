@@ -81,49 +81,6 @@ public class SectionController {
         return "create_section";
     }
 
-    /*
-     * @PostMapping("/section/new")
-     * public String createSection(@RequestParam String title, @RequestParam String
-     * description,
-     * 
-     * @RequestParam MultipartFile sectionImage) throws IOException {
-     * 
-     * Section section = new Section(title, description, null);
-     * sectionService.saveSection(section);
-     * 
-     * imageSectionService.saveImage(SECTIONS_FOLDER, section.getId(),
-     * sectionImage);
-     * String imageName = sectionImage.getOriginalFilename();
-     * section.setSectionImage(imageName);
-     * 
-     * sectionService.saveSection(section);
-     * 
-     * return "redirect:/section";
-     * }
-     */
-
-    /*
-     * @PostMapping("/section/new")
-     * public String createSection(Model model, Section section, MultipartFile
-     * sectionImage) throws Exception{
-     * sectionService.saveImageSection(section, sectionImage);
-     * return "redirect:/section";
-     * }
-     */
-
-    /* @PostMapping("/section/new")
-    public String createSection(@RequestParam String title, @RequestParam String description,
-            @RequestParam MultipartFile sectionImage) {
-        try {
-            Section section = new Section(title, description);
-            SectionDTO sectionDTO = sectionService.toDto(section);
-            sectionService.saveSectionWithImageSection(sectionDTO, sectionImage);
-            return "redirect:/section";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "error";
-        }
-    } */
 
     @PostMapping("/section/new")
     public String createSection(@ModelAttribute CreateSectionDTO sectionDTO, @RequestParam MultipartFile sectionImage) {
@@ -135,15 +92,6 @@ public class SectionController {
             return "error";
         }
     } 
-
-
-    /*
-     * @GetMapping("/section/{id}/image")
-     * public ResponseEntity<Object> downloadImage(@PathVariable long id) throws
-     * MalformedURLException {
-     * return imageSectionService.createResponseFromImage(SECTIONS_FOLDER, id);
-     * }
-     */
 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
@@ -264,34 +212,6 @@ public class SectionController {
         }
 
     }
-
-   /* @GetMapping("/section/search")
-    public String searchSection(Model model, @RequestParam(required = false) String title) {
-        if (title != null) {
-            Section section = new Section();
-            section.setTitle(title);
-
-            ExampleMatcher matcher = ExampleMatcher.matching()
-                    .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING).withIgnoreCase()
-                    .withIgnorePaths("id", "averageRating", "numberOfPublications", "posts", "author", "sectionImage");
-            Example<Section> example = Example.of(section, matcher);
-
-            if(sectionService.findAll(example).isEmpty()){
-                model.addAttribute("noResult", true);
-                model.addAttribute("sections", sectionService.findAll());
-            }
-            else{
-                model.addAttribute("sections", sectionService.findAll(example));
-                model.addAttribute("isSearch", true);
-            }
-        } else {
-            model.addAttribute("sections", sectionService.findAll());
-            
-        }
-        return "section";
-
-    }
-    */
 
     @GetMapping("/section/search")
     public String searchSection(Model model, @RequestParam(required = false) List<String> filters){
