@@ -93,19 +93,19 @@ public class PostService {
         return postRepository.existsById(id);
     }
 
-    public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException {
+public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException {
+    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    post.setContent(policy.sanitize(post.getContent()));
+    post.setTitle(policy.sanitize(post.getTitle()));
 
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        post.setContent(policy.sanitize(post.getContent()));
-        post.setTitle(policy.sanitize(post.getTitle()));
-
-        if (!imageFile.isEmpty()) {
-            post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
-        }
-
-        return save(post, request);
-
+    if (!imageFile.isEmpty()) {
+    
+        byte[] imageBytes = imageFile.getBytes();
+        post.setImageFile(BlobProxy.generateProxy(new java.io.ByteArrayInputStream(imageBytes), imageBytes.length));
     }
+
+    return save(post, request);
+}
 
     public PostDTO save(PostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, request));
