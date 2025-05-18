@@ -219,7 +219,9 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
-            if (!user.getRols().contains("ADMIN") && !user.getUserName().equals(userName)) {
+         
+             if(!user.getUserName().equals(userName)) {
+                if (!user.getRols().contains("ADMIN")){
                 for (UserDTO userDTO : this.findAllUsers()) {
                     if (userDTO.userName().equals(userName)) {
                         throw new IllegalArgumentException("El nombre de usuario ya está en uso");
@@ -229,8 +231,14 @@ public class UserService {
               userName = policy.sanitize(userName);
                 user.setUserName(userName);
         }
-          
+        else
+    {
+        throw new UnsupportedOperationException("El administrador no puede cambiar su nombre de usuario");
+    }
+         
         }
+    }
+    
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
             user.setDescription(description);
@@ -245,7 +253,7 @@ public class UserService {
         }
         userRepository.save(user);
     }
-
+    
     public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User oldUser = userRepository.findById(id).orElseThrow();

@@ -201,7 +201,16 @@ public class UserController {
                 model.addAttribute("message", "No se ha encontrado ese usuario");
                 return "error";
             }
+
+            try{
             userService.updateWebUser(userId, newUserName, description, userImage);
+            }
+            catch (UnsupportedOperationException e){ 
+                model.addAttribute("message", "El administrador no puede cambiar su nombre de usuario");
+                return "error";
+            }
+           
+
                 // Invalida la sesión y borra la cookie JSESSIONID
             HttpSession session = request.getSession(false);
             if (session != null) {
