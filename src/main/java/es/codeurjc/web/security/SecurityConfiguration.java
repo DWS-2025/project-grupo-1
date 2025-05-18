@@ -105,8 +105,9 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/post/*/image").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/post/*/comments/*").hasRole("ADMIN")
                         // PUBLIC ENDPOINTS
-                        .requestMatchers(HttpMethod.POST, "/api/users/")
-                        .permitAll());
+                        .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                );
 
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
