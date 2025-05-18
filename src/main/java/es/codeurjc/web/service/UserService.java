@@ -220,12 +220,22 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
-            if (!user.getRols().contains("ADMIN")) {
-                userName = policy.sanitize(userName);
+         
+             if(!user.getUserName().equals(userName)) {
+                if (!user.getRols().contains("ADMIN")){
+                for (UserDTO userDTO : this.findAllUsers()) {
+                    if (userDTO.userName().equals(userName)) {
+                        throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                    }
+                }
+                // Sanitize the username
+              userName = policy.sanitize(userName);
                 user.setUserName(userName);
-            }
-
         }
+          
+        }
+    }
+    
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
             user.setDescription(description);
@@ -240,23 +250,24 @@ public class UserService {
         }
         userRepository.save(user);
     }
-
+    
     public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
+        String userName = updatedUser.getUserName();
         updatedUser.setId(id);
 
-        if (updatedUser.getUserName() != null && !updatedUser.getUserName().isEmpty()) {
-            for (UserDTO userDTO : this.findAllUsers()) {
-                if (userDTO.userName().equals(updatedUserDTO.userName())) {
-                    throw new IllegalArgumentException("El nombre de usuario ya está en uso");
-                }
+        for (UserDTO userDTO : this.findAllUsers()) {
+            if (userDTO.userName().equals(updatedUserDTO.userName())) {
+                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
             }
         }
 
         String userName = policy.sanitize(updatedUser.getUserName());
-        oldUser.setUserName(userName);
+        if (userName != null && !userName.isEmpty()) {
+            oldUser.setUserName(userName);
+        }
 
         String description = policy.sanitize(updatedUser.getDescription());
         if (description != null && !description.isEmpty()) {

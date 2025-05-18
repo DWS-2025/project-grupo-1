@@ -51,7 +51,7 @@ public class SecurityConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
-}
+    }
 
     @Bean
     @Order(1)
@@ -136,55 +136,56 @@ public class SecurityConfiguration {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        // PUBLIC PAGES, in /assets/** maybe we should just specify the files we need
-                        .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register", "/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/post", "/section", "/section/{id:[0-9]+}/image", "/user/*/image",
-                                "/no-image.png", "/images/spinner.gif", "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
-                        .permitAll()
+                // PUBLIC PAGES, in /assets/** maybe we should just specify the files we
+                // need
+                .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register",
+                        "/login")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/post", "/section",
+                        "/section/{id:[0-9]+}/image", "/user/*/image",
+                        "/no-image.png", "/images/spinner.gif",
+                        "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
+                .permitAll()
+                // We should test the regex for the post id
 
-                        // We should test the regex for the post id
+                // We should test the regex for the post id
 
-                        // We should test the regex for the post id
-
-                        // PRIVATE PAGES
-                        .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/post/*/edit").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/post/*/delete").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/post/*/delete").hasRole("USER")
-                        .anyRequest().authenticated())
+                // PRIVATE PAGES
+                .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/post/*/edit").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/post/*/delete").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/post/*/delete").hasRole("USER")
+                .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .failureUrl("/login")
-                        .defaultSuccessUrl("/discover")
-                        .permitAll())
+                .loginPage("/login")
+                .failureUrl("/login")
+                .defaultSuccessUrl("/discover")
+                .permitAll())
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .permitAll())
-
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .permitAll())
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/error"));
-                
+                .accessDeniedPage("/error"));
+
         http
-                        .headers(headers -> headers
-                                        .contentSecurityPolicy(csp -> csp
-                                        .policyDirectives(
-                                        "default-src 'self'; " +
-                                        "script-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://cdn.jsdelivr.net https://unpkg.com; "+
-                                        "style-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; "+
-                                        "img-src 'self' data: blob: https:; "+
-                                        "font-src 'self' https://fonts.gstatic.com data:; "+
-                                        "connect-src 'self'; " +
-                                        "frame-src 'none'; " +
-                                        "object-src 'none'; " +
-                                        "form-action 'self';")
-                                        )                  
-                        );
+                .headers(headers -> headers
+                .contentSecurityPolicy(csp -> csp
+                .policyDirectives(
+                        "default-src 'self'; "
+                        + "script-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://cdn.jsdelivr.net https://unpkg.com; "
+                        + "style-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; "
+                        + "img-src 'self' data: blob: https:; "
+                        + "font-src 'self' https://fonts.gstatic.com data:; "
+                        + "connect-src 'self'; "
+                        + "frame-src 'none'; "
+                        + "object-src 'none'; "
+                        + "form-action 'self';")));
         return http.build();
-        }
+    }
 }

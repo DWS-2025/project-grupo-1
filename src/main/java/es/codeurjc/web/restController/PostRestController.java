@@ -58,16 +58,12 @@ public class PostRestController {
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,@RequestParam(value = "sections", required = false) List<Long> sectionIds,@RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
+        
         if (createPostDTO.title().isEmpty()) {
           throw new IllegalArgumentException("Title cannot be empty");
         }
 
-        postService.addSections(createPostDTO, sectionIds);
-
-        String[] contributorsArray = newContributors.split(",");
-        postService.addContributors(createPostDTO, contributorsArray);
-
-        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, request));
+        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, sectionIds, newContributors.split(","), request));
 
     }
 
@@ -75,7 +71,7 @@ public class PostRestController {
     public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @ModelAttribute CreatePostDTO newCreatePostDTO, @RequestParam MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(id, request)) {
-            PostDTO updated = postService.updatePost(id, newCreatePostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile);
+            PostDTO updated = postService.updatePost(id, newCreatePostDTO, newImageFile, newSectionIds, newContributorsStrings.split(","), request);
             return ResponseEntity.ok(updated);
         } else {
             return ResponseEntity.status(403).build(); // Forbidden

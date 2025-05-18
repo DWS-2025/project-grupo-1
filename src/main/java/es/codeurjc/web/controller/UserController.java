@@ -184,11 +184,13 @@ public class UserController {
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage,
             HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, SQLException {
-
-        for (UserDTO userDTO : userService.findAllUsers()) {
-            if (userDTO.userName().equals(newUserName)) {
-                model.addAttribute("message", "El nombre de usuario ya existe");
-                return "error";
+            
+        if (!request.getUserPrincipal().getName().equals(newUserName)) {
+            for (UserDTO userDTO : userService.findAllUsers()) {
+                if (userDTO.userName().equals(newUserName)) {
+                    model.addAttribute("message", "El nombre de usuario ya existe");
+                    return "error";
+                }
             }
         }
 
@@ -199,7 +201,16 @@ public class UserController {
                 model.addAttribute("message", "No se ha encontrado ese usuario");
                 return "error";
             }
+
+            try{
             userService.updateWebUser(userId, newUserName, description, userImage);
+            }
+            catch (UnsupportedOperationException e){ 
+                model.addAttribute("message", "El administrador no puede cambiar su nombre de usuario");
+                return "error";
+            }
+           
+
                 // Invalida la sesión y borra la cookie JSESSIONID
             HttpSession session = request.getSession(false);
             if (session != null) {
