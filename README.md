@@ -11,10 +11,10 @@
 ## Aspectos Principales
 
 ### Entidades
-- Post: entidad que representa los post que créan los usuarios dentro de la web.
-- Comment: pequeño texto para dar opinión sobre un post en concreto.
-- User: entidad principal que se encarga de manipular los posts y comentarios.
-- Section: categorías de los posts.
+- **<u>Post</u>**: entidad que representa los post que créan los usuarios dentro de la web.
+- **<u>Comment</u>**: pequeño texto para dar opinión sobre un post en concreto.
+- **<u>User</u>**: entidad principal que se encarga de manipular los posts y comentarios.
+- **<u>Section</u>**: categorías de los posts.
 
 ### Persmisos de los usuarios
 
@@ -58,18 +58,16 @@ Encargada principalmente de la clase Section, implementando cada aspecto referen
 #### 5 commits más significativos
 - [a2e647e](https://github.com/DWS-2025/project-grupo-1/commit/a2e647e484bcc8488691687a1e7ed37b3ab54007): Todas las entradas de los formularios sanitizadas.
 - [b451183](https://github.com/DWS-2025/project-grupo-1/commit/b4511839b35c825199d79a65aed4a9c990bfd35d): Añadido el panel de administrador para que pueda ver todos los usuarios, solo el administrador podrá acceder a esta página.
-
-
-- 
-- 
-- 
+- [ce467a1](https://github.com/DWS-2025/project-grupo-1/commit/ce467a10b8f21ef96a40e4fe3f083c64ce69dd10): Implementación de JWT y Configuración Detallada de Roles en Spring Security. 
+- [0c12300](https://github.com/DWS-2025/project-grupo-1/commit/0c1230081c4b10d19d47b58353dc487fe2f3033b): Implementación de texto enriquecido y securizado en el frontend.
+- [78ac530](https://github.com/DWS-2025/project-grupo-1/commit/78ac530723c9456de044ef6581cabc0e0d14234a): Implementación de la consulta dinámica.
 
 #### 5 ficheros en los que más ha participado
-- 
-- 
-- 
-- 
-- 
+- SectionService.java
+- SectionRestController.java
+- SectionController.java
+- SectionRepository.java
+- SecurityConfiguration.java
 
 ### Markel Fernández Pinilla
 Encargado principalmente de la clase Comment, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
