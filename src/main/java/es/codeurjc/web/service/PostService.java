@@ -155,8 +155,9 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
-
-        // Elimina relaciones para evitar errores de integridad
+       
+        post.getOwner().getPosts().remove(post);
+ 
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
             sectionService.saveSection(section);
@@ -171,7 +172,7 @@ public class PostService {
         post.getSections().clear();
         post.getComments().clear();
 
-        postRepository.delete(post); // Mejor usar delete(post) que deleteById(post.getId())
+        postRepository.delete(post); 
     }
 
    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
