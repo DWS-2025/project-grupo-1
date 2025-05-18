@@ -17,10 +17,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +36,7 @@ import es.codeurjc.web.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/post")
 public class PostRestController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@RequestBody CreatePostDTO createPostDTO, MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
         PostDTO postDTO = postService.save(createPostDTO, imageFile, request); // Save the post and image
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(postDTO.id()).toUri(); // URI for the new post
@@ -65,7 +65,7 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody CreatePostDTO newCreatePostDTO, @RequestAttribute MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @ModelAttribute CreatePostDTO newCreatePostDTO, @RequestParam MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(id, request)) {
             PostDTO updated = postService.updatePost(id, newCreatePostDTO, newSectionIds, newContributorsStrings.split(","), newImageFile);
@@ -117,11 +117,6 @@ public class PostRestController {
         postService.deletePostImage(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{postId}/edit")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
     }
 
     @GetMapping("/comments")

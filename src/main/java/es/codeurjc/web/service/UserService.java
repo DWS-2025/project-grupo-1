@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -133,6 +135,7 @@ public class UserService {
     public UserDTO findById(long id) {
         return toDTO(userRepository.findById(id).orElseThrow());
     }
+
     public User findByIdDomain(long id) {
         return userRepository.findById(id).orElseThrow();
     }
@@ -212,12 +215,15 @@ public class UserService {
     }
 
     public void updateWebUser(long id, String userName, String description, MultipartFile image) {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
+            userName = policy.sanitize(user.getUserName());
             user.setUserName(userName);
         }
         if (description != null && !description.isEmpty()) {
+            description = policy.sanitize(user.getDescription());
             user.setDescription(description);
         }
         if (image != null && !image.isEmpty()) {
@@ -232,6 +238,7 @@ public class UserService {
     }
 
     public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
         updatedUser.setId(id);
@@ -247,17 +254,17 @@ public class UserService {
             oldUser.setUserName(userName);
         }
 
-        String description = updatedUser.getDescription();
+        String description = policy.sanitize(updatedUser.getDescription());
         if (description != null && !description.isEmpty()) {
             oldUser.setDescription(description);
         }
 
-        String email = updatedUser.getEmail();
+        String email = policy.sanitize(updatedUser.getEmail());
         if (email != null && !email.isEmpty()) {
             oldUser.setEmail(email);
         }
 
-        String password = updatedUser.getPassword();
+        String password = policy.sanitize(updatedUser.getPassword());
         if (password != null && !password.isEmpty()) {
             oldUser.setPassword(password);
         }
@@ -275,9 +282,16 @@ public class UserService {
 
     public UserDTO updateApiUser(Long id, UserDTO userDTO) {
         User user = userRepository.findById(id).orElseThrow();
-        user.setUserName(userDTO.userName());
-        user.setDescription(userDTO.description());
-        user.setEmail(userDTO.email());
+
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String sanitizedUsername = policy.sanitize(userDTO.userName());
+        String sanitizedDescription = policy.sanitize(userDTO.description());
+        String sanitizedEmail = policy.sanitize(userDTO.email());
+
+        user.setUserName(sanitizedUsername);
+        user.setDescription(sanitizedDescription);
+        user.setEmail(sanitizedEmail);
+
         return toDTO(userRepository.save(user));
     }
 
@@ -400,7 +414,8 @@ public class UserService {
             throw new NoSuchElementException("CV not found for this user");
         }
 
-        // Build the file path using the base directory and the relative path from the database
+        // Build the file path using the base directory and the relative path from the
+        // database
         File file = new File(BASE_DIRECTORY, user.getCvFilePath());
 
         // Canonicalize the file path and verify it is within the allowed directory
@@ -451,7 +466,8 @@ public class UserService {
         System.out.println("Expected base path: " + expectedBasePath);
         System.out.println("Destination file canonical path: " + destinationFile.getCanonicalPath());
 
-        // Verify that the canonical path of the destination file starts with the expected base path
+        // Verify that the canonical path of the destination file starts with the
+        // expected base path
         if (!destinationFile.getCanonicalPath().startsWith(expectedBasePath)) {
             throw new SecurityException("Invalid file path detected, go hack other page script kiddie");
         }
@@ -514,7 +530,7 @@ public class UserService {
         }
     }
 
-    public Collection<UserDTO> getOnlyUsersRole (HttpServletRequest request) {
+    public Collection<UserDTO> getOnlyUsersRole(HttpServletRequest request) {
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         Collection<UserDTO> users = findAllUsers();
         Collection<UserDTO> onlyUsers = new ArrayList<>();

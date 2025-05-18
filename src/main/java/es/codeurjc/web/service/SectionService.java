@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -128,9 +130,11 @@ public class SectionService {
     }
 
     public void saveSectionWithImageSection(CreateSectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        // Section section = toDomain(sectionDTO);
-        String sanitizedDescription = sanitizeHtml(sectionDTO.description());
-        Section section = new Section(sectionDTO.title(), sanitizedDescription);
+        
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String sanitizedDescription = policy.sanitize(sectionDTO.description());
+        String sanitizedTitle = sanitizeHtml(sectionDTO.title());
+        Section section = new Section(sanitizedTitle, sanitizedDescription);
 
         if (!imageFile.isEmpty()) {
             section.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
@@ -180,22 +184,6 @@ public class SectionService {
 
     }
 
-    /*
-     * public void deleteSection(Section sectionToDelete) {
-     * 
-     * List<User> users = userRepository.findAll();
-     * Section section = sectionRepository.findById(sectionToDelete.getId()).get();
-     * 
-     * for (User user : users) { //delete section from followed sections of all
-     * users
-     * if (user.getFollowedSections().contains(section)) {
-     * user.getFollowedSections().remove(section);
-     * }
-     * }
-     * sectionRepository.delete(sectionToDelete);
-     * 
-     * }
-     */
     public SectionDTO deleteSection(SectionDTO sectionDTO) {
 
         Section sectionToDelete = toDomain(sectionDTO);
@@ -223,10 +211,14 @@ public class SectionService {
     public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
             throws IOException {
         Section oldSection =  sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
-        Section updatedSection = toDomain(updatedSectionDTO);
+        //Section updatedSection = toDomain(updatedSectionDTO);
 
-        oldSection.setTitle(updatedSection.getTitle());
-        oldSection.setDescription(sanitizeHtml(updatedSection.getDescription()));
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String updatedSanitizedDescription = policy.sanitize(updatedSectionDTO.description());
+        String updatedSanitizedTitle = sanitizeHtml(updatedSectionDTO.title());
+
+        oldSection.setTitle(updatedSanitizedDescription);
+        oldSection.setDescription(sanitizeHtml(updatedSanitizedTitle));
 
         if (!newImage.isEmpty()) {
             Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts

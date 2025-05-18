@@ -27,6 +27,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
@@ -91,12 +93,12 @@ public class PostService {
     }
 
     public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException { // Swapped from Post to void
-
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         } 
-        post.setContent(sanitizeHtml(post.getContent()));
-        post.setTitle(sanitizeHtml(post.getTitle()));
+        post.setContent(policy.sanitize(post.getContent()));
+        post.setTitle(policy.sanitize(post.getTitle()));
         return save(post,request);
 
     }
@@ -181,12 +183,14 @@ public class PostService {
 
    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
     Post oldPost = postRepository.findById(id).orElseThrow();
+    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
     if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {        
-        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
+        oldPost.setTitle(policy.sanitize(newPost.getTitle()));
     }
     
     if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {        
-        oldPost.setContent(sanitizeHtml(newPost.getContent()));
+        oldPost.setContent(policy.sanitize(newPost.getContent()));
     }
 
     for (Section s : oldPost.getSections()) {
@@ -219,6 +223,12 @@ public class PostService {
     return oldPost;
 }
     public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        String sanitizedContent = policy.sanitize(newCreatePostDTO.content());
+        String sanitizedTitle = policy.sanitize(newCreatePostDTO.title());
+
+        toDomain(newCreatePostDTO).setTitle(sanitizedTitle);
+        toDomain(newCreatePostDTO).setContent(sanitizedContent);
         return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
     }
 
@@ -355,8 +365,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {
-        
+    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {        
         Post post = findById(id).orElseThrow();
         Collection<Section> allSections = sectionService.findAll();
         List<Section> postSections = post.getSections();

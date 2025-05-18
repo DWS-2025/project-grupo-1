@@ -19,6 +19,8 @@ import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import es.codeurjc.web.repository.CommentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -38,8 +40,12 @@ public class CommentService {
     private CommentMapper mapper;
 
     public CommentDTO saveCommentInPost(Long postID, CreateCommentDTO commentDTO, HttpServletRequest request) {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
         Comment comment = toDomain(commentDTO);
         Post postToComment = postService.findById(postID).get();
+        String sanitizedContent = policy.sanitize(comment.getContent());
+        comment.setContent(sanitizedContent);
 
         User currentUser = userService.getLoggedUserDomain(request.getUserPrincipal().getName());
         comment.setOwner(currentUser);
@@ -138,10 +144,14 @@ public class CommentService {
     }
 
     public CommentDTO updateComment(Long commentId, CommentDTO updatedCommentDTO, Long postId) {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
         if (commentRepository.findById(commentId).isPresent() && postService.findById(postId).isPresent()) {
             Comment commentToUpdate = commentRepository.findById(commentId).get();
+            String sanitizedContent = policy.sanitize(updatedCommentDTO.content());
             Post commentedPost = postService.findById(postId).get();
-            commentToUpdate.updateComment(updatedCommentDTO.content(), updatedCommentDTO.rating());
+            
+            commentToUpdate.updateComment(sanitizedContent, updatedCommentDTO.rating());
             commentRepository.save(commentToUpdate);
 
             postService.setAverageRatingPost(commentedPost.getId());
