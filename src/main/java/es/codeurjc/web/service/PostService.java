@@ -155,23 +155,28 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
-
-        // Elimina relaciones para evitar errores de integridad
+        User owner = post.getOwner();
+        post.getOwner().getPosts().remove(post);
+        owner.calculateUserRate();
+ 
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
+            section.calculateAverageRating();
             sectionService.saveSection(section);
         }
 
         List<Comment> commentsCopy = new ArrayList<>(post.getComments());
         for (Comment comment : commentsCopy) {
-            commentService.deleteCommentFromPost(post.getId(), comment.getId());
+            comment.setCommentedPost(null);
+            post.getComments().remove(comment);
         }
+
 
         post.getContributors().clear();
         post.getSections().clear();
         post.getComments().clear();
 
-        postRepository.delete(post); // Mejor usar delete(post) que deleteById(post.getId())
+        postRepository.delete(post); 
     }
 
    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
@@ -333,7 +338,7 @@ public class PostService {
 
     public String sanitizeHtml(String htmlContent) {
         // Use a predefined safelist to allow only basic HTML tags
-        return Jsoup.clean(htmlContent, Safelist.relaxed());
+        return Jsoup.clean(htmlContent, Safelist.basic());
     }
 
     public void deletePostImage(Long id) {
