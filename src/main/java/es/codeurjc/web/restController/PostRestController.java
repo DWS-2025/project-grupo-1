@@ -61,13 +61,8 @@ public class PostRestController {
         if (createPostDTO.title().isEmpty()) {
           throw new IllegalArgumentException("Title cannot be empty");
         }
-
-        postService.addSections(createPostDTO, sectionIds);
-
-        String[] contributorsArray = newContributors.split(",");
-        postService.addContributors(createPostDTO, contributorsArray);
-
-        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, request));
+    
+        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, request, sectionIds, newContributors.split(",")));
 
     }
 

@@ -44,6 +44,152 @@
 			"response": []
 		},
 		{
+			"name": "NEW POST_IMAGE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "imageFile",
+							"type": "file",
+							"src": "/C:/Users/alexd/Pictures/Imagen de WhatsApp 2024-10-03 a las 19.59.29_58ab64b0.jpg"
+						}
+					]
+				},
+				"url": "{{baseURL}}/api/posts/1/image"
+			},
+			"response": []
+		},
+		{
+			"name": "NEW COMMENT",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"content\": \"¡Este post es muy útil!\",\r\n  \"rating\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/posts/1/comments"
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE Section",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Autenticación segura\",\r\n    \"description\": \"La autenticación segura es un proceso esencial en la ciberseguridad que permite a individuos, aplicaciones o servicios demostrar su identidad antes de acceder a sistemas digitales.\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:8443/api/sections"
+			},
+			"response": []
+		},
+		{
+			"name": "POST SECTION image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "imageFile",
+							"type": "file",
+							"src": "/C:/Users/evafe/Pictures/unnamed.jpg"
+						}
+					]
+				},
+				"url": "https://localhost:8443/api/sections/12/image"
+			},
+			"response": []
+		},
+		{
+			"name": "NEW POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Tengo las neuronas justas",
+							"type": "text"
+						},
+						{
+							"key": "content",
+							"value": "Pues eso, lo justito para pasar el día",
+							"type": "text"
+						},
+						{
+							"key": "sections",
+							"value": "1,2,3",
+							"type": "text"
+						},
+						{
+							"key": "newContributors",
+							"value": "user6,Admin",
+							"type": "text"
+						},
+						{
+							"key": "imageFile",
+							"type": "file",
+							"src": "/C:/Users/marke/Downloads/test.png"
+						}
+					]
+				},
+				"url": "{{baseURL}}/api/posts/"
+			},
+			"response": []
+		},
+		{
 			"name": "GET all sections",
 			"request": {
 				"method": "GET",
@@ -167,6 +313,69 @@
 			"response": []
 		},
 		{
+			"name": "GET POST_IMAGE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{baseURL}}/api/posts/1/image"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://localhost:8443/api/sections/1/image"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Section",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:8443/api/sections/1"
+			},
+			"response": []
+		},
+		{
+			"name": "GET Sections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://localhost:8443/api/sections"
+			},
+			"response": []
+		},
+		{
 			"name": "EDIT POST",
 			"request": {
 				"method": "PUT",
@@ -209,73 +418,6 @@
 			"response": []
 		},
 		{
-			"name": "DELETE POST",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": "{{baseURL}}/api/posts/1"
-			},
-			"response": []
-		},
-		{
-			"name": "GET POST_IMAGE",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": "{{baseURL}}/api/posts/1/image"
-			},
-			"response": []
-		},
-		{
-			"name": "NEW POST_IMAGE",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "imageFile",
-							"type": "file",
-							"src": "/C:/Users/alexd/Pictures/Imagen de WhatsApp 2024-10-03 a las 19.59.29_58ab64b0.jpg"
-						}
-					]
-				},
-				"url": "{{baseURL}}/api/posts/1/image"
-			},
-			"response": []
-		},
-		{
 			"name": "EDIT POST_IMAGE",
 			"event": [
 				{
@@ -310,43 +452,6 @@
 			"response": []
 		},
 		{
-			"name": "DELETE POST_IMAGE",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": []
-				},
-				"url": "{{baseURL}}/api/posts/1/image"
-			},
-			"response": []
-		},
-		{
-			"name": "NEW COMMENT",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"content\": \"¡Este post es muy útil!\",\r\n  \"rating\": 5\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "{{baseURL}}/api/posts/1/comments"
-			},
-			"response": []
-		},
-		{
 			"name": "EDIT COMMENT",
 			"request": {
 				"auth": {
@@ -364,50 +469,6 @@
 					}
 				},
 				"url": "{{baseURL}}/api/posts/1/comments/1"
-			},
-			"response": []
-		},
-		{
-			"name": "CREATE Section",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Autenticación segura\",\r\n    \"description\": \"La autenticación segura es un proceso esencial en la ciberseguridad que permite a individuos, aplicaciones o servicios demostrar su identidad antes de acceder a sistemas digitales.\"\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "https://localhost:8443/api/sections"
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Section",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}"
-				},
-				"url": "https://localhost:8443/api/sections/3"
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE Section Image",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": "https://localhost:8443/api/sections/7/image"
 			},
 			"response": []
 		},
@@ -455,60 +516,74 @@
 			"response": []
 		},
 		{
-			"name": "POST image",
+			"name": "EDIT COMMENT",
 			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "imageFile",
-							"type": "file",
-							"src": "/C:/Users/evafe/Pictures/unnamed.jpg"
-						}
-					]
+				"auth": {
+					"type": "noauth"
 				},
-				"url": "https://localhost:8443/api/sections/12/image"
-			},
-			"response": []
-		},
-		{
-			"name": "GET Image",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "https://localhost:8443/api/sections/1/image"
-			},
-			"response": []
-		},
-		{
-			"name": "GET Section",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}",
+					"raw": "{\r\n  \"content\": \"He editado mi comentario para añadir más detalles.\",\r\n  \"rating\": 4\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "https://localhost:8443/api/sections/1"
+				"url": "{{baseURL}}/api/post/1/comments/1"
 			},
 			"response": []
 		},
 		{
-			"name": "GET Sections",
+			"name": "DELETE POST",
 			"request": {
-				"method": "GET",
+				"method": "DELETE",
 				"header": [],
-				"url": "https://localhost:8443/api/sections"
+				"url": "{{baseURL}}/api/posts/1"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE POST_IMAGE",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "{{baseURL}}/api/posts/1/image"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Section",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}"
+				},
+				"url": "https://localhost:8443/api/sections/3"
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Section Image",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "https://localhost:8443/api/sections/7/image"
 			},
 			"response": []
 		},
