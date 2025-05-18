@@ -51,9 +51,8 @@ public class SecurityConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
-    }
+}
 
-    // ¡¡¡¡HAY QUE CONFIRMAR LOS ROLES DE CADA UNO!!!!!
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
@@ -81,14 +80,14 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("USER")
 
                         // POSTS
                         .requestMatchers(HttpMethod.GET, "/api/posts/").hasAnyRole("USER", "ADMIN")
@@ -150,7 +149,7 @@ public class SecurityConfiguration {
                         // PRIVATE PAGES
                         .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
@@ -170,7 +169,22 @@ public class SecurityConfiguration {
 
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/error"));
-
+                
+        http
+                        .headers(headers -> headers
+                                        .contentSecurityPolicy(csp -> csp
+                                        .policyDirectives(
+                                        "default-src 'self'; " +
+                                        "script-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://cdn.jsdelivr.net https://unpkg.com; "+
+                                        "style-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; "+
+                                        "img-src 'self' data: blob: https:; "+
+                                        "font-src 'self' https://fonts.gstatic.com data:; "+
+                                        "connect-src 'self'; " +
+                                        "frame-src 'none'; " +
+                                        "object-src 'none'; " +
+                                        "form-action 'self';")
+                                        )                  
+                        );
         return http.build();
-    }
+        }
 }
