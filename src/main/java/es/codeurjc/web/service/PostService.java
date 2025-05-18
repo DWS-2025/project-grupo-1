@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -93,12 +91,12 @@ public class PostService {
     }
 
     public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException { // Swapped from Post to void
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
         if (!imageFile.isEmpty()) {
             post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
         } 
-        post.setContent(policy.sanitize(post.getContent()));
-        post.setTitle(policy.sanitize(post.getTitle()));
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
         return save(post,request);
 
     }
@@ -157,22 +155,18 @@ public class PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
-        User owner = post.getOwner();
+       
         post.getOwner().getPosts().remove(post);
-        owner.calculateUserRate();
  
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
-            section.calculateAverageRating();
             sectionService.saveSection(section);
         }
 
         List<Comment> commentsCopy = new ArrayList<>(post.getComments());
         for (Comment comment : commentsCopy) {
-            comment.setCommentedPost(null);
-            post.getComments().remove(comment);
+            commentService.deleteCommentFromPost(post.getId(), comment.getId());
         }
-
 
         post.getContributors().clear();
         post.getSections().clear();
@@ -183,14 +177,12 @@ public class PostService {
 
    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
     Post oldPost = postRepository.findById(id).orElseThrow();
-    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-
     if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {        
-        oldPost.setTitle(policy.sanitize(newPost.getTitle()));
+        oldPost.setTitle(sanitizeHtml(newPost.getTitle()));
     }
     
     if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {        
-        oldPost.setContent(policy.sanitize(newPost.getContent()));
+        oldPost.setContent(sanitizeHtml(newPost.getContent()));
     }
 
     for (Section s : oldPost.getSections()) {
@@ -223,12 +215,6 @@ public class PostService {
     return oldPost;
 }
     public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        String sanitizedContent = policy.sanitize(newCreatePostDTO.content());
-        String sanitizedTitle = policy.sanitize(newCreatePostDTO.title());
-
-        toDomain(newCreatePostDTO).setTitle(sanitizedTitle);
-        toDomain(newCreatePostDTO).setContent(sanitizedContent);
         return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
     }
 
@@ -348,7 +334,7 @@ public class PostService {
 
     public String sanitizeHtml(String htmlContent) {
         // Use a predefined safelist to allow only basic HTML tags
-        return Jsoup.clean(htmlContent, Safelist.basic());
+        return Jsoup.clean(htmlContent, Safelist.relaxed());
     }
 
     public void deletePostImage(Long id) {
@@ -365,7 +351,8 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {        
+    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {
+        
         Post post = findById(id).orElseThrow();
         Collection<Section> allSections = sectionService.findAll();
         List<Section> postSections = post.getSections();
