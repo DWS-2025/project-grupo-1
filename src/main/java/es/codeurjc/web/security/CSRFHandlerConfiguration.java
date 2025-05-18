@@ -1,6 +1,5 @@
 package es.codeurjc.web.security;
 
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -33,8 +32,7 @@ class CSRFHandlerInterceptor implements HandlerInterceptor {
 				modelAndView.addObject("token", token.getToken());
 			}
 		}
-		
+
 	}
-	
+
 }
-    

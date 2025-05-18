@@ -20,8 +20,8 @@ public interface PostMapper {
 
     Post toDomain(CreatePostDTO postDTO);
 
-    Collection<PostDTO> toDTOs(Collection<Post> posts); 
+    Collection<PostDTO> toDTOs(Collection<Post> posts);
 
-    Collection<Post> toDomains(Collection<PostDTO> postDTOs); 
-    
+    Collection<Post> toDomains(Collection<PostDTO> postDTOs);
+
 }

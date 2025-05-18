@@ -14,11 +14,10 @@ import es.codeurjc.web.security.jwt.LoginRequest;
 import es.codeurjc.web.security.jwt.UserLoginService;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
-	
+
 	@Autowired
 	private UserLoginService userService;
 
@@ -26,7 +25,7 @@ public class LoginController {
 	public ResponseEntity<AuthResponse> login(
 			@RequestBody LoginRequest loginRequest,
 			HttpServletResponse response) {
-		
+
 		return userService.login(response, loginRequest);
 	}
 

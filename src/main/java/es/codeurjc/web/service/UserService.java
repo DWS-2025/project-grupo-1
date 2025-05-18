@@ -219,26 +219,24 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
 
         if (userName != null && !userName.isEmpty()) {
-         
-             if(!user.getUserName().equals(userName)) {
-                if (!user.getRols().contains("ADMIN")){
-                for (UserDTO userDTO : this.findAllUsers()) {
-                    if (userDTO.userName().equals(userName)) {
-                        throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+
+            if (!user.getUserName().equals(userName)) {
+                if (!user.getRols().contains("ADMIN")) {
+                    for (UserDTO userDTO : this.findAllUsers()) {
+                        if (userDTO.userName().equals(userName)) {
+                            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                        }
                     }
+                    // Sanitize the username
+                    userName = policy.sanitize(userName);
+                    user.setUserName(userName);
+                } else {
+                    throw new UnsupportedOperationException("El administrador no puede cambiar su nombre de usuario");
                 }
-                // Sanitize the username
-              userName = policy.sanitize(userName);
-                user.setUserName(userName);
+
+            }
         }
-        else
-    {
-        throw new UnsupportedOperationException("El administrador no puede cambiar su nombre de usuario");
-    }
-         
-        }
-    }
-    
+
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
             user.setDescription(description);
@@ -253,7 +251,7 @@ public class UserService {
         }
         userRepository.save(user);
     }
-    
+
     public UserDTO updateApiUser(long id, UserDTO updatedUserDTO) throws SQLException {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User oldUser = userRepository.findById(id).orElseThrow();
@@ -263,15 +261,15 @@ public class UserService {
 
         if (userName != null && !userName.isEmpty()) {
             if (!oldUser.getRols().contains("ADMIN") && !oldUser.getUserName().equals(userName)) {
-        for (UserDTO userDTO : this.findAllUsers()) {
-            if (userDTO.userName().equals(updatedUserDTO.userName())) {
-                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                for (UserDTO userDTO : this.findAllUsers()) {
+                    if (userDTO.userName().equals(updatedUserDTO.userName())) {
+                        throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                    }
+                }
             }
         }
-    }
-}
 
-         userName = policy.sanitize(updatedUser.getUserName());
+        userName = policy.sanitize(updatedUser.getUserName());
         if (userName != null && !userName.isEmpty()) {
             oldUser.setUserName(userName);
         }
@@ -330,16 +328,8 @@ public class UserService {
         return mapper.toDomain(userDTO);
     }
 
-    private User toDomain(UserBasicDTO userBasicDTO) {
-        return mapper.toDomain(userBasicDTO);
-    }
-
     private Collection<UserDTO> toDTOs(List<User> users) {
         return mapper.toDTOs(users);
-    }
-
-    private Collection<User> toDomains(Collection<UserDTO> userDTOs) {
-        return mapper.toDomains(userDTOs);
     }
 
     public Collection<User> getUsersFromUserNamesList(String[] contributorNames) {

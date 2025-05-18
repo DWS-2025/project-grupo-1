@@ -5,6 +5,5 @@ public record SectionBasicDTO(
         String title,
         String description,
         Float  averageRating,
-        Integer numberOfPublications
-        ) {
+        Integer numberOfPublications) {
 }

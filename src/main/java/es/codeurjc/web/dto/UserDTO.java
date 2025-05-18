@@ -9,7 +9,7 @@ public record UserDTO(
         String description,
         String password,
         String cvFilePath,
-        String email, 
+        String email,
         String image,
         List<PostBasicDTO> posts,
         List<UserBasicDTO> followers,

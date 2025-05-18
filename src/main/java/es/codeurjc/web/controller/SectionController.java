@@ -44,19 +44,19 @@ public class SectionController {
     private UserService userService;
 
     @ModelAttribute
-	public void addAttributes(Model model, HttpServletRequest request) {
+    public void addAttributes(Model model, HttpServletRequest request) {
 
-		Principal principal = request.getUserPrincipal();
+        Principal principal = request.getUserPrincipal();
 
-		if(principal != null) {
-		
-			model.addAttribute("logged", true);		
-			model.addAttribute("userName", principal.getName());
-			model.addAttribute("admin", request.isUserInRole("ADMIN"));
-			
-		} else {
-			model.addAttribute("logged", false);
-		}
+        if (principal != null) {
+
+            model.addAttribute("logged", true);
+            model.addAttribute("userName", principal.getName());
+            model.addAttribute("admin", request.isUserInRole("ADMIN"));
+
+        } else {
+            model.addAttribute("logged", false);
+        }
     }
 
     @GetMapping("/section")
@@ -81,7 +81,6 @@ public class SectionController {
         return "create_section";
     }
 
-
     @PostMapping("/section/new")
     public String createSection(@ModelAttribute CreateSectionDTO sectionDTO, @RequestParam MultipartFile sectionImage) {
         try {
@@ -91,12 +90,11 @@ public class SectionController {
             e.printStackTrace();
             return "error";
         }
-    } 
+    }
 
     @GetMapping("/section/{id}/image")
     public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException {
         Optional<Section> op = sectionService.findSectionById(id);
-
 
         if (op.isPresent() && op.get().getImageFile() != null) {
             Blob image = op.get().getImageFile();
@@ -169,7 +167,7 @@ public class SectionController {
     }
 
     @GetMapping("/section/{id}/follow")
-    public String followSection(Model model, @PathVariable long id,HttpServletRequest request) {
+    public String followSection(Model model, @PathVariable long id, HttpServletRequest request) {
         Optional<SectionDTO> section = sectionService.findById(id);
         UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
 
@@ -183,7 +181,7 @@ public class SectionController {
 
     }
 
-    @GetMapping("/section/{id}/edit") 
+    @GetMapping("/section/{id}/edit")
     public String editSection(Model model, @PathVariable long id) {
         Optional<SectionDTO> section = sectionService.findById(id);
 
@@ -198,7 +196,8 @@ public class SectionController {
     }
 
     @PostMapping("/section/{id}/edit")
-    public String updateSection(RedirectAttributes redirectAttributes, Model model, @PathVariable long id, SectionDTO updatedSection, MultipartFile newImage) throws IOException {
+    public String updateSection(RedirectAttributes redirectAttributes, Model model, @PathVariable long id,
+            SectionDTO updatedSection, MultipartFile newImage) throws IOException {
         Optional<SectionDTO> op = sectionService.findById(id);
 
         if (op.isPresent()) {
@@ -214,9 +213,9 @@ public class SectionController {
     }
 
     @GetMapping("/section/search")
-    public String searchSection(Model model, @RequestParam(required = false) List<String> filters){
+    public String searchSection(Model model, @RequestParam(required = false) List<String> filters) {
         Collection<SectionDTO> sections;
-        
+
         if (filters == null || filters.isEmpty()) {
             sections = sectionService.getAllSections();
         } else {
@@ -226,13 +225,12 @@ public class SectionController {
                 sections = sectionService.getSectionPublicationsGT2();
             } else if (filters.contains("minRating") && !filters.contains("minPosts") && !filters.contains("title")) {
                 sections = sectionService.getSectionAverageRatingGT5();
-            } 
-            else if (filters.contains("minRating") && filters.contains("minPosts") && !filters.contains("title")) {
+            } else if (filters.contains("minRating") && filters.contains("minPosts") && !filters.contains("title")) {
                 sections = sectionService.getSectionAverageRatingGT5PublicationsGTE2();
             } else if (filters.contains("title") && filters.contains("minPosts") && filters.contains("minRating")) {
                 sections = sectionService.getSectionPostsGTE2AverageRatingGT5();
             } else if (filters.contains("title") && filters.contains("minRating") && !filters.contains("minPosts")) {
-                sections = sectionService.getSectionAverageRatingGTE5ByTitle(); 
+                sections = sectionService.getSectionAverageRatingGTE5ByTitle();
             } else if (filters.contains("title") && filters.contains("minPosts") && !filters.contains("minRating")) {
                 sections = sectionService.getSectionPostsGTE2ByTitle();
             } else {

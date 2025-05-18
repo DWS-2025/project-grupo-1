@@ -25,11 +25,10 @@ public class Section {
 
     @Lob
     private Blob imageFile; // Blob for storing the image file
-    
-   @ManyToMany
+
+    @ManyToMany
     private List<Post> posts = new ArrayList<>();
 
-   
     public Section() {
     }
 
@@ -41,15 +40,14 @@ public class Section {
         this.numberOfPublications = 0;
     }
 
-    
-
     public void addPost(Post post) {
         posts.add(post);
         numberOfPublications++;
     }
-    public void addPostToSection(Post post){
+
+    public void addPostToSection(Post post) {
         post.addSection(this);
-        
+
     }
 
     public void deletePost(Post post) {
@@ -81,19 +79,11 @@ public class Section {
         this.description = description;
     }
 
-   /* public String getimageFile() {
+    public Blob getImageFile() {
         return this.imageFile;
     }
 
-    public void setimageFile(String imageFile) {
-        this.imageFile = imageFile;
-    }*/ 
-
-    public Blob getImageFile(){
-        return this.imageFile;
-    }
-
-    public void setImageFile(Blob imageFile){
+    public void setImageFile(Blob imageFile) {
         this.imageFile = imageFile;
     }
 
@@ -108,55 +98,58 @@ public class Section {
     public int getNumberOfPosts() {
         return this.numberOfPublications;
     }
-    public void setAverageRating(float rate){
-      this.averageRating = rate;
-     
+
+    public void setAverageRating(float rate) {
+        this.averageRating = rate;
+
     }
 
     public String getImage() {
-		return image;
-	}
+        return image;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public void calculateAverageRating() {
         List<Post> posts = getPosts();
         if (posts.isEmpty()) {
-            setAverageRating(0); 
+            setAverageRating(0);
             return;
         }
-    
+
         float totalRating = 0;
         int ratedPostsCount = 0;
-    
+
         for (Post post : posts) {
             if (post.getAverageRating() > 0) { // Check if the post has a rating
                 totalRating += post.getAverageRating();
                 ratedPostsCount++;
             }
         }
-    
+
         if (ratedPostsCount > 0) {
-            setAverageRating(totalRating / ratedPostsCount); 
+            setAverageRating(totalRating / ratedPostsCount);
         } else {
-            setAverageRating(0); 
+            setAverageRating(0);
         }
     }
 
-     // Overriding equals and hashCode methods to compare sections by their id
-     @Override
+    // Overriding equals and hashCode methods to compare sections by their id
+    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Section section = (Section) o;
-        return Objects.equals(id, section.id); 
+        return Objects.equals(id, section.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); 
+        return Objects.hash(id);
     }
 
 }
