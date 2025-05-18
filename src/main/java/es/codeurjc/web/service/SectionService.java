@@ -210,7 +210,7 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) 
             throws IOException {
         Section oldSection =  sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
         //Section updatedSection = toDomain(updatedSectionDTO);
