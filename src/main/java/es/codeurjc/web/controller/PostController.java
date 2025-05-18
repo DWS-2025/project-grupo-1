@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -23,6 +24,7 @@ import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
+import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -36,6 +38,9 @@ public class PostController {
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -54,11 +59,18 @@ public class PostController {
     }
 
     @PostMapping("/post/new")
-    public String createPost(Model model, CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+    public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDTO, @RequestParam MultipartFile newImage, @RequestParam String newContributors, @RequestParam(value = "sections", required = false) List<Long> sectionIds, HttpServletRequest request) throws IOException {
+
+        if (!userService.isLogged(userService.getLoggedUser(request.getUserPrincipal().getName()))) {
+            model.addAttribute("message", "You must be logged in to create a post");
+            return "error";
+        }
+
         if (createPostDTO.title().isEmpty()) {
             model.addAttribute("message", "The title cannot be empty");
             return "error";
         }
+
         postService.addSections(createPostDTO, sectionIds);
 
         String[] contributorsArray = newContributors.split(",");
@@ -132,8 +144,8 @@ public class PostController {
     }
 
     @PostMapping("/post/{postId}/edit")
-    public String updatePost(Model model, @PathVariable Long postId, CreatePostDTO createPostDTO,
-            @RequestAttribute MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
+    public String updatePost(Model model, @PathVariable Long postId, @ModelAttribute CreatePostDTO createPostDTO,
+            @RequestParam MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
             @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(postId, request)) {

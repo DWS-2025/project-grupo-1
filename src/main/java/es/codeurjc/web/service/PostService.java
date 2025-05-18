@@ -34,6 +34,7 @@ import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserBasicDTO;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -92,14 +93,17 @@ public class PostService {
         return postRepository.existsById(id);
     }
 
-    public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException { // Swapped from Post to void
+    public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException {
+
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        if (!imageFile.isEmpty()) {
-            post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
-        } 
         post.setContent(policy.sanitize(post.getContent()));
         post.setTitle(policy.sanitize(post.getTitle()));
-        return save(post,request);
+
+        if (!imageFile.isEmpty()) {
+            post.setImageFile(BlobProxy.generateProxy(imageFile.getInputStream(), imageFile.getSize()));
+        }
+
+        return save(post, request);
 
     }
 
@@ -113,9 +117,13 @@ public class PostService {
 
     public Post save(Post post, HttpServletRequest request) { // Swapped from Post to void
 
-        User currentUser = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName()));
+        UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
+
+        User currentUser = userService.findByIdDomain(userDTO.id());
+
         post.setOwner(currentUser);
         currentUser.getPosts().add(post);
+
         post.setContent(sanitizeHtml(post.getContent()));
         post.setTitle(sanitizeHtml(post.getTitle()));
 
@@ -160,7 +168,7 @@ public class PostService {
         User owner = post.getOwner();
         post.getOwner().getPosts().remove(post);
         owner.calculateUserRate();
- 
+
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
             section.calculateAverageRating();
@@ -173,63 +181,68 @@ public class PostService {
             post.getComments().remove(comment);
         }
 
-
         post.getContributors().clear();
         post.getSections().clear();
         post.getComments().clear();
 
-        postRepository.delete(post); 
+        postRepository.delete(post);
     }
 
-   public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-    Post oldPost = postRepository.findById(id).orElseThrow();
-    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings,
+            MultipartFile newImage) throws IOException {
+        Post oldPost = postRepository.findById(id).orElseThrow();
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
-    if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {        
-        oldPost.setTitle(policy.sanitize(newPost.getTitle()));
-    }
-    
-    if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {        
-        oldPost.setContent(policy.sanitize(newPost.getContent()));
-    }
+        if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {
+            oldPost.setTitle(policy.sanitize(newPost.getTitle()));
+        }
 
-    for (Section s : oldPost.getSections()) {
-        s.getPosts().remove(oldPost);
-    }
-    oldPost.getSections().clear();
+        if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {
+            oldPost.setContent(policy.sanitize(newPost.getContent()));
+        }
 
+        for (Section s : oldPost.getSections()) {
+            s.getPosts().remove(oldPost);
+        }
 
-    if (newSectionIds != null && !newSectionIds.isEmpty()) {
-        for (Long sectionId : newSectionIds) {
-            Section section = sectionService.findSectionById(sectionId).get();
-            oldPost.getSections().add(section);
-            if (!section.getPosts().contains(oldPost)) {
-                section.getPosts().add(oldPost);
+        oldPost.getSections().clear();
+
+        if (newSectionIds != null && !newSectionIds.isEmpty()) {
+            for (Long sectionId : newSectionIds) {
+                Section section = sectionService.findSectionById(sectionId).get();
+                oldPost.getSections().add(section);
+                if (!section.getPosts().contains(oldPost)) {
+                    section.getPosts().add(oldPost);
+                }
             }
         }
+
+        if (newContributorsStrings != null && newContributorsStrings.length > 0) {
+            oldPost.getContributors().clear();
+            addContributors(oldPost, newContributorsStrings);
+        }
+
+        if (!newImage.isEmpty()) {
+            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
+        }
+
+        postRepository.save(oldPost);
+
+        return oldPost;
     }
 
-    if (newContributorsStrings != null && newContributorsStrings.length > 0) {
-        oldPost.getContributors().clear();
-        addContributors(oldPost, newContributorsStrings);
-    }
+    public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds,
+            String[] newContributorsStrings, MultipartFile newImage) throws IOException {
 
-    if (!newImage.isEmpty()) {
-        oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
-    }
-
-    postRepository.save(oldPost);
-  
-    return oldPost;
-}
-    public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds, String[] newContributorsStrings, MultipartFile newImage) throws IOException {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         String sanitizedContent = policy.sanitize(newCreatePostDTO.content());
         String sanitizedTitle = policy.sanitize(newCreatePostDTO.title());
 
         toDomain(newCreatePostDTO).setTitle(sanitizedTitle);
         toDomain(newCreatePostDTO).setContent(sanitizedContent);
+
         return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
+
     }
 
     public CommentService getCommentService() {
@@ -238,21 +251,20 @@ public class PostService {
 
     public void setAverageRatingPostRemoving(Long id, Long commentRemovedId) {
         Post post = postRepository.findById(id).orElseThrow();
-        post.setAverageRating(postRepository.findAverageRatingByPostIdExcludingComment(id,commentRemovedId));
-        
-      
+        post.setAverageRating(postRepository.findAverageRatingByPostIdExcludingComment(id, commentRemovedId));
+
     }
+
     public void setAverageRatingPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
         post.setAverageRating(postRepository.findAverageRatingByPostId(id));
-        
-      
+
     }
 
     public void addSections(Post post, List<Long> sectionIds) {
-        
+
         if (sectionIds != null && !sectionIds.isEmpty()) {
-        
+
             for (Long sectionId : sectionIds) {
                 post.addSection(sectionService.toDomain(sectionService.findById(sectionId).get()));
             }
@@ -314,7 +326,7 @@ public class PostService {
     }
 
     public void createPostImage(Long id, URI location, InputStream inputStream, Long size) {
-        
+
         Post post = postRepository.findById(id).orElseThrow();
         post.setImage(location.toString());
         post.setImageFile(BlobProxy.generateProxy(inputStream, size));
@@ -365,7 +377,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {        
+    public List<Map<String, Object>> preparePostSectionsForForm(Long id) {
         Post post = findById(id).orElseThrow();
         Collection<Section> allSections = sectionService.findAll();
         List<Section> postSections = post.getSections();
@@ -399,7 +411,8 @@ public class PostService {
         Post post = findById(id).orElseThrow();
         Blob image = post.getImageFile();
         Resource file = new InputStreamResource(image.getBinaryStream());
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length()).body(file);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").contentLength(image.length())
+                .body(file);
     }
 
     public boolean checkIfUserIsTheOwner(Long postId, HttpServletRequest request) {
