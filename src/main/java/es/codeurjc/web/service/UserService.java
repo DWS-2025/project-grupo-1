@@ -120,7 +120,7 @@ public class UserService {
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         UserDTO userToEdit = findById(id);
 
-        if (loggedUser.id().equals(userToEdit.id()) || loggedUser.userName().equals("Admin")) {
+        if (loggedUser.id().equals(userToEdit.id()) || loggedUser.rols().contains("ADMIN")) {
             return true;
         } else {
             return false;
@@ -218,17 +218,15 @@ public class UserService {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User user = userRepository.findById(id).orElseThrow();
 
-        for(UserDTO userDTO : this.findAllUsers()) {
-            if (userDTO.userName().equals(userName)) {
-                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
-            }
-        }
         if (userName != null && !userName.isEmpty()) {
-            userName = policy.sanitize(user.getUserName());
-            user.setUserName(userName);
+            if (!user.getRols().contains("ADMIN")) {
+              userName = policy.sanitize(userName);
+                user.setUserName(userName);
+        }
+          
         }
         if (description != null && !description.isEmpty()) {
-            description = policy.sanitize(user.getDescription());
+            description = policy.sanitize(description);
             user.setDescription(description);
         }
         if (image != null && !image.isEmpty()) {
@@ -292,8 +290,12 @@ public class UserService {
         String sanitizedUsername = policy.sanitize(userDTO.userName());
         String sanitizedDescription = policy.sanitize(userDTO.description());
         String sanitizedEmail = policy.sanitize(userDTO.email());
-
-        user.setUserName(sanitizedUsername);
+        if(!sanitizedUsername.equals("Admin") ) {
+            throw new IllegalArgumentException("No es posible establecer este nombre de usuario");
+        }
+        if (!user.getRols().contains("ADMIN")) {
+            user.setUserName(sanitizedUsername);
+        }
         user.setDescription(sanitizedDescription);
         user.setEmail(sanitizedEmail);
 
