@@ -95,18 +95,33 @@
                   }
                 </style>
                 {{#ShowButtons}}
+                {{#user.cvFilePath}}
                 <div class="col-lg-4 align-self-center">
 
+                  <form action="/users/{{user.id}}/delete-cv" method="post" >
+                    <label for="file">
+                      <h2>Borra tu cv</h2>
+                    </label>
+                    <button type="submit">Eliminar</button>
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                  </form>
+                </div>
+                {{/user.cvFilePath}}
+
+                {{^user.cvFilePath}}
+                <div class="col-lg-4 align-self-center">
+                
                   <form action="/users/{{user.id}}/upload-cv" method="post" enctype="multipart/form-data">
                     <label for="file">
-                      <h2>Sube tu CV!</h2>
+                      <h2>Sube tu cv</h2>
                     </label>
                     <input type="file" id="file" name="file" required>
                     <button type="submit">Subir</button>
-                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <input type="hidden" name="_csrf" value="{{token}}" />
                   </form>
-
+                
                 </div>
+                {{/user.cvFilePath}}
                 {{/ShowButtons}}
                 {{/notSameUser}}
               </div>

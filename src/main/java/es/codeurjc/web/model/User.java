@@ -59,7 +59,7 @@ public class User {
         this.followedSections = new ArrayList<>();
         this.comments = new ArrayList<>();
         this.userRate = 0;
-        this.rols = List.of(rols);
+        this.rols = List.of(rols); 
     }
 
     public User() {
