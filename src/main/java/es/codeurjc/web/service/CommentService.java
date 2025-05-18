@@ -3,6 +3,8 @@ package es.codeurjc.web.service;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +21,6 @@ import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import es.codeurjc.web.repository.CommentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -88,15 +88,20 @@ public class CommentService {
     public void deleteCommentFromPost(Long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         Post commentedPost = postService.findById(commentedPostId).get();
-        postService.saveForInit(commentedPost);
-      
-           
-        // Calculates the rating of the post
+        // postService.saveForInit(commentedPost);
+
+
         postService.setAverageRatingPostRemoving(commentedPost.getId(), commentToDelete.getId());
         commentToDelete.setCommentedPost(null);
+        // commentedPost.removeComment(commentToDelete);
+
+           
+        // Calculates the rating of the post
         postService.saveForInit(commentedPost);
+
         //Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
+        
         //Calculates the rating of the section
 
         for (Section section : commentedPost.getSections()) {
@@ -104,21 +109,21 @@ public class CommentService {
         }
        
     }
+
     public Collection<CommentDTO> deleteCommentFromPostAPI(Long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         Post commentedPost = postService.findById(commentedPostId).get();
 
-      
-           
         // Calculates the rating of the post
         postService.setAverageRatingPostRemoving(commentedPost.getId(), commentToDelete.getId());
         commentToDelete.setCommentedPost(null);
         commentedPost.getComments().remove(commentToDelete);
         postService.saveForInit(commentedPost);
+
         //Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
+        
         //Calculates the rating of the section
-
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }

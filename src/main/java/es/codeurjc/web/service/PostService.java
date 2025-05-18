@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -34,6 +35,7 @@ import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
 import es.codeurjc.web.dto.UserBasicDTO;
+import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.dto.UserMapper;
 import es.codeurjc.web.model.Comment;
 import es.codeurjc.web.model.Post;
@@ -92,56 +94,41 @@ public class PostService {
         return postRepository.existsById(id);
     }
 
-public Post save(Post post, MultipartFile imageFile, HttpServletRequest request) throws IOException {
-    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-    post.setContent(policy.sanitize(post.getContent()));
-    post.setTitle(policy.sanitize(post.getTitle()));
+    @Transactional
+    public Post save(Post post, MultipartFile imageFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException { // Swapped from Post to void
 
-    if (!imageFile.isEmpty()) {
-    
-        byte[] imageBytes = imageFile.getBytes();
-        post.setImageFile(BlobProxy.generateProxy(new java.io.ByteArrayInputStream(imageBytes), imageBytes.length));
-    }
-
-    return save(post, request);
-}
-
-    public PostDTO save(PostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
-        return toDTO(save(toDomain(postDTO), imagFile, request));
-    }
-
-    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, HttpServletRequest request) throws IOException {
-        return toDTO(save(toDomain(postDTO), imagFile, request));
-    }
-    public PostDTO save(CreatePostDTO postDTO, MultipartFile imageFile, HttpServletRequest request, List<Long> sectionIds, String[] contributorNames) throws IOException {
-    Post post = toDomain(postDTO);
-
-
-    addSections(post, sectionIds);
-    addContributors(post, contributorNames);
-
-    return toDTO(save(post, imageFile, request));
-}
-
-    public Post save(Post post, HttpServletRequest request) { // Swapped from Post to void
-
-        User currentUser = userService.findByUserName(request.getUserPrincipal().getName());
-              
-        post.setOwner(currentUser);
-        currentUser.getPosts().add(post);
-
-        post.setContent(sanitizeHtml(post.getContent()));
-        post.setTitle(sanitizeHtml(post.getTitle()));
-      
-
-        List<User> contributors = post.getContributors();
-        for (User contributor : contributors) {
-            contributor.addCollaboratedPosts(post);
-        }
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        post.setTitle(policy.sanitize(post.getTitle()));
+        post.setContent(policy.sanitize(post.getContent()));
 
         post = postRepository.save(post);
 
-        post.setImage("/api/posts/" + post.getId() + "/image");
+        if (!imageFile.isEmpty()) {
+
+            byte[] imageBytes = imageFile.getBytes();
+            post.setImageFile(BlobProxy.generateProxy(new java.io.ByteArrayInputStream(imageBytes), imageBytes.length));
+            post.setImage("/api/posts/" + post.getId() + "/image");
+
+        }
+
+        for (Section section : post.getSections()) {
+            section.getPosts().remove(post);
+            sectionService.saveSection(section);
+        }
+        addSections(post, sectionsId);
+
+        addContributors(post, contributors);
+
+        UserDTO userDTO = userService.getLoggedUser(request.getUserPrincipal().getName());
+        User currentUser = userService.findByIdDomain(userDTO.id());
+
+        if (post.getOwner() == null) {
+            post.setOwner(currentUser);
+            currentUser.getPosts().add(post);
+        }
+
+        post.setContent(sanitizeHtml(post.getContent()));
+        post.setTitle(sanitizeHtml(post.getTitle()));
 
         postRepository.save(post);
 
@@ -149,8 +136,14 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
 
     }
 
-    public PostDTO save(PostDTO postDTO) {
-        return toDTO(toDomain(postDTO));
+    // Transform the PostDTO to a Post and save it
+    public PostDTO save(PostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException {
+        return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
+    }
+
+    // Transform the CreatePostDTO to a Post and save it
+    public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors, HttpServletRequest request) throws IOException {
+        return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
     }
 
     public void saveForInit(Post post) {
@@ -169,8 +162,6 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
         
         Post post = postRepository.findById(id).orElseThrow();
         User owner = post.getOwner();
-        owner.getPosts().remove(post);
-        owner.calculateUserRate();
 
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
@@ -182,6 +173,8 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
             commentService.deleteCommentFromPost(post.getId(), comment.getId());
         }
 
+        owner.getPosts().remove(post);
+        owner.calculateUserRate();
         post.getContributors().clear();
         post.getSections().clear();
         post.getComments().clear();
@@ -189,60 +182,26 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
         postRepository.delete(post);
     }
 
-    public Post updatePost(Long id, Post newPost, List<Long> newSectionIds, String[] newContributorsStrings,
-            MultipartFile newImage) throws IOException {
+    public Post updatePost(Long id, Post newPost, MultipartFile newImage, List<Long> newSectionIds, String[] newContributors, HttpServletRequest request) throws IOException {
+        
         Post oldPost = postRepository.findById(id).orElseThrow();
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
 
         if (newPost.getTitle() != null && !newPost.getTitle().isEmpty()) {
-            oldPost.setTitle(policy.sanitize(newPost.getTitle()));
+            oldPost.setTitle(newPost.getTitle());
         }
 
         if (newPost.getContent() != null && !newPost.getContent().isEmpty()) {
-            oldPost.setContent(policy.sanitize(newPost.getContent()));
+            oldPost.setContent(newPost.getContent());
         }
 
-        for (Section s : oldPost.getSections()) {
-            s.getPosts().remove(oldPost);
-        }
-
-        oldPost.getSections().clear();
-
-        if (newSectionIds != null && !newSectionIds.isEmpty()) {
-            for (Long sectionId : newSectionIds) {
-                Section section = sectionService.findSectionById(sectionId).get();
-                oldPost.getSections().add(section);
-                if (!section.getPosts().contains(oldPost)) {
-                    section.getPosts().add(oldPost);
-                }
-            }
-        }
-
-        if (newContributorsStrings != null && newContributorsStrings.length > 0) {
-            oldPost.getContributors().clear();
-            addContributors(oldPost, newContributorsStrings);
-        }
-
-        if (!newImage.isEmpty()) {
-            oldPost.setImageFile(BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()));
-        }
-
-        postRepository.save(oldPost);
+        save(oldPost, newImage, newSectionIds, newContributors, request);
 
         return oldPost;
     }
 
-    public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, List<Long> newSectionIds,
-            String[] newContributorsStrings, MultipartFile newImage) throws IOException {
-
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        String sanitizedContent = policy.sanitize(newCreatePostDTO.content());
-        String sanitizedTitle = policy.sanitize(newCreatePostDTO.title());
-
-        toDomain(newCreatePostDTO).setTitle(sanitizedTitle);
-        toDomain(newCreatePostDTO).setContent(sanitizedContent);
-
-        return toDTO(updatePost(id, toDomain(newCreatePostDTO), newSectionIds, newContributorsStrings, newImage));
+    public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, MultipartFile newImage, List<Long> newSectionIds,
+            String[] contributors, HttpServletRequest request) throws IOException {
+        return toDTO(updatePost(id, toDomain(newCreatePostDTO), newImage, newSectionIds, contributors, request));
 
     }
 
@@ -264,11 +223,19 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
 
     public void addSections(Post post, List<Long> sectionIds) {
 
-        if (sectionIds != null && !sectionIds.isEmpty()) {
+        post.getSections().clear();
 
-            for (Long sectionId : sectionIds) {
-                post.addSection(sectionService.findSectionById(sectionId).get());
-                sectionService.findSectionById(sectionId).get().addPost(post);
+        if (sectionIds != null && !sectionIds.isEmpty()) {
+            
+            Set<Long> uniqueSectionsId = new LinkedHashSet<>(sectionIds);
+            Section section;
+
+            for (Long sectionId : uniqueSectionsId) {
+
+                section = sectionService.findSectionById(sectionId).get();
+                post.addSection(section);
+                section.addPost(post);
+
             }
 
         }
@@ -292,18 +259,31 @@ public Post save(Post post, MultipartFile imageFile, HttpServletRequest request)
     }
 
     public void addContributors(Post post, String[] contributorNames) {
+        
+        post.getContributors().clear();
+
         User user;
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+
         if (contributorNames != null && contributorNames.length > 0) {
-            for (String colaborator : contributorNames) {
+            
+            Set<String> uniqueContributors = new LinkedHashSet<>(List.of(contributorNames));
+
+            for (String colaborator : uniqueContributors) {
+                
+                colaborator = policy.sanitize(colaborator);
+
                 try {
 
                     user = userService.findByUserName(sanitizeHtml(colaborator));
                     addContributor(post, user);
+                    user.addCollaboratedPosts(post);
 
                 } catch (NoSuchElementException e) {
                     // Handle the case where the user is not found
                     System.out.println("User not found: " + colaborator);
                 }
+
             }
 
         }

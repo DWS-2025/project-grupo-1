@@ -23,7 +23,6 @@ import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
-import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -37,9 +36,6 @@ public class PostController {
 
     @Autowired
     private SectionService sectionService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping("/post")
     public String viewPosts(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -65,9 +61,11 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
         return "error";
     }
 
-    postService.save(createPostDTO, newImage, request, sectionIds, newContributors.split(","));
-    return "redirect:/post";
-}
+        postService.save(createPostDTO, newImage, sectionIds, newContributors.split(","), request);
+        
+        return "redirect:/post";
+    
+    }
 
     @GetMapping("/post/{postId}")
     public String viewPost(Model model, @PathVariable Long postId, HttpServletRequest request) {
@@ -136,11 +134,11 @@ public String createPost(Model model, @ModelAttribute CreatePostDTO createPostDT
     @PostMapping("/post/{postId}/edit")
     public String updatePost(Model model, @PathVariable Long postId, @ModelAttribute CreatePostDTO createPostDTO,
             @RequestParam MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
-            @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
+            @RequestParam String newContributors, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(postId, request)) {
 
-            postService.updatePost(postId, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
+            postService.updatePost(postId, createPostDTO, newImage, newSectionIds, newContributors.split(","), request);
             return "redirect:/post/" + postId;
 
         } else {
