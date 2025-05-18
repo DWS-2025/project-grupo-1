@@ -213,6 +213,12 @@ public class UserService {
 
     public void updateWebUser(long id, String userName, String description, MultipartFile image) {
         User user = userRepository.findById(id).orElseThrow();
+
+        for(UserDTO userDTO : this.findAllUsers()) {
+            if (userDTO.userName().equals(userName)) {
+                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+            }
+        }
         if (userName != null && !userName.isEmpty()) {
             user.setUserName(userName);
         }
@@ -234,6 +240,12 @@ public class UserService {
         User oldUser = userRepository.findById(id).orElseThrow();
         User updatedUser = toDomain(updatedUserDTO);
         updatedUser.setId(id);
+
+        for (UserDTO userDTO : this.findAllUsers()) {
+            if (userDTO.userName().equals(updatedUserDTO.userName())) {
+                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+            }
+        }
 
         String userName = updatedUser.getUserName();
         if (userName != null && !userName.isEmpty()) {
