@@ -119,7 +119,7 @@ public class SectionRestController {
 	}
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+    public ResponseEntity<Object> replaceUserImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
             throws IOException {
         sectionService.replaceSectionImage(id, imageFile.getInputStream(), imageFile.getSize());
         return ResponseEntity.noContent().build();
