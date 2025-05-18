@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,12 +70,10 @@ public class PostController {
             return "error";
         }
 
-        postService.addSections(createPostDTO, sectionIds);
-
-        String[] contributorsArray = newContributors.split(",");
-        postService.addContributors(createPostDTO, contributorsArray);
-        postService.save(createPostDTO, newImage, request);
+        postService.save(createPostDTO, newImage, sectionIds, newContributors.split(","), request);
+        
         return "redirect:/post";
+    
     }
 
     @GetMapping("/post/{postId}")
@@ -146,11 +143,11 @@ public class PostController {
     @PostMapping("/post/{postId}/edit")
     public String updatePost(Model model, @PathVariable Long postId, @ModelAttribute CreatePostDTO createPostDTO,
             @RequestParam MultipartFile newImage, @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
-            @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
+            @RequestParam String newContributors, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(postId, request)) {
 
-            postService.updatePost(postId, createPostDTO, newSectionIds, newContributorsStrings.split(","), newImage);
+            postService.updatePost(postId, createPostDTO, newImage, newSectionIds, newContributors.split(","), request);
             return "redirect:/post/" + postId;
 
         } else {
