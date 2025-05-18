@@ -36,7 +36,7 @@ Las entidades con imágenes serán los **Post**, los **User** (foto de perfil) y
 ## Desarrollo Colaborativo
 
 ### Alejandro Damas Pablos
-Se ha encargado principalmente de la clase Post, implementando cada aspecto referente a esta.
+Se ha encargado principalmente de la clase Post, implementando cada aspecto referente a esta. Además, ha ido manipulando el resto de entidades en mayor o menor medida debido a la conexión de la entidad Post con todas las demás.
 
 #### 5 commits más significativos
 - 
@@ -46,14 +46,14 @@ Se ha encargado principalmente de la clase Post, implementando cada aspecto refe
 - 
 
 #### 5 ficheros en los que más ha participado
-- 
+- PostController
 - 
 - 
 - 
 - 
 
 ### Eva Fernández López
-Se ha encargado principalmente de la clase Section, implementando cada aspecto referente a esta.
+Se ha encargado principalmente de la clase Section, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
 - 
@@ -87,7 +87,7 @@ Se ha encargado principalmente de la clase Comment, implementando cada aspecto r
 - 
 
 ### Julio López de Lucas
-Se ha encargado principalmente de la clase User, implementando cada aspecto referente a esta.
+Se ha encargado principalmente de la clase User, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
 - 
