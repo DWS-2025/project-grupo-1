@@ -80,7 +80,6 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users/").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
@@ -106,7 +105,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/api/post/*/image").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/post/*/comments/*").hasRole("ADMIN")
                         // PUBLIC ENDPOINTS
-                        .anyRequest().permitAll());
+                        .requestMatchers(HttpMethod.POST, "/api/users/")
+                        .permitAll());
 
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
