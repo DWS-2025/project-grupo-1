@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -205,6 +206,59 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot delete an image for this user");
         }
         userService.deleteUserImage(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/CV")
+    public ResponseEntity<Object> getUserCV(@PathVariable long id) throws IOException {
+        UserDTO user = userService.findById(id);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        if (user.cvFilePath() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User CV not found");
+        }
+        ResponseEntity<Resource> cv = userService.downloadCV(id);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/pdf").body(cv);
+
+    }
+
+    @PutMapping("/{id}/CV")
+    @PostMapping("/{id}/CV")
+    public ResponseEntity<Object> createUserCV(@PathVariable long id, @RequestParam MultipartFile file, HttpServletRequest request)
+            throws IOException {
+        UserDTO user = userService.findById(id);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        if (!userService.checkIsSameUser(user.id(), request)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot create a CV for this user");
+        }
+        URI location = fromCurrentRequest().build().toUri();
+        userService.uploadCv(id, file);
+        return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/{id}/CV")
+    public ResponseEntity<Object> deleteUserCV(@PathVariable long id, HttpServletRequest request) throws IOException {
+        UserDTO user = userService.findById(id);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        if (user.cvFilePath() == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User CV not found");
+        }
+
+        if (!userService.checkIsSameUser(user.id(), request)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot delete a CV for this user");
+        }
+        userService.deleteCv(id);
         return ResponseEntity.noContent().build();
     }
 }

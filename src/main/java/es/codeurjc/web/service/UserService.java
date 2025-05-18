@@ -460,6 +460,43 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void deleteCv(long id) throws IOException {
+        // Find the user by ID or throw an exception if not found
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        // Check if the user has a CV file path
+        if (user.getCvFilePath() == null) {
+            throw new NoSuchElementException("CV not found for this user");
+        }
+
+        // Build the file path using the base directory and the relative path from the
+        // database
+        File file = new File(BASE_DIRECTORY, user.getCvFilePath());
+
+        // Canonicalize the file path and verify it is within the allowed directory
+        String expectedBasePath = new File(BASE_DIRECTORY, CV_DIRECTORY).getCanonicalPath();
+        String fileCanonicalPath = file.getCanonicalPath();
+
+        if (!fileCanonicalPath.startsWith(expectedBasePath)) {
+            throw new SecurityException("Invalid file path detected, go hack other page script kiddie");
+        }
+
+        // Check if the file exists
+        if (!file.exists()) {
+            throw new NoSuchElementException("CV file not found at: " + fileCanonicalPath);
+        }
+
+        // Delete the file
+        if (!file.delete()) {
+            throw new IOException("Failed to delete CV file");
+        }
+
+        // Remove the file path from the user record
+        user.setCvFilePath(null);
+        userRepository.save(user);
+    }
+
     public boolean checkIfTheUserIsFollowed(UserDTO userToCheck, HttpServletRequest request) {
         User user = getLoggedUserDomain(request.getUserPrincipal().getName());
         User userToCheckDomain = userRepository.findById(userToCheck.id()).orElseThrow();

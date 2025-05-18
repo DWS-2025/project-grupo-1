@@ -28,6 +28,8 @@ import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class UserController {
@@ -319,6 +321,17 @@ public class UserController {
     public ResponseEntity<Resource> downloadCv(@PathVariable Long id) throws IOException {
         return userService.downloadCV(id);
 
+    }
+
+    @PostMapping("users/{id}/delete-cv")
+    public String deleteCv(@PathVariable Long id, Model model, HttpServletRequest request) throws IOException {
+        if (userService.checkIsSameUser(id,request)) {
+            userService.deleteCv(id);
+            return "redirect:/profile/" + id;
+        } else {
+            model.addAttribute("message", "No puedes editar el perfil de otro usuario");
+            return "error";
+        }
     }
 
     @GetMapping("users/admin")

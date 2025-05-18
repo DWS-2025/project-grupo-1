@@ -105,7 +105,19 @@
                     <button type="submit">Subir</button>
                     <input type="hidden" name="_csrf" value="{{token}}"/>
                   </form>
+                </div>
 
+                <div class="col-lg-4 align-self-center">
+                
+                  <form action="/users/{{user.id}}/delete-cv" method="post">
+                    <label for="file">
+                      <h2>Borra tu cv</h2>
+                    </label>
+                    <input type="file" id="file" name="file" required>
+                    <button type="submit">Subir</button>
+                    <input type="hidden" name="_csrf" value="{{token}}" />
+                  </form>
+                
                 </div>
                 {{/ShowButtons}}
                 {{/notSameUser}}
