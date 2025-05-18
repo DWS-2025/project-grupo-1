@@ -188,6 +188,13 @@ public class UserController {
             @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage, HttpServletRequest request)
             throws IOException, SQLException {
 
+            for (UserDTO userDTO : userService.findAllUsers()) {
+            if (userDTO.userName().equals(newUserName)) {            
+                model.addAttribute("message", "El nombre de usuario ya existe");
+                return "error";
+            }
+        }
+
         if (userService.checkIsSameUser(userId, request)) {
             UserDTO user = userService.getUserById(userId);
 

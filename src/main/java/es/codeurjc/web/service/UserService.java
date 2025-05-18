@@ -118,7 +118,7 @@ public class UserService {
         UserDTO loggedUser = getLoggedUser(request.getUserPrincipal().getName());
         UserDTO userToEdit = findById(id);
 
-        if (loggedUser.id().equals(userToEdit.id()) || loggedUser.userName().equals("Admin")) {
+        if (loggedUser.id().equals(userToEdit.id()) || loggedUser.rols().contains("ADMIN")) {
             return true;
         } else {
             return false;
@@ -214,11 +214,6 @@ public class UserService {
     public void updateWebUser(long id, String userName, String description, MultipartFile image) {
         User user = userRepository.findById(id).orElseThrow();
 
-        for(UserDTO userDTO : this.findAllUsers()) {
-            if (userDTO.userName().equals(userName)) {
-                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
-            }
-        }
         if (userName != null && !userName.isEmpty()) {
             user.setUserName(userName);
         }
