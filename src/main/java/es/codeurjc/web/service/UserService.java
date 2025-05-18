@@ -259,12 +259,14 @@ public class UserService {
         updatedUser.setId(id);
 
         for (UserDTO userDTO : this.findAllUsers()) {
-            if (userDTO.userName().equals(updatedUserDTO.userName())) {
-                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+            if (!updatedUser.getRols().contains("ADMIN")){
+                if (userDTO.userName().equals(updatedUserDTO.userName())) {
+                    throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+                }
             }
         }
 
-        String userName = policy.sanitize(updatedUser.getUserName());
+        userName = policy.sanitize(updatedUser.getUserName());
         if (userName != null && !userName.isEmpty()) {
             oldUser.setUserName(userName);
         }
