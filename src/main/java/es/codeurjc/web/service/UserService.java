@@ -238,7 +238,7 @@ public class UserService {
         if (image != null && !image.isEmpty()) {
             try {
                 user.setUserImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
-                user.setImage(image.getOriginalFilename());
+                user.setImage("/api/user/" + id + "/image");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -284,7 +284,7 @@ public class UserService {
         }
 
         if (oldUser.getImage() != null) {
-            // Set the image in the updated post
+            // Set the image in the updated user
             updatedUser.setUserImage(BlobProxy.generateProxy(
                     oldUser.getUserImage().getBinaryStream(),
                     oldUser.getUserImage().length()));
@@ -292,25 +292,6 @@ public class UserService {
         }
         userRepository.save(updatedUser);
         return toDTO(updatedUser);
-    }
-
-    public UserDTO updateApiUser(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElseThrow();
-
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        String sanitizedUsername = policy.sanitize(userDTO.userName());
-        String sanitizedDescription = policy.sanitize(userDTO.description());
-        String sanitizedEmail = policy.sanitize(userDTO.email());
-        if(!sanitizedUsername.equals("Admin") ) {
-            throw new IllegalArgumentException("No es posible establecer este nombre de usuario");
-        }
-        if (!user.getRols().contains("ADMIN")) {
-            user.setUserName(sanitizedUsername);
-        }
-        user.setDescription(sanitizedDescription);
-        user.setEmail(sanitizedEmail);
-
-        return toDTO(userRepository.save(user));
     }
 
     public void unfollowUser(UserDTO userToUnfollowDTO, HttpServletRequest request) {
