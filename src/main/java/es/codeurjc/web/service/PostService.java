@@ -164,21 +164,20 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id) {
+        
         Post post = postRepository.findById(id).orElseThrow();
         User owner = post.getOwner();
-        post.getOwner().getPosts().remove(post);
+        owner.getPosts().remove(post);
         owner.calculateUserRate();
 
         for (Section section : post.getSections()) {
             section.getPosts().remove(post);
-            section.calculateAverageRating();
             sectionService.saveSection(section);
         }
 
         List<Comment> commentsCopy = new ArrayList<>(post.getComments());
         for (Comment comment : commentsCopy) {
-            comment.setCommentedPost(null);
-            post.getComments().remove(comment);
+            commentService.deleteCommentFromPost(post.getId(), comment.getId());
         }
 
         post.getContributors().clear();
@@ -360,7 +359,7 @@ public class PostService {
 
     public String sanitizeHtml(String htmlContent) {
         // Use a predefined safelist to allow only basic HTML tags
-        return Jsoup.clean(htmlContent, Safelist.basic());
+        return Jsoup.clean(htmlContent, Safelist.relaxed());
     }
 
     public void deletePostImage(Long id) {
