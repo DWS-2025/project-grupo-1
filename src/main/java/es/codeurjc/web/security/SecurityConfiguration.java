@@ -85,8 +85,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/CV").hasRole("USER")
 
                         // POSTS
                         .requestMatchers(HttpMethod.GET, "/api/post/").hasAnyRole("USER", "ADMIN")
