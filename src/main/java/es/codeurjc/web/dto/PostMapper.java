@@ -13,6 +13,7 @@ public interface PostMapper {
     PostDTO toDTO(Post post);
 
     PostDTO toDTO(CreatePostDTO postDTO);
+    
 
     CreatePostDTO toCreatePostDTO(Post post);
 

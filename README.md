@@ -70,21 +70,21 @@ Encargada principalmente de la clase Section, implementando cada aspecto referen
 - SecurityConfiguration.java
 
 ### Markel Fernández Pinilla
-Encargado principalmente de la clase Comment, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
+Encargado principalmente de la clase Comment, implementando cada aspecto referente a esta como a las entidades relacionadas. Además, ha ido aportando al resto de clases.
 
 #### 5 commits más significativos
-- 
-- 
-- 
-- 
-- 
+- [6802ca47] (https://github.com/DWS-2025/project-grupo-1/commit/6802ca47c5e80803acd4a22095f4bcbc2e92e0cd): Implementada el control de acceso para los comentarios
+- [e9184a36] (https://github.com/DWS-2025/project-grupo-1/commit/e9184a36ef6f2b2ba3de3347e45def28f7ee6ca9): Implementada la funcionalidad de texto enriquecido
+- [e5540c9] (https://github.com/DWS-2025/project-grupo-1/commit/e5540c923d7f6603b0185426d5a91001098aa8e8): Implementado el inicio de sesión de la aplicación
+- [7a53165](https://github.com/DWS-2025/project-grupo-1/commit/7a53165b47cb4a7660fb11a6439ab3605322fe62): Implementada la subida de archivos
+- [2efbb25] (https://github.com/DWS-2025/project-grupo-1/commit/2efbb25469aa3212d95e1a769e18819d8aeecb5d): Implementación del header dinámico para la aplicación
 
 #### 5 ficheros en los que más ha participado
-- 
-- 
-- 
-- 
-- 
+- commentService.java
+- userService.java
+- postService.java
+- SecurityConfiguration.java
+- PostRestControler.java
 
 ### Julio López de Lucas
 Encargado principalmente de la clase User, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
