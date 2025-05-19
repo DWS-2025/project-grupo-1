@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
@@ -430,6 +431,7 @@ public class PostService {
     private PostDTO toDTO(Post post) {
         return postMapper.toDTO(post);
     }
+   
 
     private CreatePostDTO toCreatePostDTO(Post post) {
         return postMapper.toCreatePostDTO(post);
