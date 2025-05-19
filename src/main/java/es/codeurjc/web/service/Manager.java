@@ -65,7 +65,7 @@ public class Manager {
                         userService.findByUserName("Admin");
                         return;
                 } catch (NoSuchElementException e) {
-
+                        
                         // Default user
                         User mainUser = new User("Admin", passwordEncoder.encode("1234"), "Admin@gmail.com", "USER",
                                         "ADMIN");
