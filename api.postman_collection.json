@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "cd73969f-c9c9-4f64-af0e-7df0b77ae693",
-		"name": "Test 2",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "43541831",
-		"_collection_link": "https://markel-6334295.postman.co/workspace/markel's-Workspace~325af611-9f62-4d0d-8f93-d9f9f005c35a/collection/43541831-cd73969f-c9c9-4f64-af0e-7df0b77ae693?action=share&source=collection_link&creator=43541831"
+		"_postman_id": "c482de2b-d661-4965-8432-251e197f63f3",
+		"name": "API Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43753172"
 	},
 	"item": [
 		{
@@ -21,7 +20,17 @@
 						}
 					}
 				},
-				"url": "{{baseURL}}/api/auth/login"
+				"url": {
+					"raw": "{{baseURL}}/api/auth/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
 			},
 			"response": []
 		},
@@ -39,7 +48,17 @@
 						}
 					}
 				},
-				"url": "{{baseURL}}/api/auth/login"
+				"url": {
+					"raw": "{{baseURL}}/api/auth/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
 			},
 			"response": []
 		},
@@ -73,7 +92,18 @@
 						}
 					]
 				},
-				"url": "{{baseURL}}/api/posts/1/image"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/image",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -94,7 +124,18 @@
 						}
 					}
 				},
-				"url": "{{baseURL}}/api/posts/1/comments"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/comments",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"comments"
+					]
+				}
 			},
 			"response": []
 		},
@@ -112,7 +153,18 @@
 						}
 					}
 				},
-				"url": "https://localhost:8443/api/sections"
+				"url": {
+					"raw": "https://localhost:8443/api/sections",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections"
+					]
+				}
 			},
 			"response": []
 		},
@@ -131,7 +183,20 @@
 						}
 					]
 				},
-				"url": "https://localhost:8443/api/sections/12/image"
+				"url": {
+					"raw": "https://localhost:8443/api/sections/12/image",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections",
+						"12",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -181,11 +246,21 @@
 						{
 							"key": "imageFile",
 							"type": "file",
-							"src": "/C:/Users/marke/Downloads/test.png"
+							"src": "/C:/Users/alexd/Pictures/tarkov.jpg"
 						}
 					]
 				},
-				"url": "{{baseURL}}/api/posts/"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						""
+					]
+				}
 			},
 			"response": []
 		},
@@ -218,7 +293,17 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{baseURL}}/api/users/"
+				"url": {
+					"raw": "{{baseURL}}/api/users/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
 			},
 			"response": []
 		},
@@ -227,7 +312,17 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{baseURL}}/api/users/1"
+				"url": {
+					"raw": "{{baseURL}}/api/users/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -308,7 +403,17 @@
 						"type": "text"
 					}
 				],
-				"url": "{{baseURL}}/api/posts/1"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -332,7 +437,18 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "{{baseURL}}/api/posts/1/image"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/image",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -341,7 +457,20 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "https://localhost:8443/api/sections/1/image"
+				"url": {
+					"raw": "https://localhost:8443/api/sections/1/image",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -362,7 +491,19 @@
 						}
 					}
 				},
-				"url": "https://localhost:8443/api/sections/1"
+				"url": {
+					"raw": "https://localhost:8443/api/sections/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -371,21 +512,38 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "https://localhost:8443/api/sections"
+				"url": {
+					"raw": "https://localhost:8443/api/sections",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "EDIT POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "multipart/form-data",
-						"type": "text"
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
@@ -395,25 +553,38 @@
 							"type": "text"
 						},
 						{
-							"key": "\"content\"",
+							"key": "content",
 							"value": "Nuevo contenido",
 							"type": "text"
 						},
 						{
+							"key": "newImageFile",
+							"type": "file",
+							"src": "/C:/Users/alexd/Pictures/tarkov.jpg"
+						},
+						{
 							"key": "sections",
 							"value": "1,2,3",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						},
 						{
 							"key": "newContributors",
 							"value": "user2,user3,user5",
-							"type": "text",
-							"disabled": true
+							"type": "text"
 						}
 					]
 				},
-				"url": "{{baseURL}}/api/posts/1"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -447,7 +618,18 @@
 						}
 					]
 				},
-				"url": "{{baseURL}}/api/posts/1/image"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/image",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -468,7 +650,19 @@
 						}
 					}
 				},
-				"url": "{{baseURL}}/api/posts/1/comments/1"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/comments/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"comments",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -497,7 +691,17 @@
 						}
 					]
 				},
-				"url": "{{baseURL}}/api/sections/4"
+				"url": {
+					"raw": "{{baseURL}}/api/sections/4",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"sections",
+						"4"
+					]
+				}
 			},
 			"response": []
 		},
@@ -522,7 +726,20 @@
 						}
 					]
 				},
-				"url": "https://localhost:8443/api/sections/1/image"
+				"url": {
+					"raw": "https://localhost:8443/api/sections/1/image",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -543,7 +760,19 @@
 						}
 					}
 				},
-				"url": "{{baseURL}}/api/post/1/comments/1"
+				"url": {
+					"raw": "{{baseURL}}/api/post/1/comments/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"post",
+						"1",
+						"comments",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -552,7 +781,17 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"url": "{{baseURL}}/api/posts/1"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1"
+					]
+				}
 			},
 			"response": []
 		},
@@ -568,7 +807,18 @@
 					"mode": "formdata",
 					"formdata": []
 				},
-				"url": "{{baseURL}}/api/posts/1/image"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/image",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"image"
+					]
+				}
 			},
 			"response": []
 		},
@@ -581,7 +831,19 @@
 					"mode": "raw",
 					"raw": "{\r\n    \"username\": \"Admin\",\r\n    \"password\": \"1234\"\r\n}"
 				},
-				"url": "https://localhost:8443/api/sections/3"
+				"url": {
+					"raw": "https://localhost:8443/api/sections/3",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"sections",
+						"3"
+					]
+				}
 			},
 			"response": []
 		},
@@ -593,7 +855,20 @@
 				},
 				"method": "DELETE",
 				"header": [],
-				"url": "{{baseURL}}/api/posts/1/comments/3/"
+				"url": {
+					"raw": "{{baseURL}}/api/posts/1/comments/3/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"1",
+						"comments",
+						"3",
+						""
+					]
+				}
 			},
 			"response": []
 		}

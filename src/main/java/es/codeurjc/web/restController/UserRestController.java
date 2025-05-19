@@ -96,17 +96,24 @@ public class UserRestController {
         }
     
     @DeleteMapping("/{id}")
-    public UserDTO deleteUser(@PathVariable long id, HttpServletRequest request) {
+    public ResponseEntity<Void> deleteUser(@PathVariable long id, HttpServletRequest request) {
         UserDTO user = userService.findById(id);
 
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (userService.checkIfTheUserIsFollowed(user, request)) {
+        if (!userService.checkIsSameUser(id, request)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot  delete this user");
         }
-        return userService.deleteUser(user);
+        
+        userService.deleteUser(user);
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.WWW_AUTHENTICATE,
+                        "Bearer error=\"invalid_token\", error_description=\"Deleted successfully. Please login again\"")
+                .build();
     }
 
     @PostMapping("/{id}/followings")
