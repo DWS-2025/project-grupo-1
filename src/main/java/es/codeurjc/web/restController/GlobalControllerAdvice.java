@@ -10,6 +10,33 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import es.codeurjc.web.dto.UserDTO;
 import es.codeurjc.web.service.UserService;
 
+/**
+ * GlobalControllerAdvice is a Spring {@link ControllerAdvice} class that adds common attributes
+ * to the model for all controllers. It injects the currently authenticated user's details
+ * into the model under the attribute "loggedUser", and if the user is an admin (username "Admin"),
+ * it also adds an "admin" attribute.
+ *
+ * <p>
+ * This allows views to access the logged-in user's information and admin status easily.
+ * </p>
+ *
+ * <p>
+ * Dependencies:
+ * <ul>
+ *   <li>{@link UserService} for fetching user details.</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Model Attributes:
+ * <ul>
+ *   <li><b>loggedUser</b>: The authenticated user's details as a {@link UserDTO}, or {@code null} if not authenticated.</li>
+ *   <li><b>admin</b>: {@code true} if the authenticated user is "Admin", otherwise not present.</li>
+ * </ul>
+ * </p>
+ * 
+ * @author Grupo 1
+ */
 @ControllerAdvice
 public class GlobalControllerAdvice {
 

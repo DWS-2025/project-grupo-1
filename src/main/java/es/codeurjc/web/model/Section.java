@@ -12,6 +12,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 
+/**
+ * Represents a section in the application, which can contain multiple posts.
+ * Each section has a title, description, image (as a URL or Blob), an average rating,
+ * and a count of the number of publications (posts) it contains.
+ *
+ * <p>
+ * The Section entity is mapped to a database table using JPA annotations.
+ * It maintains a many-to-many relationship with the {@link Post} entity.
+ * </p>
+ *
+ * <p>
+ * Key features:
+ * <ul>
+ *   <li>Stores both a URL and a Blob for the section image.</li>
+ *   <li>Keeps track of the average rating of its posts.</li>
+ *   <li>Provides methods to add and remove posts, and to calculate the average rating.</li>
+ *   <li>Overrides {@code equals} and {@code hashCode} based on the section's ID.</li>
+ * </ul>
+ * </p>
+ * 
+ * @author Grupo 1
+ */
 @Entity
 public class Section {
     @Id

@@ -24,6 +24,42 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.CommentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Service class for managing comments in the application.
+ * <p>
+ * Provides methods for creating, retrieving, updating, and deleting comments associated with posts.
+ * Handles comment sanitization, rating calculations for posts, users, and sections, and ensures
+ * proper associations between comments, posts, and users.
+ * </p>
+ *
+ * <p>
+ * Main responsibilities:
+ * <ul>
+ *   <li>Saving new comments to posts with content sanitization.</li>
+ *   <li>Retrieving comments by post or globally, with pagination support.</li>
+ *   <li>Deleting comments from posts and updating related ratings.</li>
+ *   <li>Updating existing comments and recalculating ratings.</li>
+ *   <li>Checking comment ownership and association with posts for authorization.</li>
+ *   <li>Mapping between domain and DTO representations of comments.</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Dependencies:
+ * <ul>
+ *   <li>{@link CommentRepository} for persistence operations.</li>
+ *   <li>{@link PostService} for post-related operations and rating calculations.</li>
+ *   <li>{@link UserService} for user-related operations and authentication.</li>
+ *   <li>{@link CommentMapper} for converting between domain and DTO objects.</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Methods in this service may throw {@link IllegalArgumentException} if entities are not found.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Service
 public class CommentService {
 

@@ -30,6 +30,30 @@ import es.codeurjc.web.dto.CreateSectionDTO;
 import es.codeurjc.web.dto.SectionDTO;
 import es.codeurjc.web.service.SectionService;
 
+/**
+ * REST controller for managing Section resources.
+ * <p>
+ * Provides endpoints for CRUD operations on sections, as well as endpoints for managing section images.
+ * </p>
+ *
+ * <ul>
+ *   <li>GET /api/sections - Retrieves a paginated list of sections.</li>
+ *   <li>GET /api/sections/{id} - Retrieves a specific section by its ID.</li>
+ *   <li>POST /api/sections - Creates a new section.</li>
+ *   <li>PUT /api/sections/{id} - Updates an existing section's details and optionally its image.</li>
+ *   <li>DELETE /api/sections/{id} - Deletes a section by its ID.</li>
+ *   <li>GET /api/sections/{id}/image - Retrieves the image associated with a section.</li>
+ *   <li>POST /api/sections/{id}/image - Uploads a new image for a section.</li>
+ *   <li>PUT /api/sections/{id}/image - Replaces the image of a section.</li>
+ *   <li>DELETE /api/sections/{id}/image - Deletes the image of a section.</li>
+ * </ul>
+ *
+ * <p>
+ * Uses {@link SectionService} for business logic and data access.
+ * </p>
+ * 
+ * @author Grupo 1
+ */
 @RestController
 @RequestMapping("/api/sections")
 public class SectionRestController {
@@ -58,7 +82,7 @@ public class SectionRestController {
         sectionDTO = sectionService.saveSection(sectionDTO);
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(sectionDTO.id()).toUri(); // URI for the new
-                                                                                                   // section
+                                                                                                   // Section
 
         return ResponseEntity.created(location).body(sectionDTO);
     }

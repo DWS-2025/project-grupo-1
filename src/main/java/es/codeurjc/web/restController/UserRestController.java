@@ -33,6 +33,37 @@ import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST controller for managing users in the application.
+ * <p>
+ * Provides endpoints for user registration, retrieval, update, deletion,
+ * following/unfollowing users, and managing user images and CVs.
+ * </p>
+ *
+ * <ul>
+ *   <li>GET /api/users/ - List users with pagination.</li>
+ *   <li>GET /api/users/{id} - Retrieve a user by ID.</li>
+ *   <li>POST /api/users/ - Register a new user.</li>
+ *   <li>PUT /api/users/{id} - Update user information.</li>
+ *   <li>DELETE /api/users/{id} - Delete a user.</li>
+ *   <li>POST /api/users/{id}/followings - Follow another user.</li>
+ *   <li>DELETE /api/users/{id}/followings - Unfollow a user.</li>
+ *   <li>POST /api/users/{id}/image - Upload a user profile image.</li>
+ *   <li>GET /api/users/{id}/image - Retrieve a user's profile image.</li>
+ *   <li>PUT /api/users/{id}/image - Replace a user's profile image.</li>
+ *   <li>DELETE /api/users/{id}/image - Delete a user's profile image.</li>
+ *   <li>GET /api/users/{id}/CV - Download a user's CV.</li>
+ *   <li>PUT/POST /api/users/{id}/CV - Upload or replace a user's CV.</li>
+ *   <li>DELETE /api/users/{id}/CV - Delete a user's CV.</li>
+ * </ul>
+ *
+ * <p>
+ * Security checks are performed to ensure that users can only modify their own data,
+ * and appropriate HTTP status codes are returned for error conditions.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
@@ -74,27 +105,28 @@ public class UserRestController {
         return ResponseEntity.created(location).body(userService.findById(user.getId()));
     }
 
-        @PutMapping("/{id}")
-        public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO, HttpServletRequest request)
-        throws SQLException {
-        
-            UserDTO oldUser = userService.findById(id);
-            if (oldUser == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-            }
-            if (!userService.checkIsSameUser(id, request)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
-            }
-        
-            userService.updateApiUser(id, newUserDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
+            HttpServletRequest request)
+            throws SQLException {
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .header(HttpHeaders.WWW_AUTHENTICATE,
-                            "Bearer error=\"invalid_token\", error_description=\"Updated successfully. Please login again\"")
-                    .build();
+        UserDTO oldUser = userService.findById(id);
+        if (oldUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-    
+        if (!userService.checkIsSameUser(id, request)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
+        }
+
+        userService.updateApiUser(id, newUserDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.WWW_AUTHENTICATE,
+                        "Bearer error=\"invalid_token\", error_description=\"Updated successfully. Please login again\"")
+                .build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable long id, HttpServletRequest request) {
         UserDTO user = userService.findById(id);

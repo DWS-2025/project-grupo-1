@@ -41,7 +41,7 @@ Encargado principalmente de la clase Post, implementando cada aspecto referente 
 #### 5 commits más significativos
 - [6b6c324](https://github.com/DWS-2025/project-grupo-1/commit/6b6c3240326a7ff946ae521ac0a7ae7a67f06393): se pasa a trabajar con DTOs en PostController y se implementan diversas funcionalidades.
 - [1022180](https://github.com/DWS-2025/project-grupo-1/commit/1022180acca0da6b279753f7569b58c67ce55879): se implementan controles de acceso para los diferentes endpoints relacionados con la entidad Post.
-- [c1dd118](https://github.com/DWS-2025/project-grupo-1/commit/c1dd1184a0e4ada0bf6729e47d54e80c89771179): se implementan controles de acceso para la API y se modifica el comportamiento de algunas plantillas HTML.
+- [05295e2](https://github.com/DWS-2025/project-grupo-1/commit/05295e2efc4ba535c787db215df805a88a1477d6): corrección de errores que impedían la correcta asignación de secciones y colaboradores a los Post. Además de la corrección de un error en el borrado de Post con comentarios.
 - [28dbd6b](https://github.com/DWS-2025/project-grupo-1/commit/28dbd6b50b4438b5af016ff4e7c2432e352ec82b): borrar un post suponía la aniquilación de las secciones a las que perteneciese.
 - [4abd873](https://github.com/DWS-2025/project-grupo-1/commit/4abd8730ee5409c113fdc6a59ed6d53dbd576dab): corrección de errores que provocaban fallos a la hora de visualizar las imágenes de los posts.
 

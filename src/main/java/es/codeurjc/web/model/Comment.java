@@ -7,6 +7,31 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Represents a comment made by a user on a post.
+ * <p>
+ * Each comment contains textual content, a rating, an owner (user who made the comment),
+ * and a reference to the post it comments on.
+ * </p>
+ *
+ * <p>
+ * This entity is mapped to a database table using JPA annotations.
+ * </p>
+ *
+ * Fields:
+ * <ul>
+ *   <li>id: Unique identifier for the comment.</li>
+ *   <li>content: The textual content of the comment (up to 2000 characters).</li>
+ *   <li>owner: The user who authored the comment.</li>
+ *   <li>commentedPost: The post that this comment refers to.</li>
+ *   <li>rating: A numerical rating associated with the comment.</li>
+ * </ul>
+ *
+ * Constructors allow creation of comments with varying levels of detail.
+ * Includes methods for updating content and rating.
+ * 
+ * @author Grupo 1
+ */
 @Entity
 public class Comment {
 
@@ -18,7 +43,7 @@ public class Comment {
 
     @ManyToOne
     private User owner;
-    // esto hay que quitarlo cuando tengamos BD
+
     @ManyToOne
     private Post commentedPost;
     private int rating;

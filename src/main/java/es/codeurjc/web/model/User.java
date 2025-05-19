@@ -15,6 +15,54 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+/**
+ * Represents a user entity in the application.
+ * <p>
+ * This class is mapped to the "UserTable" entity in the database and contains
+ * information about the user such as username, password, email, profile image,
+ * posts, followers, followings, followed sections, comments, collaborated posts,
+ * roles, and CV file path.
+ * </p>
+ *
+ * <p>
+ * The class provides methods for managing user relationships (following/unfollowing users and sections),
+ * managing posts and comments, calculating the user's rating based on post ratings,
+ * and handling user roles and profile information.
+ * </p>
+ *
+ * <p>
+ * Relationships:
+ * <ul>
+ *   <li>One-to-many with {@code Post} (user's posts)</li>
+ *   <li>Many-to-many with {@code User} (followers and followings)</li>
+ *   <li>Many-to-many with {@code Section} (followed sections)</li>
+ *   <li>One-to-many with {@code Comment} (user's comments)</li>
+ *   <li>Many-to-many with {@code Post} (collaborated posts)</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Fields:
+ * <ul>
+ *   <li>{@code id} - Unique identifier for the user</li>
+ *   <li>{@code userName} - Username of the user</li>
+ *   <li>{@code password} - Hashed password</li>
+ *   <li>{@code description} - User profile description</li>
+ *   <li>{@code email} - User email address</li>
+ *   <li>{@code userRate} - Calculated user rating</li>
+ *   <li>{@code image} - Path or URL to the user's profile image</li>
+ *   <li>{@code userImage} - Binary large object for storing image data</li>
+ *   <li>{@code cvFilePath} - Path to the user's CV file</li>
+ *   <li>{@code rols} - List of roles assigned to the user</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Note: The {@code equals} method is overridden to compare users by their username.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Entity(name = "UserTable")
 public class User {
 

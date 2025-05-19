@@ -14,6 +14,23 @@ import org.springframework.stereotype.Service;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
 
+/**
+ * Service implementation of {@link UserDetailsService} that loads user-specific data.
+ * This service retrieves user details from the {@link UserRepository} based on the provided username.
+ * It is used by Spring Security for authentication and authorization.
+ *
+ * <p>
+ * The {@code loadUserByUsername} method fetches a {@link User} entity from the repository,
+ * converts its roles to {@link GrantedAuthority} objects, and returns a Spring Security
+ * {@link org.springframework.security.core.userdetails.User} instance.
+ * </p>
+ *
+ * <p>
+ * If the user is not found, a {@link UsernameNotFoundException} is thrown.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Service
 public class RepositoryUserDetailsService implements UserDetailsService {
 
