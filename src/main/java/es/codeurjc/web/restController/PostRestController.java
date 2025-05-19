@@ -136,32 +136,52 @@ public class PostRestController {
     }
 
     @PostMapping("/{id}/image")
-    public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
+    public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
 
-        URI location = fromCurrentRequest().build().toUri();
+        if (postService.checkIfUserIsTheOwner(id, request)) {
+            URI location = fromCurrentRequest().build().toUri();
 
-        postService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+            postService.createPostImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+        
 
     }
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
+    public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
 
-        postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
+        if (postService.checkIfUserIsTheOwner(id, request)) {
 
-        return ResponseEntity.noContent().build();
+            postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+            return ResponseEntity.noContent().build();
+
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
     }
 
     @DeleteMapping("/{id}/image")
-    public ResponseEntity<Object> deletePostImage(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Object> deletePostImage(@PathVariable Long id, HttpServletRequest request) throws IOException {
 
-        postService.deletePostImage(id);
+        if (postService.checkIfUserIsTheOwner(id, request)) {
 
-        return ResponseEntity.noContent().build();
+            postService.deletePostImage(id);
+            return ResponseEntity.noContent().build();
+        
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden
+            
+        }
+
     }
 
     @GetMapping("/comments")
@@ -200,6 +220,7 @@ public class PostRestController {
         CommentDTO savedComment = commentService.saveCommentInPost(postId, commentDTO, request);
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(savedComment.id()).toUri();
         return ResponseEntity.created(location).body(savedComment);
+        
     }
 
     // Update a specific comment in a post
