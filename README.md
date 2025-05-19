@@ -91,11 +91,11 @@ Encargado principalmente de la clase User, debida a su alta cantidad de funciona
 También ha aportado en cuestiones de seguridad, como control de acceso, content security policy y control de entradas del usuario.
 
 #### 5 commits más significativos
-- 
-- 
-- 
-- 
-- 
+- [3c12948]https://github.com/DWS-2025/project-grupo-1/commit/3c12948f76501d5fde04c2ff83641dd11c3ef842 (Implementación del errorHander para errores en API)
+- [9b26371] (https://github.com/DWS-2025/project-grupo-1/commit/9b2637129626c22d19344769d00bab41b1ec7b4e) contro de acceso usuario api.
+- [2c357e8](https://github.com/DWS-2025/project-grupo-1/commit/2c357e8056b61d70eb1c4b71abd09d45c78b01e1) funciones de borrar cv en web y apim y toda la funcionalidad de cv en api
+- [f7e13ff](https://github.com/DWS-2025/project-grupo-1/commit/f7e13ffa22a007e8f71cd7b643449bb8f6984ae9) Usuario Invitado ya funciona correctamente para ver /home /login y /register
+- [e49b0cc](https://github.com/DWS-2025/project-grupo-1/commit/e49b0cce0cd40c6d21fb3d3bdfa38b6bac449ce5) ya funciona register, asignando el rol y hasheando la contraseña.
 
 #### 5 ficheros en los que más ha participado
 - UserController
