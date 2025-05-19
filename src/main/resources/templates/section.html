@@ -2,7 +2,6 @@
 {{>Common/top_container}}
 <script src="/assets/js/ajaxRequest.js"></script>
 <h1 style="text-align: center;">Descubre las secciones</h1><br>
-
 <details>
   <summary style="width: 300px; margin: auto;"><strong>APLICAR FILTROS</strong></summary>
   <form method="get" action="/section/search">
@@ -23,10 +22,9 @@
     <div style="display: flex; justify-content: center; margin-top: 10px;">
       <button type="submit">Aplicar</button>
     </div>
-    <input type="hidden" name="_csrf" value="{{token}}"/>
+    <input type="hidden" name="_csrf" value="{{token}}" />
   </form>
 </details>
-
 
 {{#successMessage}}
 <p class="text-light" style="text-align: center; background-color: green;">{{successMessage}}</p>
@@ -34,15 +32,16 @@
 
 {{#isSearch}}
 <form action="/section" method="get" style="text-align: center; margin-bottom: 20px;">
-  <button type="submit" style="background-color: palevioletred; color: palevioletred; border: none; color: white; border-radius: 25px">Todas las secciones</button>
-<input type="hidden" name="_csrf" value="{{token}}"/>
+  <button type="submit"
+    style="background-color: palevioletred; color: palevioletred; border: none; color: white; border-radius: 25px">Todas
+    las secciones</button>
+  <input type="hidden" name="_csrf" value="{{token}}" />
 </form>
 {{/isSearch}}
 
 {{#noResult}}
 <p class="text-light" style="text-align: center; background-color: red;">No se ha encontrado ninguna sección</p>
 {{/noResult}}
-
 
 <div class="live-stream">
   <div class="col-lg-12">
@@ -67,14 +66,14 @@
               <li>
                 <a href="/section/{{id}}">Inicia sesión para ver sección</a>
               <li>
-              {{/logged}}
+                {{/logged}}
                 {{#admin}}
                 <a>
                   <form action="/section/{{id}}/delete" method="post" style="display:inline;">
                     <button type="submit"
                       style="border-radius: 12px; background-color: rgb(238, 113, 167); color: palevioletred; border: none; color: white">Borrar
                       sección</button>
-                      <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <input type="hidden" name="_csrf" value="{{token}}" />
                   </form>
                 </a>
               </li>
@@ -86,41 +85,36 @@
           </div>
         </div>
         <div class="down-content">
-          <h4 style="text-align: center;">{{title}}<br><span><i class="fa fa-star" style="color: yellow;"></i>{{averageRating}}</span></h4>
+          <h4 style="text-align: center;">{{title}}<br><span><i class="fa fa-star"
+                style="color: yellow;"></i>{{averageRating}}</span></h4>
           <p style="text-align: center;">{{{description}}}</p>
         </div>
-        
+
       </div>
     </div>
     {{/sections}}
 
-    
-
-    
-    
     <div id="loading-spinner" style="display: none; text-align: center; margin-top: 20px;">
-        <img src="/images/spinner.gif" alt="Cargando..." style="width: 50px; height: 50px;">
+      <img src="/images/spinner.gif" alt="Cargando..." style="width: 50px; height: 50px;">
     </div>
-    
-      <nobr>
-        {{#hasNext}}
-        <div class="col-lg-12" style="text-align: center; margin-top: 20px;">
-          <button id="load-more-sections" data-page="{{next}}" >
-            Cargar más secciones
-          </button>
-        </div>{{/hasNext}}
-      </nobr>
 
-
-    </div><br>
-    <div class="col-lg-12">
-      {{#logged}}
-      <div class="main-button">
-        <a href="/section/new">Añadir sección</a>
-      </div>
-      {{/logged}}
+    <nobr>
+      {{#hasNext}}
+      <div class="col-lg-12" style="text-align: center; margin-top: 20px;">
+        <button id="load-more-sections" data-page="{{next}}">
+          Cargar más secciones
+        </button>
+      </div>{{/hasNext}}
+    </nobr>
+  </div><br>
+  <div class="col-lg-12">
+    {{#logged}}
+    <div class="main-button">
+      <a href="/section/new">Añadir sección</a>
     </div>
-    <div>
+    {{/logged}}
+  </div>
+  <div>
   </div>
 </div>
 {{>Common/bottom_container}}

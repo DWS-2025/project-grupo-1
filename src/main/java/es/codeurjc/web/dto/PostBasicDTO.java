@@ -4,6 +4,5 @@ public record PostBasicDTO(
         Long id,
         String title,
         UserBasicDTO owner,
-        float averageRating
-     ) {
+        float averageRating) {
 }

@@ -117,6 +117,49 @@ public class SecurityConfiguration {
                 .hasRole("ADMIN")
                 // PUBLIC ENDPOINTS
                 .anyRequest().permitAll());
+                        // PRIVATE ENDPOINTS
+                        // SECTIONS
+                        .requestMatchers(HttpMethod.GET, "/api/sections/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/*/image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image").hasRole("ADMIN")
+                        // USERS
+                        .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/image").hasRole("USER")
+
+                        // POSTS
+                        .requestMatchers(HttpMethod.GET, "/api/post/").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/post/*").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/post/*/image").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/post/comments").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/post/*/comments").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/post/*/comments/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/post/").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/post/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/post/*/comments").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/post/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/post/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/post/*/comments/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/*/image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/*/comments/*").hasRole("ADMIN")
+                        // PUBLIC ENDPOINTS
+                        .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                );
 
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
@@ -146,8 +189,7 @@ public class SecurityConfiguration {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                // PUBLIC PAGES, in /assets/** maybe we should just specify the files we
-                // need
+                // PUBLIC PAGES
                 .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register",
                         "/login")
                 .permitAll()
@@ -156,10 +198,6 @@ public class SecurityConfiguration {
                         "/no-image.png", "/images/spinner.gif",
                         "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
                 .permitAll()
-                // We should test the regex for the post id
-
-                // We should test the regex for the post id
-
                 // PRIVATE PAGES
                 .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")

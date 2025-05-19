@@ -20,29 +20,30 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(length = 100) 
+    @Column(length = 100)
     private String title;
-    @Column(length = 2000) 
+    @Column(length = 2000)
     private String content;
-    
+
     private String image;
     @Lob
     private Blob imageFile;
 
     @ManyToOne
     private User owner;
-    private float  averageRating = 0; // [0.00, 5.00]
-    
+    private float averageRating = 0; // [0.00, 5.00]
+
     @OneToMany(mappedBy = "commentedPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-    
+
     @ManyToMany(mappedBy = "posts")
     private List<Section> sections = new ArrayList<>();
-    
+
     @ManyToMany
     private List<User> contributors = new ArrayList<>();
 
-    public Post() {}
+    public Post() {
+    }
 
     public Post(String title, String content) {
         this.title = title;
@@ -74,7 +75,7 @@ public class Post {
     }
 
     public void addContributor(User user) {
-        if(!contributors.contains(user)) {
+        if (!contributors.contains(user)) {
             this.contributors.add(user);
             user.addCollaboratedPosts(this);
         }
@@ -156,14 +157,15 @@ public class Post {
     public void setSections(List<Section> sections) {
         this.sections = sections;
     }
-  public void removeComment(Comment comment) {
-    comments.remove(comment);
-   
-}
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+
+    }
 
     @Override
     public boolean equals(Object obj) {
-        return this.title.equals(((Post)obj).getTitle()) && this.owner.equals(((Post)obj).getOwner());
+        return this.title.equals(((Post) obj).getTitle()) && this.owner.equals(((Post) obj).getOwner());
     }
 
 }

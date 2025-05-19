@@ -87,7 +87,8 @@ Encargado principalmente de la clase Comment, implementando cada aspecto referen
 - PostRestControler.java
 
 ### Julio López de Lucas
-Encargado principalmente de la clase User, implementando cada aspecto referente a esta. Además, ha ido aportando al resto de clases.
+Encargado principalmente de la clase User, debida a su alta cantidad de funcionalidad, desarrollada junto con Markel. 
+También ha aportado en cuestiones de seguridad, como control de acceso, content security policy y control de entradas del usuario.
 
 #### 5 commits más significativos
 - 
@@ -97,8 +98,8 @@ Encargado principalmente de la clase User, implementando cada aspecto referente 
 - 
 
 #### 5 ficheros en los que más ha participado
-- 
-- 
-- 
-- 
-- 
+- UserController
+- UserRestController
+- UserService  
+- SecurityConfiguration
+- Profile.html
