@@ -237,14 +237,6 @@ public class UserService {
 
             }
         }
-<<<<<<< HEAD
-
-=======
-          
-        }
-    }
-    
->>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
             user.setDescription(description);
@@ -267,19 +259,12 @@ public class UserService {
         String userName = updatedUser.getUserName();
         updatedUser.setId(id);
 
-<<<<<<< HEAD
         if (userName != null && !userName.isEmpty()) {
             if (!oldUser.getRols().contains("ADMIN") && !oldUser.getUserName().equals(userName)) {
                 for (UserDTO userDTO : this.findAllUsers()) {
                     if (userDTO.userName().equals(updatedUserDTO.userName())) {
                         throw new IllegalArgumentException("El nombre de usuario ya está en uso");
                     }
-=======
-        for (UserDTO userDTO : this.findAllUsers()) {
-            if (!updatedUser.getRols().contains("ADMIN")){
-                if (userDTO.userName().equals(updatedUserDTO.userName())) {
-                    throw new IllegalArgumentException("El nombre de usuario ya está en uso");
->>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
                 }
             }
         }

@@ -74,7 +74,6 @@ public class UserRestController {
         return ResponseEntity.created(location).body(userService.findById(user.getId()));
     }
 
-<<<<<<< HEAD
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
             MultipartFile newImagem, HttpServletRequest request) throws IOException, SQLException {
@@ -89,7 +88,7 @@ public class UserRestController {
         return userService.updateApiUser(id, newUserDTO);
 
     }
-=======
+
         @PutMapping("/{id}")
         public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO, HttpServletRequest request)
         throws SQLException {
@@ -103,7 +102,6 @@ public class UserRestController {
             }
         
             userService.updateApiUser(id, newUserDTO);
->>>>>>> 87fe4c0ffaf92114448550ad9074d1d1b9d7a0aa
 
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
