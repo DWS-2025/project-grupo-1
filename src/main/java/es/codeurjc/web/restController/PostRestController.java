@@ -59,12 +59,13 @@ public class PostRestController {
     @PostMapping("/")
     public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
-        
+
         if (createPostDTO.title().isEmpty()) {
-          throw new IllegalArgumentException("Title cannot be empty");
+            throw new IllegalArgumentException("Title cannot be empty");
         }
 
-        return ResponseEntity.ok(postService.save(createPostDTO, imageFile, sectionIds, newContributors.split(","), request));
+        return ResponseEntity
+                .ok(postService.save(createPostDTO, imageFile, sectionIds, newContributors.split(","), request));
 
     }
 
@@ -97,7 +98,8 @@ public class PostRestController {
     }
 
     @PostMapping("/{id}/image")
-    public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> createPostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
 
         URI location = fromCurrentRequest().build().toUri();
 
@@ -108,7 +110,8 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> replacePostImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
 
         postService.replacePostImage(id, imageFile.getInputStream(), imageFile.getSize());
 
@@ -124,7 +127,7 @@ public class PostRestController {
     }
 
     @GetMapping("/comments")
-    //Get all comments for all posts
+    // Get all comments for all posts
     public ResponseEntity<Page<CommentDTO>> getAllComments(@RequestParam(defaultValue = "0") int page) {
         Page<CommentDTO> commentsPage = commentService.findAllComments(page);
         return ResponseEntity.ok(commentsPage);
@@ -163,14 +166,13 @@ public class PostRestController {
     }
 
     // update a specific comment in a post
-
     @PutMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody CommentDTO updatedCommentDTO, HttpServletRequest request) {
         if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
-            
+
             return ResponseEntity.ok(commentService.updateComment(commentId, updatedCommentDTO, postId));
         } else {
             return ResponseEntity.status(403).build(); // Forbidden
@@ -179,15 +181,15 @@ public class PostRestController {
 
     // delete a specific comment from a post
     @DeleteMapping("/{postId}/comments/{commentId}/")
-public ResponseEntity<Collection<CommentDTO>> deleteCommentFromPost(
-        @PathVariable Long postId,
-        @PathVariable Long commentId,
-        HttpServletRequest request) {
-    if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
+    public ResponseEntity<Collection<CommentDTO>> deleteCommentFromPost(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            HttpServletRequest request) {
+        if (commentService.checkIfCommentOwnerAndCommnetOnPost(request, postId, commentId)) {
 
-        Collection<CommentDTO> comments = commentService.deleteCommentFromPostAPI(postId, commentId);
-        return ResponseEntity.ok(comments);
+            Collection<CommentDTO> comments = commentService.deleteCommentFromPostAPI(postId, commentId);
+            return ResponseEntity.ok(comments);
+        }
+        return ResponseEntity.status(403).build(); // Forbidden
     }
-    return ResponseEntity.status(403).build(); // Forbidden
-}
 }

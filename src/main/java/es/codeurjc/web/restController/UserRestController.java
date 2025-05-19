@@ -70,25 +70,31 @@ public class UserRestController {
         }
         User user = new User(newUser.userName(), passwordEncoder.encode(newUser.password()), newUser.email(), "USER");
         userService.save(user);
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(newUser.id()).toUri(); // URI for the new User
-        return ResponseEntity.created(location).body(newUser);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri(); // URI for the new User
+        return ResponseEntity.created(location).body(userService.findById(user.getId()));
     }
 
-    @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
-            MultipartFile newImagem, HttpServletRequest request) throws IOException, SQLException {
-        UserDTO oldUser = userService.findById(id);
-        if (oldUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
+        @PutMapping("/{id}")
+        public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO, HttpServletRequest request)
+        throws SQLException {
         
-        if (userService.checkIfTheUserIsFollowed(newUserDTO, request)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
-        }
-        return userService.updateApiUser(id, newUserDTO);
+            UserDTO oldUser = userService.findById(id);
+            if (oldUser == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            }
+            if (!userService.checkIsSameUser(id, request)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
+            }
         
-    }
+            userService.updateApiUser(id, newUserDTO);
 
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .header(HttpHeaders.WWW_AUTHENTICATE,
+                            "Bearer error=\"invalid_token\", error_description=\"Updated successfully. Please login again\"")
+                    .build();
+        }
+    
     @DeleteMapping("/{id}")
     public UserDTO deleteUser(@PathVariable long id, HttpServletRequest request) {
         UserDTO user = userService.findById(id);
@@ -100,9 +106,8 @@ public class UserRestController {
         if (userService.checkIfTheUserIsFollowed(user, request)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot  delete this user");
         }
-            return userService.deleteUser(user);
+        return userService.deleteUser(user);
     }
-
 
     @PostMapping("/{id}/followings")
     public UserDTO followUser(@PathVariable long id, @RequestBody UserDTO userToFollowDTO, HttpServletRequest request) {
@@ -118,25 +123,27 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}/followings")
-    public UserDTO unfollowUser(@PathVariable long id, @RequestBody UserDTO userToUnFollowDTO, HttpServletRequest request) {
+    public UserDTO unfollowUser(@PathVariable long id, @RequestBody UserDTO userToUnFollowDTO,
+            HttpServletRequest request) {
         UserDTO userDTO = userService.getUserById(id);
 
         if (userDTO == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (userService.checkIfTheUserIsFollowed(userDTO, request)) {        
+        if (userService.checkIfTheUserIsFollowed(userDTO, request)) {
             if (userService.existsById(userToUnFollowDTO.id()) && userDTO.followings().contains(userToUnFollowDTO)) {
                 userService.unfollowUser(userToUnFollowDTO, request);
-            return userDTO;
+                return userDTO;
+            }
         }
-    }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");    
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
 
     @PostMapping("/{id}/image")
     public ResponseEntity<Object> createUserImage(
-            @PathVariable long id, @RequestParam MultipartFile imageFile, HttpServletRequest request) throws IOException {
+            @PathVariable long id, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+            throws IOException {
         UserDTO user = userService.findById(id);
 
         if (user == null) {
@@ -152,8 +159,8 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getUserImage(@PathVariable long id) 
-        throws SQLException, IOException {
+    public ResponseEntity<Object> getUserImage(@PathVariable long id)
+            throws SQLException, IOException {
         UserDTO user = userService.findById(id);
 
         if (user == null) {
@@ -162,14 +169,15 @@ public class UserRestController {
 
         if (user.image() == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User image not found");
-            
+
         }
         Resource image = userService.getUserImage(id);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
     }
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+            HttpServletRequest request)
             throws IOException {
         UserDTO user = userService.findById(id);
 
@@ -189,7 +197,8 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}/image")
-    public ResponseEntity<Object> deleteUserImage(@PathVariable long id, HttpServletRequest request) throws IOException {
+    public ResponseEntity<Object> deleteUserImage(@PathVariable long id, HttpServletRequest request)
+            throws IOException {
         UserDTO user = userService.findById(id);
 
         if (user == null) {
@@ -225,7 +234,8 @@ public class UserRestController {
 
     @PutMapping("/{id}/CV")
     @PostMapping("/{id}/CV")
-    public ResponseEntity<Object> createUserCV(@PathVariable long id, @RequestParam MultipartFile file, HttpServletRequest request)
+    public ResponseEntity<Object> createUserCV(@PathVariable long id, @RequestParam MultipartFile file,
+            HttpServletRequest request)
             throws IOException {
         UserDTO user = userService.findById(id);
 

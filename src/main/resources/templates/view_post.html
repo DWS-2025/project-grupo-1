@@ -10,9 +10,9 @@
             <div class="main-profile ">
               <div class="row">
                 <div class="heading-section">
-                  <h4>{{post.title}} <em>por <a href="/profile/{{post.owner.id}}">{{post.owner.userName}}</a></em><br><br><span><i class="fa fa-star" style="color: yellow;"></i>{{post.averageRating}}</span></h1>
-                    
-               
+                  <h4>{{post.title}} <em>por <a
+                        href="/profile/{{post.owner.id}}">{{post.owner.userName}}</a></em><br><br><span><i
+                        class="fa fa-star" style="color: yellow;"></i>{{post.averageRating}}</span></h1>
                 </div>
               </div>
               <div class="row">
@@ -25,10 +25,10 @@
                     </div>
                     <div class="row">
                       {{#hasImage}}
-                        <img class="centered-image" src="/post/{{post.id}}/image" alt=""></img>
+                      <img class="centered-image" src="/post/{{post.id}}/image" alt=""></img>
                       {{/hasImage}}
                       {{^hasImage}}
-                        <img src="/no-image.png" alt=""></img>
+                      <img src="/no-image.png" alt=""></img>
                       {{/hasImage}}
                     </div>
                     {{#logged}}
@@ -47,7 +47,7 @@
                       <div class="main-button">
                         <form action="/post/{{post.id}}/delete" method="post">
                           <input type='submit' value='Eliminar Post' />
-                          <input type="hidden" name="_csrf" value="{{token}}"/>
+                          <input type="hidden" name="_csrf" value="{{token}}" />
                         </form>
                       </div>
                     </div>
@@ -58,11 +58,12 @@
                       <div class="main-button">
                         <a href="/login">Inicia sesión para comentar</a>
                       </div>
-                    {{/logged}}
-                    
-                    <div class="col-lg-12">
-                      <div class="secondary-button">
-                        <a href="/post">Volver</a>
+                      {{/logged}}
+
+                      <div class="col-lg-12">
+                        <div class="secondary-button">
+                          <a href="/post">Volver</a>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -71,60 +72,53 @@
             </div>
           </div>
         </div>
-      </div>
-      <!-- ***** Post content end ***** -->
+        <!-- ***** Post content end ***** -->
 
-      <!-- ***** Comments Start ***** -->
-      <div class="gaming-library profile-library">
-        <div class="col-lg-12">
-          <div class="heading-section">
-            <h4> Comentarios</h4>
-          </div>
-          {{#comments}}
-          <div class="item">
-            <ul>
-              <li><img src="/user/{{owner.id}}/image" alt="" class="templatemo-item"></li>
-              <li>
-                <h4>Nombre de usuario</h4><span style="color: white;">{{owner.userName}}</span>
-              </li>
-              <li>
-                <h4>Valoración</h4><span><i class="fa fa-star" style="color: yellow;"></i>{{rating}}</span>
-              </li>
-              <li>
-                <h4>Contenido</h4><span style="color: white;">{{content}}</span>
-              </li>
-              <li>
-                <div class="main-border-button border-no-active"><a href="/profile/{{owner.id}}">Ver perfil</a></div>
-              </li>
-              <li>
-                <div class="main-border-button border-active"><a href="/post/{{post.id}}/comment/{{id}}/edit">Editar
-                  </a></div>
-                <div class="main-border-button border-active">
-                  <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
-                    <input type='submit' value='Eliminar comentario' />
-                    <input type="hidden" name="_csrf" value="{{token}}"/>
-                  </form>
-                </div>
-              </li>
-            </ul>
-          </div>
-          {{/comments}}
+        <!-- ***** Comments Start ***** -->
+        <div class="gaming-library profile-library">
+          <div class="col-lg-12">
+            <div class="heading-section">
+              <h4> Comentarios</h4>
+            </div>
+            {{#comments}}
+            <div class="item">
+              <ul>
+                <li><img src="/user/{{owner.id}}/image" alt="" class="templatemo-item"></li>
+                <li>
+                  <h4>Nombre de usuario</h4><span style="color: white;">{{owner.userName}}</span>
+                </li>
+                <li>
+                  <h4>Valoración</h4><span><i class="fa fa-star" style="color: yellow;"></i>{{rating}}</span>
+                </li>
+                <li>
+                  <h4>Contenido</h4><span style="color: white;">{{content}}</span>
+                </li>
+                <li>
+                  <div class="main-border-button border-no-active"><a href="/profile/{{owner.id}}">Ver perfil</a></div>
+                </li>
+                <li>
+                  <div class="main-border-button border-active"><a href="/post/{{post.id}}/comment/{{id}}/edit">Editar
+                    </a></div>
+                  <div class="main-border-button border-active">
+                    <form action="/post/{{post.id}}/comment/{{id}}/delete" method="post">
+                      <input type='submit' value='Eliminar comentario' />
+                      <input type="hidden" name="_csrf" value="{{token}}" />
+                    </form>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            {{/comments}}
 
-          <!-- 
-          <button id="load-more-comments" data-page="{{currentPage}}" data-post-id="{{post.id}}" class="main-border-button">
-            Cargar más
-          </button> 
-          -->
-
-          <!-- Spinner de carga -->
-          <div id="loading-spinner" style="display: none;">
+            <!-- Loading spinner -->
+            <div id="loading-spinner" style="display: none;">
               <img src="/images/spinner.gif" alt="Cargando...">
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
 
-{{>Common/footer}}
+  {{>Common/footer}}

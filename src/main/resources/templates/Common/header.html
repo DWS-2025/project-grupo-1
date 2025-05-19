@@ -81,13 +81,14 @@ https://templatemo.com/tm-579-cyborg-gaming
               {{/admin}}
               <li>
                 <form id="logoutForm" action="/logout" method="post" style="display:inline;">
-                <input type="hidden" name="_csrf" value="{{token}}">
-                <button type="submit" style="background:none;border:none;padding:0;color:#007bff;cursor:pointer;">Cerrar
-                  sesión</button>
-              </form>
+                  <input type="hidden" name="_csrf" value="{{token}}">
+                  <button type="submit"
+                    style="background:none;border:none;padding:0;color:#007bff;cursor:pointer;">Cerrar
+                    sesión</button>
+                </form>
               </li>
-              
-              
+
+
               {{/loggedUser}}
               {{^loggedUser}}
               <li><a href="/login">Iniciar sesión</a></li>

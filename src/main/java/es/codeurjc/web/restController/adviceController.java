@@ -1,4 +1,5 @@
 package es.codeurjc.web.restController;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -13,7 +14,7 @@ import java.util.Map;
 @Controller
 public class adviceController implements ErrorController {
 
-   private final ErrorAttributes errorAttributes;
+    private final ErrorAttributes errorAttributes;
 
     public adviceController(ErrorAttributes errorAttributes) {
         this.errorAttributes = errorAttributes;

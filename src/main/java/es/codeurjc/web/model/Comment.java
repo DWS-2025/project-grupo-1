@@ -13,23 +13,23 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(length = 2000) 
+    @Column(length = 2000)
     private String content;
 
     @ManyToOne
     private User owner;
-    // esto hay que quitarlo cuando tengamos BD 
+    // esto hay que quitarlo cuando tengamos BD
     @ManyToOne
     private Post commentedPost;
     private int rating;
 
-    //Constructor for the comments made by the user
+    // Constructor for the comments made by the user
     public Comment(String content, int rating) {
         this.content = content;
         this.rating = rating;
     }
 
-    //Constructor for the initial comments
+    // Constructor for the initial comments
     public Comment() {
 
     }
@@ -76,6 +76,7 @@ public class Comment {
     public void setRating(int rating) {
         this.rating = rating;
     }
+
     public void setCommentedPost(Post commentedPost) {
         this.commentedPost = commentedPost;
     }
@@ -88,7 +89,5 @@ public class Comment {
             this.setRating(rating);
         }
     }
-
-   
 
 }

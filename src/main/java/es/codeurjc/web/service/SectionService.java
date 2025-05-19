@@ -78,7 +78,8 @@ public class SectionService {
         return toDTOs(findAll());
     }
 
-    public Collection<Section> findAll(Example<Section> example) { // Example is a Spring Data interface for creating queries
+    public Collection<Section> findAll(Example<Section> example) { // Example is a Spring Data interface for creating
+                                                                   // queries
         return sectionRepository.findAll(example);
     }
 
@@ -130,7 +131,7 @@ public class SectionService {
     }
 
     public void saveSectionWithImageSection(CreateSectionDTO sectionDTO, MultipartFile imageFile) throws IOException {
-        
+
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         String sanitizedDescription = policy.sanitize(sectionDTO.description());
         String sanitizedTitle = sanitizeHtml(sectionDTO.title());
@@ -154,7 +155,7 @@ public class SectionService {
         Section section = sectionRepository.findById(id).orElseThrow();
 
         if (section.getImageFile() != null) {
-            return new InputStreamResource(section.getImageFile().getBinaryStream()); 
+            return new InputStreamResource(section.getImageFile().getBinaryStream());
         } else {
             throw new NoSuchElementException();
         }
@@ -213,11 +214,9 @@ public class SectionService {
         section.deletePost(post);
     }
 
-    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage) 
+    public SectionDTO update(SectionDTO oldSectionDTO, SectionDTO updatedSectionDTO, MultipartFile newImage)
             throws IOException {
-        Section oldSection =  sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
-        //Section updatedSection = toDomain(updatedSectionDTO);
-
+        Section oldSection = sectionRepository.findById(oldSectionDTO.id()).orElseThrow();
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         String updatedSanitizedDescription = policy.sanitize(updatedSectionDTO.description());
         String updatedSanitizedTitle = policy.sanitize(updatedSectionDTO.title());
@@ -255,8 +254,9 @@ public class SectionService {
 
     public Collection<SectionDTO> findNotFollowedSections(HttpServletRequest request) {
         List<Section> allSections = sectionRepository.findAll();
-        List<Section> followedSections = userMapper.toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
-    
+        List<Section> followedSections = userMapper
+                .toDomain(userService.getLoggedUser(request.getUserPrincipal().getName())).getFollowedSections();
+
         // Filter only the sections that are NOT in the list of followed sections
         if (followedSections != null) {
             List<Section> notFollowedSections = allSections.stream()
@@ -280,17 +280,13 @@ public class SectionService {
     Section toDomain(SectionDTO sectionDTO) {
         return mapper.toDomain(sectionDTO);
     }
+
     public SectionDTO toDTO(CreateSectionDTO sectionDTO) {
         return mapper.toDTO(sectionDTO);
     }
 
     private Collection<SectionDTO> toDTOs(Collection<Section> sections) {
         return mapper.toDTOs(sections);
-    }
-
-    private Collection<Section> toDomains(Collection<SectionDTO> sectionsDTO) {
-        return mapper.toDomains(sectionsDTO);
-
     }
 
     public Collection<SectionDTO> getSections() {

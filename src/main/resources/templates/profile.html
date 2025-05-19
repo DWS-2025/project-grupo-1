@@ -54,7 +54,7 @@
                       <div class="delete-button">
                         <form action="/deleteUser/{{id}}" method="post">
 
-                          <input type='submit' value='Eliminar usuario'  style="
+                          <input type='submit' value='Eliminar usuario' style="
                           background-color: #eb5a9e;
                           color: white;
                           border: none;
@@ -63,8 +63,8 @@
                           cursor: pointer;
                           font-size: 16px;
                           font-weight: 400;
-                          "/>
-                          <input type="hidden" name="_csrf" value="{{token}}"/>
+                          " />
+                          <input type="hidden" name="_csrf" value="{{token}}" />
                         </form>
                       </div>
                     </div>
@@ -72,7 +72,7 @@
                     <h4>{{user.userName}}</h4>
                     <p>{{#user.description}}{{user.description}}{{/user.description}} {{^user.description}}No hay
                       descripción{{/user.description}}</p>
-                      {{#ShowButtons}}
+                    {{#ShowButtons}}
                     <div class="main-border-button">
                       <a href="/post">Nueva publicación</a>
                     </div>
@@ -98,19 +98,19 @@
                 {{#user.cvFilePath}}
                 <div class="col-lg-4 align-self-center">
 
-                  <form action="/users/{{user.id}}/delete-cv" method="post" >
+                  <form action="/users/{{user.id}}/delete-cv" method="post">
                     <label for="file">
                       <h2>Borra tu cv</h2>
                     </label>
                     <button type="submit">Eliminar</button>
-                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <input type="hidden" name="_csrf" value="{{token}}" />
                   </form>
                 </div>
                 {{/user.cvFilePath}}
 
                 {{^user.cvFilePath}}
                 <div class="col-lg-4 align-self-center">
-                
+
                   <form action="/users/{{user.id}}/upload-cv" method="post" enctype="multipart/form-data">
                     <label for="file">
                       <h2>Sube tu cv</h2>
@@ -119,7 +119,7 @@
                     <button type="submit">Subir</button>
                     <input type="hidden" name="_csrf" value="{{token}}" />
                   </form>
-                
+
                 </div>
                 {{/user.cvFilePath}}
                 {{/ShowButtons}}
@@ -138,7 +138,7 @@
                       <div class="col-lg-3 col-sm-6">
                         <div class="item">
                           <div class="thumb">
-                            <img class="centered-image" src="/post/{{id}}/image" alt="" >
+                            <img class="centered-image" src="/post/{{id}}/image" alt="">
                           </div>
                           <div class="down-content">
                             <ul>
@@ -164,7 +164,7 @@
                       <div class="col-lg-3 col-sm-6">
                         <div class="item">
                           <div class="thumb">
-                            <img class="centered-image" src="/post/{{id}}/image" alt="" >
+                            <img class="centered-image" src="/post/{{id}}/image" alt="">
                           </div>
                           <div class="down-content">
                             <ul>

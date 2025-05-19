@@ -37,57 +37,49 @@ public class SectionRestController {
     @Autowired
     private SectionService sectionService;
 
-     @GetMapping("")
+    @GetMapping("")
     public Page<SectionDTO> getSections(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 10);
         return sectionService.findAllAsDTO(pageable);
-    } 
-
-   /* @GetMapping("")
-    public ResponseEntity<List<SectionDTO>> getSections(@RequestParam(defaultValue = "0") int page) {
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(page, pageSize);
-        Page<SectionDTO> sectionPage = sectionService.findAllAsDTO(pageable);
-        return ResponseEntity.ok(sectionPage.getContent());
-    } */
-
-
+    }
 
     @GetMapping("/{id}")
-    public SectionDTO getSection (@PathVariable Long id) {
+    public SectionDTO getSection(@PathVariable Long id) {
         if (sectionService.getSection(id) != null) {
             return sectionService.getSection(id);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Section not found");
         }
-        
+
     }
-    
+
     @PostMapping("")
     public ResponseEntity<SectionDTO> createSection(@RequestBody SectionDTO sectionDTO) {
         sectionDTO = sectionService.saveSection(sectionDTO);
-        
-        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(sectionDTO.id()).toUri(); // URI for the new section 
+
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(sectionDTO.id()).toUri(); // URI for the new
+                                                                                                   // section
 
         return ResponseEntity.created(location).body(sectionDTO);
     }
 
-   @PutMapping("/{id}")
-public SectionDTO updateSection(
-    @PathVariable Long id,   @RequestParam String title,   @RequestParam String description, @RequestParam(required = false) MultipartFile newImage) throws IOException {
+    @PutMapping("/{id}")
+    public SectionDTO updateSection(
+            @PathVariable Long id, @RequestParam String title, @RequestParam String description,
+            @RequestParam(required = false) MultipartFile newImage) throws IOException {
 
-    SectionDTO oldSection = sectionService.getSection(id);
+        SectionDTO oldSection = sectionService.getSection(id);
 
-    if (oldSection == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Section not found");
-    } else {
-        CreateSectionDTO newSectionDTO = new CreateSectionDTO(title, description);
-        return sectionService.update(oldSection, sectionService.toDTO(newSectionDTO), newImage);
+        if (oldSection == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Section not found");
+        } else {
+            CreateSectionDTO newSectionDTO = new CreateSectionDTO(title, description);
+            return sectionService.update(oldSection, sectionService.toDTO(newSectionDTO), newImage);
+        }
     }
-}
-    
+
     @DeleteMapping("/{id}")
-    public SectionDTO deleteSection(@PathVariable Long id){
+    public SectionDTO deleteSection(@PathVariable Long id) {
 
         SectionDTO section = sectionService.getSection(id);
 
@@ -105,18 +97,18 @@ public SectionDTO updateSection(
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(sectionImage);
     }
-    
 
     @PostMapping("/{id}/image")
-	public ResponseEntity<Object> createSectionImage(@PathVariable Long id, @RequestParam MultipartFile imageFile) throws IOException {
+    public ResponseEntity<Object> createSectionImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
 
-		URI location = fromCurrentRequest().build().toUri();
+        URI location = fromCurrentRequest().build().toUri();
 
-		sectionService.createSectionImage(id, location, imageFile.getInputStream(), imageFile.getSize());
+        sectionService.createSectionImage(id, location, imageFile.getInputStream(), imageFile.getSize());
 
-		return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build();
 
-	}
+    }
 
     @PutMapping("/{id}/image")
     public ResponseEntity<Object> replaceUserImage(@PathVariable Long id, @RequestParam MultipartFile imageFile)
@@ -125,14 +117,12 @@ public SectionDTO updateSection(
         return ResponseEntity.noContent().build();
     }
 
-    
-
     @DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deleteSectionImage(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Object> deleteSectionImage(@PathVariable Long id) throws IOException {
 
-		sectionService.deleteSectionImage(id);
+        sectionService.deleteSectionImage(id);
 
-		return ResponseEntity.noContent().build();
-	}
+        return ResponseEntity.noContent().build();
+    }
 
 }

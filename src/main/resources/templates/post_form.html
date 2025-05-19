@@ -69,7 +69,7 @@
     <button type="submit" class="btn btn-primary">
       Publish
     </button>
-    <input type="hidden" name="_csrf" value="{{token}}"/>
+    <input type="hidden" name="_csrf" value="{{token}}" />
   </form>
   {{>Common/bottom_container}}
 
@@ -86,7 +86,7 @@
 
     // On form submission, copy the editor's content to the hidden input
     document.getElementById('postForm').onsubmit = function () {
-  document.getElementById('content').value = quill.root.innerHTML;
+      document.getElementById('content').value = quill.root.innerHTML;
     };
   </script>
 

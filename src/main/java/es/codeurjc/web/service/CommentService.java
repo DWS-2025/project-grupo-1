@@ -53,11 +53,11 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        // Calculates the rating of the post 
+        // Calculates the rating of the post
         postService.setAverageRatingPost(postToComment.getId());
-        //Calculates the rating of the owner
+        // Calculates the rating of the owner
         postToComment.getOwner().calculateUserRate();
-        //Calculates the rating of the section
+        // Calculates the rating of the section
         for (Section section : postToComment.getSections()) {
             section.calculateAverageRating();
         }
@@ -88,26 +88,22 @@ public class CommentService {
     public void deleteCommentFromPost(Long commentedPostId, Long commentId) {
         Comment commentToDelete = commentRepository.findById(commentId).get();
         Post commentedPost = postService.findById(commentedPostId).get();
-        // postService.saveForInit(commentedPost);
-
 
         postService.setAverageRatingPostRemoving(commentedPost.getId(), commentToDelete.getId());
         commentToDelete.setCommentedPost(null);
-        // commentedPost.removeComment(commentToDelete);
 
-           
         // Calculates the rating of the post
         postService.saveForInit(commentedPost);
 
-        //Calculates the rating of the owner
+        // Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
-        
-        //Calculates the rating of the section
+
+        // Calculates the rating of the section
 
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
-       
+
     }
 
     public Collection<CommentDTO> deleteCommentFromPostAPI(Long commentedPostId, Long commentId) {
@@ -120,14 +116,14 @@ public class CommentService {
         commentedPost.getComments().remove(commentToDelete);
         postService.saveForInit(commentedPost);
 
-        //Calculates the rating of the owner
+        // Calculates the rating of the owner
         commentedPost.getOwner().calculateUserRate();
-        
-        //Calculates the rating of the section
+
+        // Calculates the rating of the section
         for (Section section : commentedPost.getSections()) {
             section.calculateAverageRating();
         }
-       return toDTOs(commentedPost.getComments());
+        return toDTOs(commentedPost.getComments());
     }
 
     public boolean checkIfCommentOwnerAndCommnetOnPost(HttpServletRequest request, Long postId, Long commentId) {
@@ -155,7 +151,7 @@ public class CommentService {
             Comment commentToUpdate = commentRepository.findById(commentId).get();
             String sanitizedContent = policy.sanitize(updatedCommentDTO.content());
             Post commentedPost = postService.findById(postId).get();
-            
+
             commentToUpdate.updateComment(sanitizedContent, updatedCommentDTO.rating());
             commentRepository.save(commentToUpdate);
 
@@ -186,10 +182,6 @@ public class CommentService {
     private CommentDTO toDTO(Comment comment) {
         return mapper.toDTO(comment);
 
-    }
-
-    private Comment toDomain(CommentDTO commentDTO) {
-        return mapper.toDomain(commentDTO);
     }
 
     private Comment toDomain(CreateCommentDTO commentDTO) {
