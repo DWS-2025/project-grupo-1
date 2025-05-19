@@ -205,7 +205,7 @@ public class UserController {
 
     @PostMapping("/editProfile/{userId}")
     public String processUserEdit(Model model, @PathVariable long userId, @RequestParam String newUserName,
-            @RequestParam(required = false) String description, @RequestParam(required = false) MultipartFile userImage,
+            @RequestParam(required = false) String description, String password, @RequestParam(required = false) MultipartFile userImage,
             HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response)
             throws IOException, SQLException {
 
@@ -227,7 +227,7 @@ public class UserController {
             }
 
             try {
-                userService.updateWebUser(userId, newUserName, description, userImage);
+                userService.updateWebUser(userId, newUserName, description, passwordEncoder.encode(password), userImage);
             } catch (UnsupportedOperationException e) {
                 model.addAttribute("message", "El administrador no puede cambiar su nombre de usuario");
                 return "error";

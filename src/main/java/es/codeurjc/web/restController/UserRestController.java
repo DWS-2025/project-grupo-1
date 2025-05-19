@@ -92,7 +92,11 @@ public class UserRestController {
 
     @PostMapping("/")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO newUser, HttpServletResponse response) {
-
+        if (newUser.userName() == null || newUser.password() == null || newUser.email() == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        
         for (UserDTO user : userService.findAllUsers()) {
             if (user.email().equals(newUser.email()) || user.userName().equals(newUser.userName())) {
                 response.setStatus(HttpServletResponse.SC_CONFLICT);

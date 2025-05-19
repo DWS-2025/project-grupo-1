@@ -269,7 +269,7 @@ public class UserService {
         return toDTO(userToDelete);
     }
 
-    public void updateWebUser(long id, String userName, String description, MultipartFile image) {
+    public void updateWebUser(long id, String userName, String description, String password, MultipartFile image) {
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         User user = userRepository.findById(id).orElseThrow();
 
@@ -288,8 +288,11 @@ public class UserService {
                 } else {
                     throw new UnsupportedOperationException("El administrador no puede cambiar su nombre de usuario");
                 }
-
             }
+        }
+        if (password != null && !password.isEmpty()) {
+            password = policy.sanitize(password);
+            user.setPassword(password);
         }
         if (description != null && !description.isEmpty()) {
             description = policy.sanitize(description);
