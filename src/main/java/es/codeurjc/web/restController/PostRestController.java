@@ -1,5 +1,7 @@
 package es.codeurjc.web.restController;
 
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -24,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.web.dto.CommentDTO;
 import es.codeurjc.web.dto.CreateCommentDTO;
@@ -56,7 +57,7 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,@RequestParam(value = "sections", required = false) List<Long> sectionIds,@RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
         
         if (createPostDTO.title().isEmpty()) {
@@ -68,10 +69,10 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @ModelAttribute CreatePostDTO newCreatePostDTO, @RequestParam MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam("newContributors") String newContributorsStrings, HttpServletRequest request) throws IOException {
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestParam String title, @RequestParam String content, @RequestParam MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam String newContributors, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(id, request)) {
-            PostDTO updated = postService.updatePost(id, newCreatePostDTO, newImageFile, newSectionIds, newContributorsStrings.split(","), request);
+            PostDTO updated = postService.updatePost(id, title, content, newImageFile, newSectionIds, newContributors.split(","), request);
             return ResponseEntity.ok(updated);
         } else {
             return ResponseEntity.status(403).build(); // Forbidden

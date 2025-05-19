@@ -202,7 +202,15 @@ public class PostService {
     public PostDTO updatePost(Long id, CreatePostDTO newCreatePostDTO, MultipartFile newImage, List<Long> newSectionIds,
             String[] contributors, HttpServletRequest request) throws IOException {
         return toDTO(updatePost(id, toDomain(newCreatePostDTO), newImage, newSectionIds, contributors, request));
+    }
 
+    // Update post with title and content as parameters to be used from API Rest
+    public PostDTO updatePost(Long id, String title, String content, MultipartFile newImage, List<Long> newSectionIds,
+            String[] contributors, HttpServletRequest request) throws IOException {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        return toDTO(updatePost(id, post, newImage, newSectionIds, contributors, request));
     }
 
     public CommentService getCommentService() {
