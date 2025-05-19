@@ -67,15 +67,15 @@ public class Manager {
                 } catch (NoSuchElementException e) {
 
                         // Default user
-                        User mainUser = new User("Admin", passwordEncoder.encode("1234"), "Admin@gmail.com", "USER",
+                        User mainUser = new User("Admin", passwordEncoder.encode("T0MZ1I9H7EEVGSZ"), "Admin@gmail.com", "USER",
                                         "ADMIN");
                         // Other users
-                        User user2 = new User("user2", passwordEncoder.encode("pass2"), "user2@gmail.com", "USER");
-                        User user3 = new User("user3", passwordEncoder.encode("pass3"), "user3@gmail.com", "USER");
-                        User user4 = new User("user4", passwordEncoder.encode("pass4"), "user4@gmail.com", "USER");
-                        User user5 = new User("user5", passwordEncoder.encode("pass5"), "user5@gmail.com", "USER");
-                        User user6 = new User("user6", passwordEncoder.encode("pass6"), "user6@gmail.com", "USER");
-                        User user7 = new User("user7", passwordEncoder.encode("pass7"), "user7@gmail.com", "USER");
+                        User user2 = new User("user2", passwordEncoder.encode("MWZ97N7JDO469V"), "user2@gmail.com", "USER");
+                        User user3 = new User("user3", passwordEncoder.encode("FQMA30BRZM4OG2Y"), "user3@gmail.com", "USER");
+                        User user4 = new User("user4", passwordEncoder.encode("RSGXHVC8QZZTB6O"), "user4@gmail.com", "USER");
+                        User user5 = new User("user5", passwordEncoder.encode("R5AOUDVI4SR7VU"), "user5@gmail.com", "USER");
+                        User user6 = new User("user6", passwordEncoder.encode("F4OXG3YV2OBSAZ"), "user6@gmail.com", "USER");
+                        User user7 = new User("user7", passwordEncoder.encode("P6Y4DDV42NJKMM"), "user7@gmail.com", "USER");
 
                         mainUser.setUserImage(localImageToBlob("images/users/image-1.jpeg"));
                         user2.setUserImage(localImageToBlob("images/users/image-2.jpeg"));
