@@ -185,6 +185,10 @@ public class UserService {
         // If the user is the admin, do not delete it
         if (id != 1) {
 
+            if(userToDelete.getUserName().equals("Admin")) {
+                throw new UnsupportedOperationException("El administrador no puede ser eliminado");
+            }
+
             if (userToDelete.getPosts() != null) {
                 List<Post> postsCopy = new ArrayList<>(userToDelete.getPosts());
                 for (Post post : postsCopy) {
