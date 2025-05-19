@@ -128,17 +128,24 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    public UserDTO deleteUser(@PathVariable long id, HttpServletRequest request) {
+    public ResponseEntity<Void> deleteUser(@PathVariable long id, HttpServletRequest request) {
         UserDTO user = userService.findById(id);
 
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (userService.checkIfTheUserIsFollowed(user, request)) {
+        if (!userService.checkIsSameUser(id, request)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot  delete this user");
         }
-        return userService.deleteUser(user);
+        
+        userService.deleteUser(user);
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.WWW_AUTHENTICATE,
+                        "Bearer error=\"invalid_token\", error_description=\"Deleted successfully. Please login again\"")
+                .build();
     }
 
     @PostMapping("/{id}/followings")
@@ -147,11 +154,11 @@ public class UserRestController {
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        if (userService.checkIsSameUser(user.id(), request) && userToFollowDTO.id() != 1) {
+        if (userService.checkIsSameUser(userToFollowDTO.id(), request)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot  follow yourself");
         }
         userService.followUser(userToFollowDTO, request);
-        return user;
+        return userService.getUserById(id);
     }
 
     @DeleteMapping("/{id}/followings")
@@ -163,11 +170,9 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
-        if (userService.checkIfTheUserIsFollowed(userDTO, request)) {
-            if (userService.existsById(userToUnFollowDTO.id()) && userDTO.followings().contains(userToUnFollowDTO)) {
-                userService.unfollowUser(userToUnFollowDTO, request);
-                return userDTO;
-            }
+        if (userService.checkIfTheUserIsFollowed(userToUnFollowDTO, request)) {
+            userService.unfollowUser(userToUnFollowDTO, request);
+            return userService.getUserById(id);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }

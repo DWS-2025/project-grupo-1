@@ -276,6 +276,10 @@ public class UserController {
     @PostMapping("/deleteUser/{userId}")
     public String postDeleteUser(Model model, @PathVariable long userId, HttpSession loggedU,
             HttpServletRequest request) {
+                if(userId == 1 || userService.findById(userId).userName().equals("Admin")) {
+                    model.addAttribute("message", "El usuario administrador no se puede borrar");
+                    return "error";
+                }
         if (userService.checkIsSameUser(userId, request)) {
 
             if (userService.findById(userId) != null) {
