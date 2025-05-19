@@ -74,21 +74,6 @@ public class UserRestController {
         return ResponseEntity.created(location).body(userService.findById(user.getId()));
     }
 
-    @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO,
-            MultipartFile newImagem, HttpServletRequest request) throws IOException, SQLException {
-        UserDTO oldUser = userService.findById(id);
-        if (oldUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-
-        if (userService.checkIfTheUserIsFollowed(newUserDTO, request)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot update this user");
-        }
-        return userService.updateApiUser(id, newUserDTO);
-
-    }
-
         @PutMapping("/{id}")
         public ResponseEntity<Void> updateUser(@PathVariable long id, @RequestBody UserDTO newUserDTO, HttpServletRequest request)
         throws SQLException {
