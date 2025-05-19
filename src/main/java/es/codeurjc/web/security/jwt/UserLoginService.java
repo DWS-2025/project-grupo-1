@@ -15,6 +15,32 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Service responsible for handling user authentication operations such as login, token refresh, and logout.
+ * <p>
+ * This service manages the authentication process using Spring Security's {@link AuthenticationManager},
+ * generates JWT access and refresh tokens, and stores them in HTTP-only cookies for secure client-side storage.
+ * It also provides functionality to refresh access tokens using a valid refresh token and to clear authentication
+ * data upon logout.
+ * </p>
+ *
+ * <ul>
+ *   <li>{@link #login(HttpServletResponse, LoginRequest)}: Authenticates the user and issues JWT tokens in cookies.</li>
+ *   <li>{@link #refresh(HttpServletResponse, String)}: Validates the refresh token and issues a new access token.</li>
+ *   <li>{@link #logout(HttpServletResponse)}: Clears authentication context and removes JWT cookies.</li>
+ * </ul>
+ *
+ * Dependencies:
+ * <ul>
+ *   <li>{@link AuthenticationManager}: For authenticating user credentials.</li>
+ *   <li>{@link UserDetailsService}: For loading user-specific data.</li>
+ *   <li>{@link JwtTokenProvider}: For generating and validating JWT tokens.</li>
+ * </ul>
+ *
+ * All token cookies are set as HTTP-only and scoped to the root path for security.
+ * 
+ * @author Grupo 1
+ */
 @Service
 public class UserLoginService {
 
@@ -24,20 +50,20 @@ public class UserLoginService {
 	private final UserDetailsService userDetailsService;
 	private final JwtTokenProvider jwtTokenProvider;
 
-	public UserLoginService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
+	public UserLoginService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
+			JwtTokenProvider jwtTokenProvider) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtTokenProvider = jwtTokenProvider;
 	}
 
 	public ResponseEntity<AuthResponse> login(HttpServletResponse response, LoginRequest loginRequest) {
-		
+
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		
 		String username = loginRequest.getUsername();
 		UserDetails user = userDetailsService.loadUserByUsername(username);
 
@@ -89,7 +115,7 @@ public class UserLoginService {
 		return cookie;
 	}
 
-	private Cookie removeTokenCookie(TokenType type){
+	private Cookie removeTokenCookie(TokenType type) {
 		Cookie cookie = new Cookie(type.cookieName, "");
 		cookie.setMaxAge(0);
 		cookie.setHttpOnly(true);

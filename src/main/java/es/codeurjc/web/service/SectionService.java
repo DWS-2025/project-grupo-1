@@ -39,6 +39,30 @@ import es.codeurjc.web.repository.SectionRepository;
 import es.codeurjc.web.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Service class for managing {@link Section} entities and related operations.
+ * <p>
+ * This service provides methods for CRUD operations, image handling, and DTO mapping
+ * for sections. It also includes utilities for sanitizing HTML content, managing
+ * relationships with users and posts, and performing custom queries.
+ * </p>
+ *
+ * <ul>
+ *   <li>CRUD operations for sections and their DTOs</li>
+ *   <li>Sanitization of HTML content in section titles and descriptions</li>
+ *   <li>Image upload, retrieval, replacement, and deletion for sections</li>
+ *   <li>Mapping between domain objects and DTOs using {@link SectionMapper}</li>
+ *   <li>Managing relationships between sections, users, and posts</li>
+ *   <li>Custom queries for filtering and sorting sections</li>
+ * </ul>
+ *
+ * <p>
+ * Dependencies are injected via constructor and field injection, including repositories,
+ * mappers, and related services.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Service
 public class SectionService {
 
@@ -194,7 +218,7 @@ public class SectionService {
         List<User> users = userRepository.findAll();
         Section section = sectionRepository.findById(sectionToDelete.getId()).get();
 
-        for (User user : users) { // delete section from followed sections of all users
+        for (User user : users) { // Delete section from followed sections of all users
             if (user.getFollowedSections().contains(section)) {
                 user.getFollowedSections().remove(section);
             }
@@ -225,7 +249,7 @@ public class SectionService {
         oldSection.setDescription(policy.sanitize(updatedSanitizedDescription));
 
         if (!newImage.isEmpty()) {
-            Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // converts
+            Blob updatedImage = BlobProxy.generateProxy(newImage.getInputStream(), newImage.getSize()); // Converts
                                                                                                         // MultipartFile
                                                                                                         // to Blob
             oldSection.setImageFile(updatedImage);
@@ -274,7 +298,7 @@ public class SectionService {
     }
 
     private Optional<SectionDTO> toDTO(Optional<Section> section) {
-        return section.map(this::toDTO); // if present, convert to DTO
+        return section.map(this::toDTO); // If present, convert to DTO
     }
 
     Section toDomain(SectionDTO sectionDTO) {

@@ -20,6 +20,47 @@ import es.codeurjc.web.security.jwt.JwtRequestFilter;
 import es.codeurjc.web.security.jwt.UnauthorizedHandlerJwt;
 import es.codeurjc.web.service.RepositoryUserDetailsService;
 
+/**
+ * SecurityConfiguration sets up the security policies for the application using Spring Security.
+ * 
+ * <p>This configuration class defines two security filter chains:
+ * <ul>
+ *   <li><b>API Security Filter Chain</b> (Order 1): Secures endpoints under <code>/api/**</code> using JWT-based stateless authentication.
+ *     <ul>
+ *       <li>Configures endpoint-specific access rules for sections, users, and posts based on user roles (USER, ADMIN).</li>
+ *       <li>Disables form login, CSRF protection, and HTTP Basic authentication for API endpoints.</li>
+ *       <li>Handles unauthorized access with a custom entry point.</li>
+ *       <li>Adds a JWT request filter before the username/password authentication filter.</li>
+ *     </ul>
+ *   </li>
+ *   <li><b>Web Security Filter Chain</b> (Order 2): Secures web endpoints (all other routes).
+ *     <ul>
+ *       <li>Allows public access to static resources and certain pages (home, register, login, etc.).</li>
+ *       <li>Restricts access to admin and user-specific pages based on roles.</li>
+ *       <li>Enables form-based login and logout with custom URLs and success/failure handling.</li>
+ *       <li>Configures a Content Security Policy (CSP) for enhanced browser security.</li>
+ *     </ul>
+ *   </li>
+ * </ul>
+ * 
+ * <p>Other configuration details:
+ * <ul>
+ *   <li>Defines beans for password encoding (BCrypt), authentication manager, and DAO authentication provider.</li>
+ *   <li>Uses a custom user details service for authentication.</li>
+ *   <li>Enforces stateless session management for API endpoints.</li>
+ * </ul>
+ * 
+ * <p>Dependencies injected:
+ * <ul>
+ *   <li>{@link RepositoryUserDetailsService} for loading user-specific data.</li>
+ *   <li>{@link JwtRequestFilter} for processing JWT tokens in API requests.</li>
+ *   <li>{@link UnauthorizedHandlerJwt} for handling unauthorized API access.</li>
+ * </ul>
+ * 
+ * <p>Note: This configuration separates API and web security concerns, ensuring RESTful APIs are stateless and web pages use session-based authentication.
+ * 
+ * @author Grupo 1
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -65,59 +106,58 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
-                // PRIVATE ENDPOINTS
-                // SECTIONS
-                .requestMatchers(HttpMethod.GET, "/api/sections/")
-                .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/sections/*")
-                .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/sections/*/image")
-                .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/sections/*/image")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/sections/**/image")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image")
-                .hasRole("ADMIN")
-                // USERS
-                .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users/*")
-                .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/users/*/image")
-                .hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/users/").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/followings")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/users/*/followings")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/users/*/image")
-                .hasRole("USER")
-                // POSTS
-        
-                .requestMatchers(HttpMethod.POST, "/api/posts/").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/posts/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/posts/*/comments")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*/image").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*")
-                .hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*/image")
-                .hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*")
-                .hasRole("ADMIN")
-                // PUBLIC ENDPOINTS
-                .anyRequest().permitAll());
-                    
+                        // PRIVATE ENDPOINTS
+                        // SECTIONS
+                        .requestMatchers(HttpMethod.GET, "/api/sections/")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/sections/*/image")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/sections/*/image")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/sections/**/image")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/sections/*/image")
+                        .hasRole("ADMIN")
+                        // USERS
+                        .requestMatchers(HttpMethod.GET, "/api/users/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/*/image")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/*/followings")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/followings")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/*/image")
+                        .hasRole("USER")
+                        // POSTS
+
+                        .requestMatchers(HttpMethod.POST, "/api/posts/").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*/image").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*")
+                        .hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/image")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*")
+                        .hasRole("ADMIN")
+                        // PUBLIC ENDPOINTS
+                        .anyRequest().permitAll());
 
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
@@ -147,51 +187,51 @@ public class SecurityConfiguration {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                // PUBLIC PAGES
-                .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register",
-                        "/login")
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/post", "/section",
-                        "/section/{id:[0-9]+}/image", "/user/*/image",
-                        "/no-image.png", "/images/spinner.gif",
-                        "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
-                .permitAll()
-                // PRIVATE PAGES
-                .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/post/*/edit").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/post/*/delete").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/post/*/delete").hasRole("USER")
-                .anyRequest().authenticated())
+                        // PUBLIC PAGES
+                        .requestMatchers("/", "/assets/**", "/vendor/**", "/home", "/register",
+                                "/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/post", "/section",
+                                "/section/{id:[0-9]+}/image", "/user/*/image",
+                                "/no-image.png", "/images/spinner.gif",
+                                "/post/{id:[0-9]+}", "/post/{id:[0-9]+}/image")
+                        .permitAll()
+                        // PRIVATE PAGES
+                        .requestMatchers(HttpMethod.GET, "/users/admin").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/section/*/edit").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/section/*/edit").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/section/*/delete").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/section/*/delete").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/post/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/post/*/edit").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/post/*/delete").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/post/*/delete").hasRole("USER")
+                        .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
-                .loginPage("/login")
-                .failureUrl("/login")
-                .defaultSuccessUrl("/discover")
-                .permitAll())
+                        .loginPage("/login")
+                        .failureUrl("/login")
+                        .defaultSuccessUrl("/discover")
+                        .permitAll())
                 .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .permitAll())
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll())
                 .exceptionHandling(exception -> exception
-                .accessDeniedPage("/error"));
+                        .accessDeniedPage("/error"));
 
         http
                 .headers(headers -> headers
-                .contentSecurityPolicy(csp -> csp
-                .policyDirectives(
-                        "default-src 'self'; "
-                        + "script-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://cdn.jsdelivr.net https://unpkg.com; "
-                        + "style-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; "
-                        + "img-src 'self' data: blob: https:; "
-                        + "font-src 'self' https://fonts.gstatic.com data:; "
-                        + "connect-src 'self'; "
-                        + "frame-src 'none'; "
-                        + "object-src 'none'; "
-                        + "form-action 'self';")));
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives(
+                                        "default-src 'self'; "
+                                                + "script-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://cdn.jsdelivr.net https://unpkg.com; "
+                                                + "style-src 'self' 'unsafe-inline' https://cdn.quilljs.com https://fonts.googleapis.com https://unpkg.com https://cdn.jsdelivr.net; "
+                                                + "img-src 'self' data: blob: https:; "
+                                                + "font-src 'self' https://fonts.gstatic.com data:; "
+                                                + "connect-src 'self'; "
+                                                + "frame-src 'none'; "
+                                                + "object-src 'none'; "
+                                                + "form-action 'self';")));
         return http.build();
     }
 }

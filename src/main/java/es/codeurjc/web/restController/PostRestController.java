@@ -35,6 +35,38 @@ import es.codeurjc.web.service.CommentService;
 import es.codeurjc.web.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * REST controller for managing posts and their associated images and comments.
+ * <p>
+ * Provides endpoints for creating, retrieving, updating, and deleting posts,
+ * as well as managing post images and comments. Supports pagination for listing
+ * posts and comments. Enforces ownership checks for sensitive operations.
+ * </p>
+ *
+ * <ul>
+ *   <li>GET /api/posts/ - List posts (paginated)</li>
+ *   <li>GET /api/posts/{id} - Retrieve a specific post</li>
+ *   <li>POST /api/posts/ - Create a new post</li>
+ *   <li>PUT /api/posts/{id} - Update an existing post (owner only)</li>
+ *   <li>DELETE /api/posts/{id} - Delete a post (owner only)</li>
+ *   <li>GET /api/posts/{id}/image - Retrieve post image</li>
+ *   <li>POST /api/posts/{id}/image - Add image to post</li>
+ *   <li>PUT /api/posts/{id}/image - Replace post image</li>
+ *   <li>DELETE /api/posts/{id}/image - Delete post image</li>
+ *   <li>GET /api/posts/comments - List all comments (paginated)</li>
+ *   <li>GET /api/posts/{postId}/comments - List comments for a post (paginated)</li>
+ *   <li>GET /api/posts/{postId}/comments/{commentId} - Retrieve a specific comment</li>
+ *   <li>POST /api/posts/{postId}/comments - Add a comment to a post</li>
+ *   <li>PUT /api/posts/{postId}/comments/{commentId} - Update a comment (owner only)</li>
+ *   <li>DELETE /api/posts/{postId}/comments/{commentId}/ - Delete a comment (owner only)</li>
+ * </ul>
+ *
+ * <p>
+ * Requires authentication for certain operations and checks ownership for updates and deletions.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @RestController
 @RequestMapping("/api/posts")
 public class PostRestController {
@@ -57,7 +89,9 @@ public class PostRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO, @RequestParam(value = "sections", required = false) List<Long> sectionIds, @RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
+    public ResponseEntity<PostDTO> createPost(@ModelAttribute CreatePostDTO createPostDTO,
+            @RequestParam(value = "sections", required = false) List<Long> sectionIds,
+            @RequestParam String newContributors, @RequestParam MultipartFile imageFile, HttpServletRequest request)
             throws IOException {
 
         if (createPostDTO.title().isEmpty()) {
@@ -70,10 +104,14 @@ public class PostRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestParam String title, @RequestParam String content, @RequestParam MultipartFile newImageFile, @RequestParam(value = "sections", required = false) List<Long> newSectionIds, @RequestParam String newContributors, HttpServletRequest request) throws IOException {
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestParam String title,
+            @RequestParam String content, @RequestParam MultipartFile newImageFile,
+            @RequestParam(value = "sections", required = false) List<Long> newSectionIds,
+            @RequestParam String newContributors, HttpServletRequest request) throws IOException {
 
         if (postService.checkIfUserIsTheOwner(id, request)) {
-            PostDTO updated = postService.updatePost(id, title, content, newImageFile, newSectionIds, newContributors.split(","), request);
+            PostDTO updated = postService.updatePost(id, title, content, newImageFile, newSectionIds,
+                    newContributors.split(","), request);
             return ResponseEntity.ok(updated);
         } else {
             return ResponseEntity.status(403).build(); // Forbidden
@@ -150,11 +188,10 @@ public class PostRestController {
             @PathVariable Long commentId) {
 
         CommentDTO comment = commentService.findCommentByIdDTO(commentId);
-        // CommentDTO comment = commentService.findCommentById(commentId, postId);
         return ResponseEntity.ok(comment);
     }
 
-    // new comment for a specific post
+    // New comment for a specific post
     @PostMapping("/{postId}/comments")
     public ResponseEntity<CommentDTO> createComment(
             @PathVariable Long postId,
@@ -165,7 +202,7 @@ public class PostRestController {
         return ResponseEntity.created(location).body(savedComment);
     }
 
-    // update a specific comment in a post
+    // Update a specific comment in a post
     @PutMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(
             @PathVariable Long postId,
@@ -179,7 +216,7 @@ public class PostRestController {
         }
     }
 
-    // delete a specific comment from a post
+    // Delete a specific comment from a post
     @DeleteMapping("/{postId}/comments/{commentId}/")
     public ResponseEntity<Collection<CommentDTO>> deleteCommentFromPost(
             @PathVariable Long postId,

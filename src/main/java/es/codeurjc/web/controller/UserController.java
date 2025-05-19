@@ -28,6 +28,30 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controller class responsible for handling user-related web requests.
+ * <p>
+ * This controller manages user authentication, registration, profile management,
+ * following/unfollowing users and sections, uploading/downloading/deleting CVs,
+ * and provides endpoints for user discovery and administration.
+ * </p>
+ *
+ * <ul>
+ *   <li>Handles user login, logout, and registration.</li>
+ *   <li>Manages user profiles, including editing and deleting profiles.</li>
+ *   <li>Supports following and unfollowing users and sections.</li>
+ *   <li>Allows users to upload, download, and delete their CVs.</li>
+ *   <li>Provides endpoints for viewing followers, followings, and followed sections.</li>
+ *   <li>Includes an admin panel for managing users with the "USER" role.</li>
+ * </ul>
+ *
+ * <p>
+ * Uses services for user management, ranking, and section management.
+ * Relies on Spring Security for authentication and authorization.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Controller
 public class UserController {
 
@@ -209,12 +233,12 @@ public class UserController {
                 return "error";
             }
 
-            // invalidate the session and delete the JSESSIONID cookie
+            // Invalidate the session and delete the JSESSIONID cookie
             HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }
-            // We invalidate the session and delete the JSESSIONID cookie
+            // Invalidate the session and delete the JSESSIONID cookie
             Cookie cookie = new Cookie("JSESSIONID", "");
             cookie.setPath("/");
             cookie.setHttpOnly(true);

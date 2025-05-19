@@ -13,6 +13,18 @@ import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.PostRepository;
 import es.codeurjc.web.repository.UserRepository;
 
+/**
+ * Service class responsible for handling ranking-related operations in the application.
+ * Provides methods to retrieve top users and posts, both globally and for followed users,
+ * as well as calculating average ratings for posts.
+ *
+ * <p>
+ * This service interacts with the {@link UserRepository} and {@link PostRepository}
+ * to fetch and process ranking data, and uses mappers to convert between domain and DTO objects.
+ * </p>
+ *
+ * @author Grupo 1
+ */
 @Service
 public class RankingService {
 

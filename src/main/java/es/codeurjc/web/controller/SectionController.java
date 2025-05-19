@@ -34,6 +34,46 @@ import es.codeurjc.web.service.SectionService;
 import es.codeurjc.web.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controller for managing Section-related operations in the web application.
+ * <p>
+ * Handles requests for viewing, creating, editing, deleting, following, and unfollowing sections.
+ * Also manages section image downloads and section search/filtering.
+ * </p>
+ * 
+ * <ul>
+ *   <li>Injects {@link SectionService} and {@link UserService} for business logic.</li>
+ *   <li>Adds user authentication and role attributes to the model for each request.</li>
+ *   <li>Supports pagination for section listing.</li>
+ *   <li>Handles multipart file uploads for section images.</li>
+ *   <li>Provides endpoints for section CRUD operations and user-section interactions.</li>
+ *   <li>Supports advanced filtering and searching of sections.</li>
+ * </ul>
+ * 
+ * Endpoints:
+ * <ul>
+ *   <li><b>GET /section</b>: List sections with pagination.</li>
+ *   <li><b>GET /section/new</b>: Show form to create a new section.</li>
+ *   <li><b>POST /section/new</b>: Create a new section with optional image upload.</li>
+ *   <li><b>GET /section/{id}/image</b>: Download section image.</li>
+ *   <li><b>POST /section/{id}/delete</b>: Delete a section (POST method).</li>
+ *   <li><b>GET /section/{id}/delete</b>: Delete a section (GET method).</li>
+ *   <li><b>GET /section/{id}</b>: View section details.</li>
+ *   <li><b>GET /section/{id}/follow</b>: Follow a section.</li>
+ *   <li><b>GET /section/{id}/unfollow</b>: Unfollow a section.</li>
+ *   <li><b>GET /section/{id}/edit</b>: Show form to edit a section.</li>
+ *   <li><b>POST /section/{id}/edit</b>: Update section details and image.</li>
+ *   <li><b>GET /section/search</b>: Search and filter sections by various criteria.</li>
+ * </ul>
+ * 
+ * Security:
+ * <ul>
+ *   <li>Checks user authentication and roles for certain operations.</li>
+ *   <li>Handles error cases and redirects appropriately.</li>
+ * </ul>
+ * 
+ * @author Grupo 1
+ */
 @Controller
 public class SectionController {
 

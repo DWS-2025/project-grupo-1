@@ -31,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import es.codeurjc.web.dto.CreatePostDTO;
 import es.codeurjc.web.dto.PostDTO;
 import es.codeurjc.web.dto.PostMapper;
@@ -46,6 +45,30 @@ import es.codeurjc.web.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
+/**
+ * Service class for managing posts, including creation, updating, deletion, and retrieval.
+ * Handles business logic related to posts, such as managing images, sections, contributors,
+ * and comments. Provides methods for converting between domain and DTO representations,
+ * sanitizing HTML content, and checking user permissions.
+ *
+ * Main responsibilities:
+ * <ul>
+ *   <li>CRUD operations for {@link Post} entities.</li>
+ *   <li>Handling post images (upload, retrieval, deletion).</li>
+ *   <li>Managing post sections and contributors.</li>
+ *   <li>Sanitizing post content and titles to prevent XSS.</li>
+ *   <li>Calculating and updating post ratings.</li>
+ *   <li>Mapping between domain objects and DTOs.</li>
+ *   <li>Checking user permissions for post operations.</li>
+ * </ul>
+ *
+ * Dependencies are injected for repository access, related services, and mappers.
+ * Most methods throw {@link NoSuchElementException} if the target post or related entity is not found.
+ *
+ * Thread safety: This service is designed for use in a Spring-managed environment and is not thread-safe by itself.
+ *
+ * @author Grupo 1
+ */
 @Service
 public class PostService {
 
@@ -97,7 +120,7 @@ public class PostService {
 
     @Transactional
     public Post save(Post post, MultipartFile imageFile, List<Long> sectionsId, String[] contributors,
-            HttpServletRequest request) throws IOException { // Swapped from Post to void
+            HttpServletRequest request) throws IOException {
 
         PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
         post.setTitle(policy.sanitize(post.getTitle()));
@@ -138,13 +161,13 @@ public class PostService {
 
     }
 
-    // Transform the PostDTO to a Post and save it
+    // Transform from PostDTO to Post and save it
     public PostDTO save(PostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors,
             HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
     }
 
-    // Transform the CreatePostDTO to a Post and save it
+    // Transform from CreatePostDTO to Post and save it
     public PostDTO save(CreatePostDTO postDTO, MultipartFile imagFile, List<Long> sectionsId, String[] contributors,
             HttpServletRequest request) throws IOException {
         return toDTO(save(toDomain(postDTO), imagFile, sectionsId, contributors, request));
@@ -431,7 +454,6 @@ public class PostService {
     private PostDTO toDTO(Post post) {
         return postMapper.toDTO(post);
     }
-   
 
     private CreatePostDTO toCreatePostDTO(Post post) {
         return postMapper.toCreatePostDTO(post);

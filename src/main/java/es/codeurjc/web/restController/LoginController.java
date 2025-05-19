@@ -14,6 +14,20 @@ import es.codeurjc.web.security.jwt.LoginRequest;
 import es.codeurjc.web.security.jwt.UserLoginService;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * REST controller for handling authentication-related endpoints.
+ * <p>
+ * Provides endpoints for user login, token refresh, and logout operations.
+ * </p>
+ *
+ * <ul>
+ *   <li><b>/api/auth/login</b>: Authenticates a user and returns authentication tokens.</li>
+ *   <li><b>/api/auth/refresh</b>: Refreshes the authentication token using a refresh token.</li>
+ *   <li><b>/api/auth/logout</b>: Logs out the user and invalidates the authentication session.</li>
+ * </ul>
+ *
+ * @author Grupo 1
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {

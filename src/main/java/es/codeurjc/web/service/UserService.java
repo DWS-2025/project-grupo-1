@@ -34,10 +34,60 @@ import es.codeurjc.web.model.Post;
 import es.codeurjc.web.model.Section;
 import es.codeurjc.web.model.User;
 import es.codeurjc.web.repository.UserRepository;
-import es.codeurjc.web.security.jwt.JwtTokenProvider;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Service class for managing user-related operations in the application.
+ * <p>
+ * This service provides methods for user CRUD operations, authentication, 
+ * following/unfollowing users and sections, managing user images and CV files, 
+ * and handling user roles and permissions.
+ * </p>
+ * 
+ * <h2>Main Responsibilities:</h2>
+ * <ul>
+ *   <li>Retrieve, create, update, and delete users</li>
+ *   <li>Manage user profile images and CV uploads/downloads</li>
+ *   <li>Handle user authentication and authorization checks</li>
+ *   <li>Support following/unfollowing users and sections</li>
+ *   <li>Sanitize user input for security</li>
+ *   <li>Map between domain and DTO representations</li>
+ * </ul>
+ * 
+ * <h2>Security Considerations:</h2>
+ * <ul>
+ *   <li>Sanitizes user input to prevent XSS</li>
+ *   <li>Validates file paths and file types for uploads/downloads</li>
+ *   <li>Restricts certain operations for admin users</li>
+ * </ul>
+ * 
+ * <h2>Dependencies:</h2>
+ * <ul>
+ *   <li>{@link UserRepository} for database access</li>
+ *   <li>{@link CommentService}, {@link PostService}, {@link SectionService} for related domain logic</li>
+ *   <li>{@link UserMapper} for mapping between entities and DTOs</li>
+ * </ul>
+ * 
+ * <h2>File Management:</h2>
+ * <ul>
+ *   <li>Stores user CVs in a dedicated directory with path validation</li>
+ *   <li>Handles user image uploads as BLOBs</li>
+ * </ul>
+ * 
+ * <h2>Thread Safety:</h2>
+ * <ul>
+ *   <li>Relies on Spring's default singleton service behavior</li>
+ *   <li>Not thread-safe for mutable shared state outside of managed beans</li>
+ * </ul>
+ * 
+ * @author Grupo 1
+ * @see UserRepository
+ * @see UserMapper
+ * @see CommentService
+ * @see PostService
+ * @see SectionService
+ */
 @Service
 public class UserService {
 

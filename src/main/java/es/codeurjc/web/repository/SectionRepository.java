@@ -8,6 +8,28 @@ import org.springframework.data.jpa.repository.Query;
 
 import es.codeurjc.web.model.Section;
 
+/**
+ * Repository interface for managing {@link Section} entities.
+ * <p>
+ * Extends {@link JpaRepository} to provide basic CRUD operations and
+ * {@link JpaSpecificationExecutor} for advanced query capabilities.
+ * </p>
+ *
+ * <p>
+ * Custom query methods:
+ * <ul>
+ *   <li>{@code findSectionByTitleASC()} - Retrieves all sections ordered by title in ascending order.</li>
+ *   <li>{@code findSectionAverageRatingGT5()} - Retrieves sections with an average rating greater than or equal to 5.</li>
+ *   <li>{@code findSectionPublicationsGT2()} - Retrieves sections with number of publications greater than or equal to 2.</li>
+ *   <li>{@code findSectionPostsGTE2ByTitle()} - Retrieves sections with at least 2 publications, ordered by title.</li>
+ *   <li>{@code findSectionPostsGTE2AverageRatingGT5()} - Retrieves sections with at least 2 publications and average rating at least 5, ordered by title.</li>
+ *   <li>{@code findSectionAverageRatingGTE5ByTitle()} - Retrieves sections with average rating at least 5, ordered by title.</li>
+ *   <li>{@code findSectionAverageRatingGT5PublicationsGTE2()} - Retrieves sections with average rating at least 5 and at least 2 publications.</li>
+ * </ul>
+ * </p>
+ * 
+ * @author Grupo 1
+ */
 public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
 
     @Query("SELECT s FROM Section s ORDER BY s.title ASC")

@@ -25,6 +25,38 @@ import es.codeurjc.web.service.PostService;
 import es.codeurjc.web.service.SectionService;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controller class for managing posts and their related operations in the web application.
+ * <p>
+ * Handles HTTP requests for creating, viewing, editing, and deleting posts, as well as
+ * managing comments associated with posts. Also provides endpoints for image download
+ * and section management within posts.
+ * </p>
+ *
+ * <ul>
+ *   <li>GET /post - List all posts</li>
+ *   <li>GET /post/new - Show form to create a new post</li>
+ *   <li>POST /post/new - Handle creation of a new post</li>
+ *   <li>GET /post/{postId} - View a specific post and its comments</li>
+ *   <li>GET /post/{postId}/image - Download the image associated with a post</li>
+ *   <li>GET /post/{postId}/edit - Show form to edit a post (owner only)</li>
+ *   <li>POST /post/{postId}/edit - Handle post update (owner only)</li>
+ *   <li>POST /post/{postId}/delete - Delete a post (owner only)</li>
+ *   <li>GET /post/{postId}/comment/new - Show form to add a comment to a post</li>
+ *   <li>POST /post/{postId}/comment/new - Handle creation of a new comment</li>
+ *   <li>GET /post/{postId}/comment/{commentId}/edit - Show form to edit a comment (owner only)</li>
+ *   <li>POST /post/{postId}/comment/{commentId}/edit - Handle comment update (owner only)</li>
+ *   <li>POST /post/{postId}/comment/{commentId}/delete - Delete a comment (owner only)</li>
+ * </ul>
+ *
+ * <p>
+ * Access control is enforced for editing and deleting posts and comments, ensuring only
+ * owners can perform these actions. Error messages are provided for unauthorized actions
+ * or invalid input.
+ * </p>
+ * 
+ * @author Grupo 1
+ */
 @Controller
 public class PostController {
 
